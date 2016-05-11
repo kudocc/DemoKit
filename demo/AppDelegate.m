@@ -7,6 +7,11 @@
 //
 
 #import "AppDelegate.h"
+#import "HomeTableViewController.h"
+#import "AnimationViewController.h"
+#import "PerformanceViewController.h"
+#import "Quartz2DViewController.h"
+#import "AudioViewController.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +22,18 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    HomeTableViewController *vc = [[HomeTableViewController alloc] init];
+    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Audio"];
+    vc.arrayClass = @[[AnimationViewController class],
+                      [PerformanceViewController class],
+                      [Quartz2DViewController class],
+                      [AudioViewController class]];
+    UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
+    
+    self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    self.window.rootViewController = nav;
+    [self.window makeKeyAndVisible];
+    
     return YES;
 }
 
