@@ -11,7 +11,9 @@
 #import "AnimationViewController.h"
 #import "PerformanceViewController.h"
 #import "Quartz2DViewController.h"
+#import "UrlSessionViewController.h"
 #import "AudioViewController.h"
+#import "WebViewController.h"
 
 @interface AppDelegate ()
 
@@ -23,10 +25,12 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
-    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Audio"];
+    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"URLSession", @"WebView & WebCache", @"Audio"];
     vc.arrayClass = @[[AnimationViewController class],
                       [PerformanceViewController class],
                       [Quartz2DViewController class],
+                      [UrlSessionViewController class],
+                      [WebViewController class],
                       [AudioViewController class]];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     
