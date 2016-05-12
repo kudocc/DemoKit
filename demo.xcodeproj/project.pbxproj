@@ -18,7 +18,6 @@
 		A785B0221CE3218700A7686D /* NSString+File.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0211CE3218700A7686D /* NSString+File.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
-		A785B0391CE3258C00A7686D /* UIViewMaskImageByClippingContext.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0301CE3258C00A7686D /* UIViewMaskImageByClippingContext.m */; };
 		A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0341CE3258C00A7686D /* Quartz2DViewController.m */; };
 		A785B03E1CE326F700A7686D /* UIImage+ImageMask.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B03D1CE326F700A7686D /* UIImage+ImageMask.m */; };
 		A785B0531CE3295D00A7686D /* TableViewPerformanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0411CE3295D00A7686D /* TableViewPerformanceViewController.m */; };
@@ -46,6 +45,8 @@
 		A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B08E1CE3344D00A7686D /* UIView+CCKit.m */; };
 		A785B0921CE3355F00A7686D /* CoordinateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0911CE3355F00A7686D /* CoordinateViewController.m */; };
 		A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0941CE41A2500A7686D /* UIColor+CCKit.m */; };
+		A785B0981CE42F3200A7686D /* ShadowGradientsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */; };
+		A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B09A1CE42FB900A7686D /* UILinearGradientView.m */; };
 		A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */; };
 		A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0591CE31DE60064AAB7 /* AudioRecordViewController.m */; };
 		A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F05D1CE31DE60064AAB7 /* AudioViewController.m */; };
@@ -97,8 +98,6 @@
 		A785B0241CE321B000A7686D /* HomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewController.m; sourceTree = "<group>"; };
 		A785B0291CE3258C00A7686D /* ImageMaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageMaskViewController.h; sourceTree = "<group>"; };
 		A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageMaskViewController.m; sourceTree = "<group>"; };
-		A785B02F1CE3258C00A7686D /* UIViewMaskImageByClippingContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewMaskImageByClippingContext.h; sourceTree = "<group>"; };
-		A785B0301CE3258C00A7686D /* UIViewMaskImageByClippingContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UIViewMaskImageByClippingContext.m; sourceTree = "<group>"; };
 		A785B0331CE3258C00A7686D /* Quartz2DViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quartz2DViewController.h; sourceTree = "<group>"; };
 		A785B0341CE3258C00A7686D /* Quartz2DViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Quartz2DViewController.m; sourceTree = "<group>"; };
 		A785B03C1CE326F700A7686D /* UIImage+ImageMask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageMask.h"; sourceTree = "<group>"; };
@@ -150,6 +149,10 @@
 		A785B0911CE3355F00A7686D /* CoordinateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinateViewController.m; sourceTree = "<group>"; };
 		A785B0931CE41A2500A7686D /* UIColor+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CCKit.h"; sourceTree = "<group>"; };
 		A785B0941CE41A2500A7686D /* UIColor+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CCKit.m"; sourceTree = "<group>"; };
+		A785B0961CE42F3200A7686D /* ShadowGradientsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShadowGradientsViewController.h; sourceTree = "<group>"; };
+		A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowGradientsViewController.m; sourceTree = "<group>"; };
+		A785B0991CE42FB900A7686D /* UILinearGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILinearGradientView.h; sourceTree = "<group>"; };
+		A785B09A1CE42FB900A7686D /* UILinearGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILinearGradientView.m; sourceTree = "<group>"; };
 		A7F5F0561CE31DE60064AAB7 /* AudioPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlaybackViewController.h; sourceTree = "<group>"; };
 		A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlaybackViewController.m; sourceTree = "<group>"; };
 		A7F5F0581CE31DE60064AAB7 /* AudioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecordViewController.h; sourceTree = "<group>"; };
@@ -305,10 +308,10 @@
 				A785B0341CE3258C00A7686D /* Quartz2DViewController.m */,
 				A785B0291CE3258C00A7686D /* ImageMaskViewController.h */,
 				A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */,
+				A785B0961CE42F3200A7686D /* ShadowGradientsViewController.h */,
+				A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */,
 				A785B0901CE3355F00A7686D /* CoordinateViewController.h */,
 				A785B0911CE3355F00A7686D /* CoordinateViewController.m */,
-				A785B02F1CE3258C00A7686D /* UIViewMaskImageByClippingContext.h */,
-				A785B0301CE3258C00A7686D /* UIViewMaskImageByClippingContext.m */,
 			);
 			path = quartz2D;
 			sourceTree = "<group>";
@@ -422,6 +425,8 @@
 		A7F5F07A1CE31F7F0064AAB7 /* subclass */ = {
 			isa = PBXGroup;
 			children = (
+				A785B0991CE42FB900A7686D /* UILinearGradientView.h */,
+				A785B09A1CE42FB900A7686D /* UILinearGradientView.m */,
 				A7F5F07B1CE31F7F0064AAB7 /* BaseViewController.h */,
 				A7F5F07C1CE31F7F0064AAB7 /* BaseViewController.m */,
 				A785B0231CE321B000A7686D /* HomeTableViewController.h */,
@@ -625,6 +630,7 @@
 				A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */,
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
+				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
 				A785B03E1CE326F700A7686D /* UIImage+ImageMask.m in Sources */,
@@ -641,7 +647,6 @@
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
-				A785B0391CE3258C00A7686D /* UIViewMaskImageByClippingContext.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
 				A785B06E1CE32D9F00A7686D /* AFSecurityPolicy.m in Sources */,
 				A7F5F0731CE31E420064AAB7 /* CAKeyframeViewController.m in Sources */,
@@ -662,6 +667,7 @@
 				A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */,
 				A785B0871CE32EF800A7686D /* WKWebViewViewController.m in Sources */,
 				A785B06F1CE32D9F00A7686D /* DataTaskBasicAuthViewController.m in Sources */,
+				A785B0981CE42F3200A7686D /* ShadowGradientsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

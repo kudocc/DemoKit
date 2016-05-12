@@ -29,6 +29,23 @@
     _shapeLayer.lineWidth = 1.0;
     _shapeLayer.strokeColor = [UIColor greenColor].CGColor;
     _shapeLayer.fillColor = [UIColor clearColor].CGColor;
+    
+    CGMutablePathRef path = CGPathCreateMutable();
+    CGPathAddEllipseInRect(path, NULL, CGRectMake(0, 0, 200, 200));
+    _shapeLayer.path = path;
+    CGPathRelease(path);
+    
+    UISlider *slider = [[UISlider alloc] init];
+    [self.view addSubview:slider];
+    slider.frame = CGRectMake(10, 400, ScreenWidth-20, slider.height);
+    slider.value = 1;
+    slider.minimumValue = 0;
+    slider.maximumValue = 1;
+    [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+}
+
+- (void)sliderValueChanged:(UISlider *)sender {
+    _shapeLayer.strokeEnd = sender.value;
 }
 
 - (void)animatePath {

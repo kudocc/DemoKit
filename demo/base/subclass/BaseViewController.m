@@ -20,7 +20,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    self.view.backgroundColor = [UIColor whiteColor];
+    self.view.backgroundColor = [UIColor cc_colorWithRed:239 green:239 blue:244];
     self.view.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
     
     NSString *string = @"Tap触发动画";

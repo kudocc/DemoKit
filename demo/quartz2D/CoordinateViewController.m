@@ -55,7 +55,7 @@ void MyDrawWithShadows (CGContextRef myContext, CGFloat wd, CGFloat ht)
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        image = [UIImage imageNamed:@"bg"];
+        image = [UIImage imageNamed:@"ori"];
         
         path = CGPathCreateMutable();
         CGPathAddArc(path, NULL, 100, 100, 100, 0, M_PI/4, YES);
