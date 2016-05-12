@@ -7,9 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIView+Coord.h"
 
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
+
+#define Pixel(x) (x/[UIScreen mainScreen])
 
 @interface BaseViewController : UIViewController
 

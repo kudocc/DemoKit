@@ -1,12 +1,23 @@
 //
-//  UIViewCordinate.m
-//  ImageMask
+//  CoordinateViewController.m
+//  demo
 //
-//  Created by KudoCC on 16/5/6.
+//  Created by KudoCC on 16/5/11.
 //  Copyright © 2016年 KudoCC. All rights reserved.
 //
 
-#import "UIViewCordinate.h"
+#import "CoordinateViewController.h"
+
+@implementation CoordinateViewController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    UIViewCordinate *v = [[UIViewCordinate alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
+    [self.view addSubview:v];
+}
+
+@end
 
 void MyDrawWithShadows (CGContextRef myContext, CGFloat wd, CGFloat ht)
 {
@@ -102,9 +113,6 @@ void MyDrawWithShadows (CGContextRef myContext, CGFloat wd, CGFloat ht)
     }
     
     MyDrawWithShadows(context, 100, 100);
-    
 }
-
-
 
 @end

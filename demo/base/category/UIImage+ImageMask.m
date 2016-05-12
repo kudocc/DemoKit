@@ -55,11 +55,11 @@
                                         CGImageGetBitsPerPixel(maskRef),
                                         CGImageGetBytesPerRow(maskRef),
                                         CGImageGetDataProvider(maskRef), NULL, false);
-    NSLog(@"%@", [self kcc_description:mask]);
+//    NSLog(@"%@", [self kcc_description:mask]);
     // for mask: alpha:None, bitsPerPixel:32, bitsPerComponent:8
-    UIImage *image = [UIImage imageWithCGImage:mask];
+    UIImage *image = [UIImage imageWithCGImage:mask scale:[UIScreen mainScreen].scale orientation:UIImageOrientationUp];
     // for image: alpha:NoneSkipFirst, bitsPerPixel:32, bitsPerComponent:8
-    NSLog(@"%@", [self kc_description]);
+//    NSLog(@"%@", [self kc_description]);
     CGImageRelease(mask);
     return image;
 }

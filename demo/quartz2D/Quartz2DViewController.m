@@ -8,6 +8,7 @@
 
 #import "Quartz2DViewController.h"
 #import "ImageMaskViewController.h"
+#import "CoordinateViewController.h"
 
 @interface Quartz2DViewController ()
 
@@ -19,8 +20,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.arrayTitle = @[@"ImageMask"];
-    self.arrayClass = @[[ImageMaskViewController class]];
+    self.arrayTitle = @[@"ImageMask", @"Coordinate Test"];
+    self.arrayClass = @[[ImageMaskViewController class], [CoordinateViewController class]];
     
     /*
     UIImage *imageNoAlpha = [UIImage imageNamed:@"image_mask"];
