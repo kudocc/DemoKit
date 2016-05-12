@@ -43,8 +43,9 @@
 		A785B0871CE32EF800A7686D /* WKWebViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0811CE32EF800A7686D /* WKWebViewViewController.m */; };
 		A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0891CE3303F00A7686D /* WebViewController.m */; };
 		A785B08C1CE3316400A7686D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A785B08B1CE3316400A7686D /* WebKit.framework */; };
-		A785B08F1CE3344D00A7686D /* UIView+Coord.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B08E1CE3344D00A7686D /* UIView+Coord.m */; };
+		A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B08E1CE3344D00A7686D /* UIView+CCKit.m */; };
 		A785B0921CE3355F00A7686D /* CoordinateViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0911CE3355F00A7686D /* CoordinateViewController.m */; };
+		A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0941CE41A2500A7686D /* UIColor+CCKit.m */; };
 		A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */; };
 		A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0591CE31DE60064AAB7 /* AudioRecordViewController.m */; };
 		A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F05D1CE31DE60064AAB7 /* AudioViewController.m */; };
@@ -143,10 +144,12 @@
 		A785B0881CE3303F00A7686D /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
 		A785B0891CE3303F00A7686D /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		A785B08B1CE3316400A7686D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		A785B08D1CE3344D00A7686D /* UIView+Coord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Coord.h"; sourceTree = "<group>"; };
-		A785B08E1CE3344D00A7686D /* UIView+Coord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Coord.m"; sourceTree = "<group>"; };
+		A785B08D1CE3344D00A7686D /* UIView+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CCKit.h"; sourceTree = "<group>"; };
+		A785B08E1CE3344D00A7686D /* UIView+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CCKit.m"; sourceTree = "<group>"; };
 		A785B0901CE3355F00A7686D /* CoordinateViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinateViewController.h; sourceTree = "<group>"; };
 		A785B0911CE3355F00A7686D /* CoordinateViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinateViewController.m; sourceTree = "<group>"; };
+		A785B0931CE41A2500A7686D /* UIColor+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+CCKit.h"; sourceTree = "<group>"; };
+		A785B0941CE41A2500A7686D /* UIColor+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+CCKit.m"; sourceTree = "<group>"; };
 		A7F5F0561CE31DE60064AAB7 /* AudioPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlaybackViewController.h; sourceTree = "<group>"; };
 		A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlaybackViewController.m; sourceTree = "<group>"; };
 		A7F5F0581CE31DE60064AAB7 /* AudioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecordViewController.h; sourceTree = "<group>"; };
@@ -402,10 +405,12 @@
 		A7F5F0791CE31F7F0064AAB7 /* category */ = {
 			isa = PBXGroup;
 			children = (
-				A785B08D1CE3344D00A7686D /* UIView+Coord.h */,
-				A785B08E1CE3344D00A7686D /* UIView+Coord.m */,
+				A785B08D1CE3344D00A7686D /* UIView+CCKit.h */,
+				A785B08E1CE3344D00A7686D /* UIView+CCKit.m */,
 				A785B05C1CE3298A00A7686D /* UIImage+CCKit.h */,
 				A785B05D1CE3298A00A7686D /* UIImage+CCKit.m */,
+				A785B0931CE41A2500A7686D /* UIColor+CCKit.h */,
+				A785B0941CE41A2500A7686D /* UIColor+CCKit.m */,
 				A785B0201CE3218700A7686D /* NSString+File.h */,
 				A785B0211CE3218700A7686D /* NSString+File.m */,
 				A785B03C1CE326F700A7686D /* UIImage+ImageMask.h */,
@@ -617,6 +622,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */,
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
@@ -644,7 +650,7 @@
 				A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */,
 				A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */,
 				A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */,
-				A785B08F1CE3344D00A7686D /* UIView+Coord.m in Sources */,
+				A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */,
 				A785B0611CE32B5A00A7686D /* CornerRadiusView+WebCache.m in Sources */,
 				A785B0531CE3295D00A7686D /* TableViewPerformanceViewController.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,

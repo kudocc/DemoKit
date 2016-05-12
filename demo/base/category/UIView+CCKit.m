@@ -1,15 +1,6 @@
-//
-//  UIView+Coord.m
-//  SdAccountKeyM
-//
-//  Created by Dev on 2/20/14.
-//  Copyright (c) 2014 snda. All rights reserved.
-//
-
-#import "UIView+Coord.h"
+#import "UIView+CCKit.h"
 
 @implementation UIView (Coord)
-#pragma mark Frame
 
 - (CGPoint)origin
 {
@@ -35,9 +26,6 @@
     self.frame = newFrame;
 }
 
-
-#pragma mark Frame Origin
-
 - (CGFloat)x
 {
     return self.frame.origin.x;
@@ -62,9 +50,6 @@
     self.frame = newFrame;
 }
 
-
-#pragma mark Frame Size
-
 - (CGFloat)height
 {
     return self.frame.size.height;
@@ -88,9 +73,6 @@
     newFrame.size.width = newWidth;
     self.frame = newFrame;
 }
-
-
-#pragma mark Frame Borders
 
 - (CGFloat)left
 {
@@ -132,22 +114,6 @@
     self.y = bottom - self.height;
 }
 
-
-#pragma mark Center Point
-
-//#if !IS_IOS_DEVICE
-//- (CGPoint)center
-//{
-//    return CGPointMake(self.left + self.middleX, self.top + self.middleY);
-//}
-//
-//- (void)setCenter:(CGPoint)newCenter
-//{
-//    self.left = newCenter.x - self.middleX;
-//    self.top = newCenter.y - self.middleY;
-//}
-//#endif
-
 - (CGFloat)centerX
 {
     return self.center.x;
@@ -168,9 +134,6 @@
     self.center = CGPointMake(self.center.x, newCenterY);
 }
 
-
-#pragma mark Middle Point
-
 - (CGPoint)middlePoint
 {
     return CGPointMake(self.middleX, self.middleY);
@@ -184,20 +147,6 @@
 - (CGFloat)middleY
 {
     return self.height / 2;
-}
-
-
-#pragma mark - Max Point
-/// 最大X值
-- (CGFloat) maxX
-{
-    return CGRectGetMaxX(self.frame);
-}
-
-/// 最大Y值
-- (CGFloat)maxY
-{
-    return CGRectGetMaxY(self.frame);
 }
 
 #pragma mark Recursion All Subviews

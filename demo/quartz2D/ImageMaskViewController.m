@@ -64,7 +64,7 @@
                                      8, bitmapBytesPerRow,
                                      colorSpace, kCGImageAlphaNoneSkipLast);
     
-    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
+    CGContextSetFillColorWithColor(context, [UIColor cc_colorWithRed:200 green:200 blue:100].CGColor);
     CGContextFillRect(context, (CGRect){CGPointZero, CGSizeMake(pixelsWide, pixelsHigh)});
     CGContextSetStrokeColorWithColor(context, [UIColor whiteColor].CGColor);
     CGContextSetLineWidth(context, 5.0);
