@@ -15,6 +15,8 @@
 		A7583C4D1CE31BFB007558CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7583C4B1CE31BFB007558CB /* LaunchScreen.storyboard */; };
 		A7583C581CE31BFB007558CB /* demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C571CE31BFB007558CB /* demoTests.m */; };
 		A7583C631CE31BFB007558CB /* demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C621CE31BFB007558CB /* demoUITests.m */; };
+		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
+		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
 		A785B0221CE3218700A7686D /* NSString+File.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0211CE3218700A7686D /* NSString+File.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
@@ -92,6 +94,10 @@
 		A7583C5E1CE31BFB007558CB /* demoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = demoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7583C621CE31BFB007558CB /* demoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = demoUITests.m; sourceTree = "<group>"; };
 		A7583C641CE31BFB007558CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A773F6771CE810E40098F1C8 /* PathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathViewController.h; sourceTree = "<group>"; };
+		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
+		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
+		A773F67B1CE86BC80098F1C8 /* PatternViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternViewController.m; sourceTree = "<group>"; };
 		A785B0201CE3218700A7686D /* NSString+File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+File.h"; sourceTree = "<group>"; };
 		A785B0211CE3218700A7686D /* NSString+File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+File.m"; sourceTree = "<group>"; };
 		A785B0231CE321B000A7686D /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewController.h; sourceTree = "<group>"; };
@@ -308,6 +314,10 @@
 				A785B0341CE3258C00A7686D /* Quartz2DViewController.m */,
 				A785B0291CE3258C00A7686D /* ImageMaskViewController.h */,
 				A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */,
+				A773F6771CE810E40098F1C8 /* PathViewController.h */,
+				A773F6781CE810E40098F1C8 /* PathViewController.m */,
+				A773F67A1CE86BC80098F1C8 /* PatternViewController.h */,
+				A773F67B1CE86BC80098F1C8 /* PatternViewController.m */,
 				A785B0961CE42F3200A7686D /* ShadowGradientsViewController.h */,
 				A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */,
 				A785B0901CE3355F00A7686D /* CoordinateViewController.h */,
@@ -630,6 +640,7 @@
 				A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */,
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
+				A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */,
 				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
@@ -646,6 +657,7 @@
 				A7F5F0721CE31E420064AAB7 /* CABasicAnimationTestViewController.m in Sources */,
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
+				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
 				A785B06E1CE32D9F00A7686D /* AFSecurityPolicy.m in Sources */,

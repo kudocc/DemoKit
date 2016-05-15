@@ -8,11 +8,7 @@
 
 #import "BaseViewController.h"
 
-typedef void(^blockTest)();
-
 @interface ImageMaskViewController : BaseViewController
-
-@property (nonatomic, copy) blockTest block;
 
 @property (nonatomic, strong) UIScrollView *scrollView;
 

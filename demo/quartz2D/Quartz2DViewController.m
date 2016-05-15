@@ -8,6 +8,8 @@
 
 #import "Quartz2DViewController.h"
 #import "ImageMaskViewController.h"
+#import "PathViewController.h"
+#import "PatternViewController.h"
 #import "CoordinateViewController.h"
 #import "ShadowGradientsViewController.h"
 
@@ -21,8 +23,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.arrayTitle = @[@"ImageMask", @"Coordinate Test", @"Shadow"];
+    self.arrayTitle = @[@"ImageMask", @"Path", @"Colored & Stencil Pattern", @"Coordinate Test", @"Shadow"];
     self.arrayClass = @[[ImageMaskViewController class],
+                        [PathViewController class],
+                        [PatternViewController class],
                         [CoordinateViewController class],
                         [ShadowGradientsViewController class]];
 }

@@ -51,11 +51,23 @@
 - (UIImage *)alphaImageWithSize:(CGSize)size {
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, [UIColor blackColor].CGColor);
     
-    CGContextSetAlpha(context, 0.3);
-    CGContextSetFillColorWithColor(context, [UIColor blueColor].CGColor);
-    CGContextFillEllipseInRect(context, CGRectInset(CGRectMake(0, 0, size.width, size.height), 20, 20));
+    CGContextSaveGState(context);
+    CGContextSetFillColorWithColor(context, [UIColor cc_colorWithRed:0 green:0 blue:100].CGColor);
+    CGContextClipToRect(context, CGRectMake(0, 0, size.width/2, size.height/2));
+    CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    
+    CGContextRestoreGState(context);
+    CGContextSaveGState(context);
+    CGContextSetFillColorWithColor(context, [UIColor cc_colorWithRed:200 green:0 blue:0].CGColor);
+    CGContextClipToRect(context, CGRectMake(size.width/2, 0, size.width/2, size.height/2));
+    CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    
+    CGContextRestoreGState(context);
+    CGContextSetFillColorWithColor(context, [UIColor cc_colorWithRed:0 green:50 blue:0].CGColor);
+    CGContextClipToRect(context, CGRectMake(0, size.height/2, size.width, size.height/2));
+    CGContextFillRect(context, CGRectMake(0, 0, size.width, size.height));
+    
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
@@ -142,7 +154,6 @@
         _imageViewMaskWithImage.frame = (CGRect){(CGPoint){x, y}, imageToMask.size};
         y = _imageViewMaskWithImage.bottom + 10;
         
-        
         labelTips = [self labelTipsWithText:@"result of mask with image" y:y];
         [_scrollView addSubview:labelTips];
         y = labelTips.bottom + 10;
@@ -150,7 +161,6 @@
         CGImageRef imageMaskedRef = CGImageCreateWithMask(imageToMask.CGImage, imageAsMask.CGImage);
         UIImage *imageMasked = [UIImage imageWithCGImage:imageMaskedRef];
         CGImageRelease(imageMaskedRef);
-        
         _imageViewResultMaskWithImage = [[UIImageView alloc] initWithImage:imageMasked];
         [_scrollView addSubview:_imageViewResultMaskWithImage];
         _imageViewResultMaskWithImage.frame = (CGRect){(CGPoint){x, y}, imageToMask.size};
@@ -159,7 +169,7 @@
     
     // mask with image mask
     {
-        labelTips = [self labelTipsWithText:@"image mask as mask" y:y];
+        labelTips = [self labelTipsWithText:@"image mask ori image" y:y];
         [_scrollView addSubview:labelTips];
         y = labelTips.bottom + 10;
         
@@ -172,15 +182,29 @@
          不过取出CGImageGetAlphaInfo(CGImage)->kCGImageAlphaNone，让人很困惑...也许mask就不应该作为image显示吧
          
          文档中的Source sample是指被转成image mask之前的图片来说的，这个1 和 0代表什么呢？？？？搞一个alpha值为0.3的图片试试看
+         1.我做了一个左边是alpha为0.5的图，右边是1，fill color为黑色，得到的结果是全部图都没有被mask，所以看来S值跟alpha没关系
+         2.一个图分成了三部分，分别是red blue green，只有blue的部分被mask掉了...
+         3.还是分成了三部分，每一部分都只给一个component设置了大于0的值，只有blue部分是有效的，并且值越大，结果的alpha值越小，即mask的越明显
+         
+         看来这个S值，在RGB中是Blue
+         
          Source samples of an image mask act as an inverse alpha value. An image mask sample value (S):
          Equal to 1 blocks painting the corresponding image sample.
          Equal to 0 allows painting the corresponding image sample at full coverage.
          Greater than 0 and less 1 allows painting the corresponding image sample with an alpha value of (1 – S).
          */
-        UIImage *imageMask = imageToMask;
-//        imageMask = [self noAlphaImageWithSize:imageToMask.size gray:NO];
+        UIImage *imageOri = [self alphaImageWithSize:imageToMask.size];
+        UIImageView *imageViewOri = [[UIImageView alloc] initWithImage:imageOri];
+        [_scrollView addSubview:imageViewOri];
+        imageViewOri.frame = (CGRect){(CGPoint){x, y}, imageToMask.size};
+        y = imageViewOri.bottom + 10;
+        
+        labelTips = [self labelTipsWithText:@"image mask as mask" y:y];
+        [_scrollView addSubview:labelTips];
+        y = labelTips.bottom + 10;
+        
         // generate a mask
-        imageMask = [imageMask imageMask];
+        UIImage *imageMask = [imageOri imageMask];
         _imageViewMaskWithImageMask = [[UIImageView alloc] initWithImage:imageMask];
         [_scrollView addSubview:_imageViewMaskWithImageMask];
         _imageViewMaskWithImageMask.frame = (CGRect){(CGPoint){x, y}, imageToMask.size};
@@ -246,8 +270,6 @@
         imageMask = [imageMask imageMask];
         UIGraphicsBeginImageContextWithOptions(_imageViewOri.bounds.size, NO, 0.0);
         CGContextRef context = UIGraphicsGetCurrentContext();
-        CGAffineTransform ctm = CGContextGetCTM(context);
-        NSLog(@"%@", NSStringFromCGAffineTransform(ctm));
         CGContextClipToMask(context, _imageViewOri.bounds, imageMask.CGImage);
         [imageToMask drawInRect:_imageViewOri.bounds];
         UIImage *imageMasked = UIGraphicsGetImageFromCurrentImageContext();
