@@ -6,8 +6,8 @@
 //  Copyright © 2016年 KudoCC. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "HomeTableViewController.h"
 
-@interface ImageIOViewController : BaseViewController
+@interface ImageIOViewController : HomeTableViewController
 
 @end

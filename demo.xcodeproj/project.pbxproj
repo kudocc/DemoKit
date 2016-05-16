@@ -17,6 +17,10 @@
 		A7583C631CE31BFB007558CB /* demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C621CE31BFB007558CB /* demoUITests.m */; };
 		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
 		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
+		A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */; };
+		A773F6841CE9A3220098F1C8 /* ImageSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6831CE9A3220098F1C8 /* ImageSourceViewController.m */; };
+		A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6881CE9D6710098F1C8 /* ImageIO.m */; };
+		A773F68C1CE9D6B60098F1C8 /* ImageDestinationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */; };
 		A785B0221CE3218700A7686D /* NSString+File.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0211CE3218700A7686D /* NSString+File.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
@@ -98,6 +102,14 @@
 		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
 		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
 		A773F67B1CE86BC80098F1C8 /* PatternViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternViewController.m; sourceTree = "<group>"; };
+		A773F67F1CE975DA0098F1C8 /* ImageIOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageIOViewController.h; sourceTree = "<group>"; };
+		A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageIOViewController.m; sourceTree = "<group>"; };
+		A773F6821CE9A3220098F1C8 /* ImageSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageSourceViewController.h; sourceTree = "<group>"; };
+		A773F6831CE9A3220098F1C8 /* ImageSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageSourceViewController.m; sourceTree = "<group>"; };
+		A773F6871CE9D6710098F1C8 /* ImageIO.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageIO.h; sourceTree = "<group>"; };
+		A773F6881CE9D6710098F1C8 /* ImageIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageIO.m; sourceTree = "<group>"; };
+		A773F68A1CE9D6B60098F1C8 /* ImageDestinationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDestinationViewController.h; sourceTree = "<group>"; };
+		A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDestinationViewController.m; sourceTree = "<group>"; };
 		A785B0201CE3218700A7686D /* NSString+File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+File.h"; sourceTree = "<group>"; };
 		A785B0211CE3218700A7686D /* NSString+File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+File.m"; sourceTree = "<group>"; };
 		A785B0231CE321B000A7686D /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewController.h; sourceTree = "<group>"; };
@@ -249,6 +261,7 @@
 				A785B03F1CE3295D00A7686D /* performance */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
+				A773F67E1CE975C00098F1C8 /* imageIO */,
 				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A7583C751CE31C88007558CB /* urlSession */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
@@ -305,6 +318,21 @@
 				A785B06B1CE32D9F00A7686D /* UIDownloadTaskViewController.m */,
 			);
 			name = urlSession;
+			sourceTree = "<group>";
+		};
+		A773F67E1CE975C00098F1C8 /* imageIO */ = {
+			isa = PBXGroup;
+			children = (
+				A773F67F1CE975DA0098F1C8 /* ImageIOViewController.h */,
+				A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */,
+				A773F6821CE9A3220098F1C8 /* ImageSourceViewController.h */,
+				A773F6831CE9A3220098F1C8 /* ImageSourceViewController.m */,
+				A773F68A1CE9D6B60098F1C8 /* ImageDestinationViewController.h */,
+				A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */,
+				A773F6871CE9D6710098F1C8 /* ImageIO.h */,
+				A773F6881CE9D6710098F1C8 /* ImageIO.m */,
+			);
+			path = imageIO;
 			sourceTree = "<group>";
 		};
 		A785B0261CE3258C00A7686D /* quartz2D */ = {
@@ -650,10 +678,13 @@
 				A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */,
 				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
+				A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */,
 				A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */,
 				A7F5F0711CE31E420064AAB7 /* CAActionTestViewController.m in Sources */,
 				A785B0731CE32D9F00A7686D /* UIDownloadTaskViewController.m in Sources */,
+				A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */,
 				A785B0701CE32D9F00A7686D /* DataTaskHttpsServerAuthViewController.m in Sources */,
+				A773F68C1CE9D6B60098F1C8 /* ImageDestinationViewController.m in Sources */,
 				A7F5F0721CE31E420064AAB7 /* CABasicAnimationTestViewController.m in Sources */,
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
@@ -666,6 +697,7 @@
 				A785B0831CE32EF800A7686D /* UIWebViewViewController.m in Sources */,
 				A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */,
 				A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */,
+				A773F6841CE9A3220098F1C8 /* ImageSourceViewController.m in Sources */,
 				A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */,
 				A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */,
 				A785B0611CE32B5A00A7686D /* CornerRadiusView+WebCache.m in Sources */,
@@ -822,7 +854,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = demo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -835,7 +867,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = demo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

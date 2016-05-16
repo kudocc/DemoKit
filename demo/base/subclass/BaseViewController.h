@@ -18,7 +18,14 @@
 @interface BaseViewController : UIViewController
 
 @property (nonatomic, assign) BOOL enableTap;
-// override
+
+@end
+
+@interface BaseViewController (need_override)
+
+// called after `viewDidLoad`
+- (void)initView;
+
 - (void)tapClick:(UITapGestureRecognizer *)gr;
 
 @end

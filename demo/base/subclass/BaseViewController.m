@@ -23,7 +23,7 @@
     self.view.backgroundColor = [UIColor cc_colorWithRed:239 green:239 blue:244];
     self.view.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
     
-    NSString *string = @"Tap触发动画";
+    NSString *string = @"Tap";
     NSDictionary *attribute = @{NSFontAttributeName:[UIFont systemFontOfSize:14.0], NSForegroundColorAttributeName:[UIColor blueColor]};
     CGRect bounding = [string boundingRectWithSize:CGSizeMake(1024, 30.0) options:0 attributes:attribute context:nil];
     CGSize size = CGSizeMake(ceil(bounding.size.width), ceil(bounding.size.height));
@@ -37,6 +37,8 @@
     [self.view.layer addSublayer:_layerTips];
     _layerTips.frame = CGRectMake(0, 0, size.width, size.height);
     _layerTips.position = CGPointMake(self.view.bounds.size.width/2, self.view.bounds.size.height/2);
+    
+    [self initView];
 }
 
 - (void)setEnableTap:(BOOL)enableTap {
@@ -59,6 +61,18 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+@end
+
+@implementation BaseViewController (need_override)
+
+- (void)initView {
+    
+}
+
+- (void)tapClick:(UITapGestureRecognizer *)gr {
+    
 }
 
 @end
