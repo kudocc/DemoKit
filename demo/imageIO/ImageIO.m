@@ -11,6 +11,8 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
+// how to get image metadata https://developer.apple.com/library/ios/qa/qa1622/_index.html
+
 @implementation ImageIO
 
 + (instancetype)sharedImageIO {
@@ -25,7 +27,7 @@
 - (void)presentImagePickerWithBlock:(ImagePickerInfoCallback)callback viewController:(UIViewController *)vc {
     _callback = callback;
     
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择" message:@"message" preferredStyle:UIAlertControllerStyleActionSheet];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
     if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
         // check 相册
@@ -34,7 +36,7 @@
             al_status == ALAuthorizationStatusNotDetermined) {
             UIAlertAction *actionPhoto = [UIAlertAction actionWithTitle:@"相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
                 UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-                imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
                 imagePicker.delegate = self;
                 [vc presentViewController:imagePicker animated:YES completion:nil];
             }];

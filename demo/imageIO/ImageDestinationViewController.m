@@ -22,47 +22,6 @@
     UIScrollView *scrollView;
 }
 
-- (void)addImageToViewWithCGImageSourceRef:(CGImageSourceRef)imageSource {
-    CGFloat x = 0;
-    CGFloat y = scrollView.contentSize.height;
-    
-    if (imageSource) {
-        CFDictionaryRef property = CGImageSourceCopyProperties(imageSource, NULL);
-        NSDictionary *dictProperty = (__bridge_transfer id)property;
-        NSLog(@"container property:%@", dictProperty);
-        
-        property = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-        dictProperty = (__bridge_transfer id)property;
-        NSLog(@"image at index 0 property:%@", dictProperty);
-        
-        UIImageOrientation orientation = UIImageOrientationUp;
-        int exifOrientation;
-        CFTypeRef val = CFDictionaryGetValue(property, kCGImagePropertyOrientation);
-        if (val) {
-            CFNumberGetValue(val, kCFNumberIntType, &exifOrientation);
-            orientation = [UIImage cc_exifOrientationToiOSOrientation:exifOrientation];
-        }
-        
-        size_t count = CGImageSourceGetCount(imageSource);
-        NSLog(@"image count:%zu", count);
-        
-        for (size_t i = 0; i < count; ++i) {
-            CGImageRef img = CGImageSourceCreateImageAtIndex(imageSource, i, NULL);
-            if (img) {
-                UIImage *image = [UIImage imageWithCGImage:img scale:[UIScreen mainScreen].scale orientation:orientation];
-                UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-                [scrollView addSubview:imageView];
-                imageView.origin = CGPointMake(x, y);
-                y = imageView.bottom + 10;
-                
-                CGImageRelease(img);
-            }
-        }
-    }
-    
-    scrollView.contentSize = CGSizeMake(ScreenWidth, y);
-}
-
 - (void)addImageToViewWithURL:(NSURL *)url {
     CGFloat x = 0;
     CGFloat y = scrollView.contentSize.height;
@@ -116,7 +75,7 @@
     
     self.navigationItem.rightBarButtonItem = nil;
     
-    UIBarButtonItem *addImageItem = [[UIBarButtonItem alloc] initWithTitle:@"Add Image" style:UIBarButtonItemStylePlain target:self action:@selector(addImage)];
+    UIBarButtonItem *addImageItem = [[UIBarButtonItem alloc] initWithTitle:@"Add" style:UIBarButtonItemStylePlain target:self action:@selector(addImage)];
     UIBarButtonItem *cleanFileItem = [[UIBarButtonItem alloc] initWithTitle:@"Clean" style:UIBarButtonItemStylePlain target:self action:@selector(clean)];
     self.navigationItem.rightBarButtonItems = @[addImageItem, cleanFileItem];
     
@@ -133,46 +92,8 @@
 
 - (void)addImage {
     [[ImageIO sharedImageIO] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
-        [self showLoadingMessage:@"save image to file"];
-        
-        // save image to file url
-        UIImage *image = info[UIImagePickerControllerOriginalImage];
-        NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSData *data = UIImageJPEGRepresentation(image, 1.0);
-            
-            NSString *imageDirectory = [self fileDirectory];
-            NSString *name = [NSString stringWithFormat:@"%d.jpeg", (int)[[NSDate date] timeIntervalSince1970]];
-            NSString *path = [imageDirectory stringByAppendingPathComponent:name];
-            
-            NSData *photoData = [self taggedImageData:data metadata:dictMetadata orientation:image.imageOrientation];
-            [photoData writeToFile:path atomically:YES];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
-                [self addImageToViewWithCGImageSourceRef:imageSource];
-                CFRelease(imageSource);
-            });
-            
-            // retrive the exif
-            NSURL *url = [NSURL fileURLWithPath:path];
-            CGImageSourceRef imageSource = CGImageSourceCreateWithURL((__bridge CFURLRef)url, NULL);
-            if (imageSource) {
-                CFDictionaryRef property = CGImageSourceCopyProperties(imageSource, NULL);
-                NSDictionary *dictProperty = (__bridge_transfer id)property;
-                NSLog(@"container property:%@", dictProperty);
-                
-                property = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, NULL);
-                dictProperty = (__bridge_transfer id)property;
-                NSLog(@"image at index 0 property:%@", dictProperty);
-                
-                CFRelease(imageSource);
-            }
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self hideLoadingMessage];
-            });
-        });
+//        [self writeImageToPhotosAlbum:info];
+        [self saveImageToDisk:info];
     } viewController:self];
 }
 
@@ -197,49 +118,37 @@
 
 #pragma mark -
 
-- (NSData *)writeMetadataIntoImageData:(NSData *)imageData metadata:(NSMutableDictionary *)metadata {
-    // create an imagesourceref
-    CGImageSourceRef source = CGImageSourceCreateWithData((__bridge CFDataRef) imageData, NULL);
+- (void)saveImageToDisk:(NSDictionary *)info {
+    [self showLoadingMessage:@"save image to file"];
     
-    // this is the type of image (e.g., public.jpeg)
-    CFStringRef UTI = CGImageSourceGetType(source);
-    
-    // create a new data object and write the new image into it
-    NSMutableData *dest_data = [NSMutableData data];
-    CGImageDestinationRef destination = CGImageDestinationCreateWithData((__bridge CFMutableDataRef)dest_data, UTI, 1, NULL);
-    if (!destination) {
-        NSLog(@"Error: Could not create image destination");
-    }
-    // add the image contained in the image source to the destination, overidding the old metadata with our modified metadata
-    metadata = nil;
-    CGImageDestinationAddImageFromSource(destination, source, 0, (__bridge CFDictionaryRef) metadata);
-    BOOL success = CGImageDestinationFinalize(destination);
-    if (!success) {
-        NSLog(@"Error: Could not create data from image destination");
-    }
-    CFRelease(destination);
-    CFRelease(source);
-    return dest_data;
-}
-
-- (NSData *)taggedImageData:(NSData *)imageData metadata:(NSDictionary *)metadata orientation:(UIImageOrientation)orientation {
-    NSMutableDictionary *newMetadata = [metadata mutableCopy];
-    
-    // add gps info
-    if (!newMetadata[(__bridge id)kCGImagePropertyGPSDictionary]) {
-        // TODO:location
-//        CLLocationManager *locationManager = [CLLocationManager new];
-//        // get nil here
-//        CLLocation *location = [locationManager location];
-//        newMetadata[(NSString *)kCGImagePropertyGPSDictionary] = [self gpsDictionaryForLocation:location];
-    }
-    
-    // modify the orientation with exif format
-    int exifOrientation = [UIImage cc_iOSOrientationToExifOrientation:orientation];
-    if (exifOrientation != -1) {
-        newMetadata[(__bridge id)kCGImagePropertyOrientation] = @(exifOrientation);
-    }
-    return [self writeMetadataIntoImageData:imageData metadata:newMetadata];
+    // save image to file url
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSString *name = [NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]];
+        NSString *path = [[self fileDirectory] stringByAppendingPathComponent:name];
+        
+        // add gps info
+//        if (!newMetadata[(__bridge id)kCGImagePropertyGPSDictionary]) {
+            // TODO:location
+//            CLLocationManager *locationManager = [CLLocationManager new];
+//            // get nil here
+//            CLLocation *location = [locationManager location];
+//            newMetadata[(NSString *)kCGImagePropertyGPSDictionary] = [self gpsDictionaryForLocation:location];
+//        }
+        
+        
+        NSURL *url = [NSURL fileURLWithPath:path];
+        BOOL res = [image writePNGDataWithMetadata:dictMetadata toURL:url];
+        if (res) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self addImageToViewWithURL:url];
+                [self hideLoadingMessage];
+            });
+        } else {
+            NSLog(@"%@, error", NSStringFromSelector(_cmd));
+        }
+    });
 }
 
 - (NSDictionary *)gpsDictionaryForLocation:(CLLocation *)location {
@@ -256,6 +165,31 @@
                               (NSString *)kCGImagePropertyGPSAltitude: @(fabs(location.altitude)),
                               };
     return gpsDict;
+}
+
+#pragma mark - save image to photosAlbum
+
+- (void)writeImageToPhotosAlbum:(NSDictionary *)info {
+    UIImage *image = info[UIImagePickerControllerOriginalImage];
+    NSDictionary *metadata = [info objectForKey:UIImagePickerControllerMediaMetadata];
+    if (!metadata[(__bridge id)kCGImagePropertyOrientation]) {
+        NSMutableDictionary *mutableMetadata = [metadata mutableCopy];
+        if (!mutableMetadata) {
+            mutableMetadata = [NSMutableDictionary dictionary];
+        }
+        mutableMetadata[(__bridge id)kCGImagePropertyOrientation] = @([UIImage cc_iOSOrientationToExifOrientation:image.imageOrientation]);
+        metadata = [mutableMetadata copy];
+    }
+    
+    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+    
+    [self showLoadingMessage:@"saving image to photosAlbum"];
+    [library writeImageToSavedPhotosAlbum:image.CGImage
+                                 metadata:metadata
+                          completionBlock:^(NSURL *assetURL, NSError *error) {
+                              NSLog(@"assetURL %@, error:%@", assetURL, error);
+                              [self hideLoadingMessage];
+                          }];
 }
 
 @end
