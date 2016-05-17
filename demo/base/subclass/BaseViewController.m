@@ -7,11 +7,17 @@
 //
 
 #import "BaseViewController.h"
+#import <MBProgressHUD.h>
 
 @interface BaseViewController ()
 
 @property (nonatomic, strong) UITapGestureRecognizer *tapGR;
+
 @property (nonatomic, strong) CALayer *layerTips;
+
+
+@property (nonatomic, strong) MBProgressHUD *hudText;
+@property (nonatomic, strong) MBProgressHUD *hudLoading;
 
 @end
 
@@ -55,12 +61,44 @@
     }
 }
 
-- (void)tapClick:(UITapGestureRecognizer *)gr {
+#pragma mark - show text tips
+
+- (MBProgressHUD *)hudText {
+    if (!_hudText) {
+        _hudText = [[MBProgressHUD alloc] initWithView:self.view];
+        _hudText.mode = MBProgressHUDModeText;
+        [self.view addSubview:_hudText];
+    }
+    return _hudText;
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)showMessage:(NSString *)message {
+    [self showMessage:message detailMessage:nil];
+}
+
+- (void)showMessage:(NSString *)message detailMessage:(NSString *)detailMessage {
+    self.hudText.detailsLabelText = detailMessage;
+    self.hudText.labelText = message;
+    [self.hudText show:YES];
+    [self.hudText hide:YES afterDelay:1.5];
+}
+
+- (MBProgressHUD *)hudLoading {
+    if (!_hudLoading) {
+        _hudLoading = [[MBProgressHUD alloc] initWithView:self.view];
+        _hudLoading.mode = MBProgressHUDModeIndeterminate;
+        [self.view addSubview:_hudLoading];
+    }
+    return _hudLoading;
+}
+
+- (void)showLoadingMessage:(NSString *)message {
+    self.hudLoading.labelText = message;
+    [self.hudLoading show:YES];
+}
+
+- (void)hideLoadingMessage {
+    [self.hudLoading hide:YES];
 }
 
 @end

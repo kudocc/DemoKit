@@ -174,4 +174,87 @@
     return image;
 }
 
+
+// Reference: http://sylvana.net/jpegcrop/exif_orientation.html
++ (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation {
+    int exifOrientation = -1;
+    switch (iOSOrientation) {
+        case UIImageOrientationUp:
+            exifOrientation = 1;
+            break;
+            
+        case UIImageOrientationDown:
+            exifOrientation = 3;
+            break;
+            
+        case UIImageOrientationLeft:
+            exifOrientation = 8;
+            break;
+            
+        case UIImageOrientationRight:
+            exifOrientation = 6;
+            break;
+            
+        case UIImageOrientationUpMirrored:
+            exifOrientation = 2;
+            break;
+            
+        case UIImageOrientationDownMirrored:
+            exifOrientation = 4;
+            break;
+            
+        case UIImageOrientationLeftMirrored:
+            exifOrientation = 5;
+            break;
+            
+        case UIImageOrientationRightMirrored:
+            exifOrientation = 7;
+            break;
+            
+        default:
+            exifOrientation = -1;
+    }
+    return exifOrientation;
+}
+
++ (UIImageOrientation)cc_exifOrientationToiOSOrientation:(int)exifOrientation {
+    UIImageOrientation orientation = UIImageOrientationUp;
+    switch (exifOrientation) {
+        case 1:
+            orientation = UIImageOrientationUp;
+            break;
+            
+        case 3:
+            orientation = UIImageOrientationDown;
+            break;
+            
+        case 8:
+            orientation = UIImageOrientationLeft;
+            break;
+            
+        case 6:
+            orientation = UIImageOrientationRight;
+            break;
+            
+        case 2:
+            orientation = UIImageOrientationUpMirrored;
+            break;
+            
+        case 4:
+            orientation = UIImageOrientationDownMirrored;
+            break;
+            
+        case 5:
+            orientation = UIImageOrientationLeftMirrored;
+            break;
+            
+        case 7:
+            orientation = UIImageOrientationRightMirrored;
+            break;
+        default:
+            break;
+    }
+    return orientation;
+}
+
 @end

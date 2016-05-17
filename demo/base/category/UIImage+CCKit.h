@@ -15,11 +15,13 @@
 + (UIImage *)cc_resizeImage:(UIImage *)image contentMode:(UIViewContentMode)contentMode size:(CGSize)size;
 
 + (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor;
-
 + (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor;
 
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius;
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius contentMode:(UIViewContentMode)contentMode;
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor contentMode:(UIViewContentMode)contentMode;
+
++ (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation;
++ (UIImageOrientation)cc_exifOrientationToiOSOrientation:(int)exifOrientation;
 
 @end

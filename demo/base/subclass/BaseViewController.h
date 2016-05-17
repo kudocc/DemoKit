@@ -19,6 +19,11 @@
 
 @property (nonatomic, assign) BOOL enableTap;
 
+- (void)showMessage:(NSString *)message;
+
+- (void)showLoadingMessage:(NSString *)message;
+- (void)hideLoadingMessage;
+
 @end
 
 @interface BaseViewController (need_override)

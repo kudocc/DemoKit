@@ -11,6 +11,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "NSString+File.h"
+#import "UIImage+CCKit.h"
 
 @implementation ImageSourceViewController {
     UIScrollView *scrollView;
@@ -34,7 +35,7 @@
         CFTypeRef val = CFDictionaryGetValue(property, kCGImagePropertyOrientation);
         if (val) {
             CFNumberGetValue(val, kCFNumberIntType, &exifOrientation);
-            orientation = [self sd_exifOrientationToiOSOrientation:exifOrientation];
+            orientation = [UIImage cc_exifOrientationToiOSOrientation:exifOrientation];
         }
         
         size_t count = CGImageSourceGetCount(imageSource);
@@ -76,7 +77,7 @@
         CFTypeRef val = CFDictionaryGetValue(property, kCGImagePropertyOrientation);
         if (val) {
             CFNumberGetValue(val, kCFNumberIntType, &exifOrientation);
-            orientation = [self sd_exifOrientationToiOSOrientation:exifOrientation];
+            orientation = [UIImage cc_exifOrientationToiOSOrientation:exifOrientation];
         }
         
         size_t count = CGImageSourceGetCount(imageSource);
@@ -118,55 +119,14 @@
 - (void)addImage {
     [[ImageIO sharedImageIO] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
         UIImage *image = info[UIImagePickerControllerOriginalImage];
-//        NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
+        NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
+        NSLog(@"meta:%@", dictMetadata);
         NSData *data = UIImageJPEGRepresentation(image, 0.7);
         CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
         [self addImageToViewWithCGImageSourceRef:imageSource];
         CFRelease(imageSource);
         
     } viewController:self];
-}
-
-#pragma mark -
-
-- (UIImageOrientation) sd_exifOrientationToiOSOrientation:(int)exifOrientation {
-    UIImageOrientation orientation = UIImageOrientationUp;
-    switch (exifOrientation) {
-        case 1:
-            orientation = UIImageOrientationUp;
-            break;
-            
-        case 3:
-            orientation = UIImageOrientationDown;
-            break;
-            
-        case 8:
-            orientation = UIImageOrientationLeft;
-            break;
-            
-        case 6:
-            orientation = UIImageOrientationRight;
-            break;
-            
-        case 2:
-            orientation = UIImageOrientationUpMirrored;
-            break;
-            
-        case 4:
-            orientation = UIImageOrientationDownMirrored;
-            break;
-            
-        case 5:
-            orientation = UIImageOrientationLeftMirrored;
-            break;
-            
-        case 7:
-            orientation = UIImageOrientationRightMirrored;
-            break;
-        default:
-            break;
-    }
-    return orientation;
 }
 
 @end

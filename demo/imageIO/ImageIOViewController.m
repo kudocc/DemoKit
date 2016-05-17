@@ -9,6 +9,7 @@
 #import "ImageIOViewController.h"
 #import <ImageIO/ImageIO.h>
 #import "ImageSourceViewController.h"
+#import "ImageDestinationViewController.h"
 
 @implementation ImageIOViewController
 
@@ -16,8 +17,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.arrayTitle = @[@"Image Source"];
-    self.arrayClass = @[[ImageSourceViewController class]];
+    self.arrayTitle = @[@"Image Source", @"Image Destination"];
+    self.arrayClass = @[[ImageSourceViewController class], [ImageDestinationViewController class]];
     
     CFArrayRef mySourceTypes = CGImageSourceCopyTypeIdentifiers();
     CFShow(mySourceTypes);
