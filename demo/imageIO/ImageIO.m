@@ -7,6 +7,7 @@
 //
 
 #import "ImageIO.h"
+#import "NSString+File.h"
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -22,6 +23,10 @@
         imageIO = [[ImageIO alloc] init];
     });
     return imageIO;
+}
+
+- (NSString *)fileDirectory {
+    return [[NSString documentPath] stringByAppendingPathComponent:@"imageIO"];
 }
 
 - (void)presentImagePickerWithBlock:(ImagePickerInfoCallback)callback viewController:(UIViewController *)vc {

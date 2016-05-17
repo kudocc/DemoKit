@@ -428,6 +428,7 @@
         CFRelease(source);
         return NO;
     }
+    
     int exifOrientation = [UIImage cc_iOSOrientationToExifOrientation:self.imageOrientation];
     if (!metadata[(__bridge id)kCGImagePropertyOrientation]) {
         NSMutableDictionary *mutableDict = [metadata mutableCopy];

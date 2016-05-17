@@ -121,7 +121,12 @@
         UIImage *image = info[UIImagePickerControllerOriginalImage];
         NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
         NSLog(@"meta:%@", dictMetadata);
+        
+#if 0
         NSData *data = UIImageJPEGRepresentation(image, 0.7);
+#else 
+        NSData *data = UIImagePNGRepresentation(image);
+#endif
         CGImageSourceRef imageSource = CGImageSourceCreateWithData((__bridge CFDataRef)data, NULL);
         [self addImageToViewWithCGImageSourceRef:imageSource];
         CFRelease(imageSource);

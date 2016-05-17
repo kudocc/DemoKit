@@ -13,7 +13,7 @@ typedef void(^ImagePickerInfoCallback)(NSDictionary<NSString *,id> *info);
 @interface ImageIO : NSObject <UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 
 + (instancetype)sharedImageIO;
-
+- (NSString *)fileDirectory;
 
 @property (nonatomic, copy) ImagePickerInfoCallback callback;
 

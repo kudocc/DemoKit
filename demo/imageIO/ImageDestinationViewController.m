@@ -66,10 +66,6 @@
     CFRelease(imageSource);
 }
 
-- (NSString *)fileDirectory {
-    return [[NSString documentPath] stringByAppendingPathComponent:@"imageIO"];
-}
-
 - (void)initView {
     self.automaticallyAdjustsScrollViewInsets = NO;
     
@@ -80,7 +76,7 @@
     self.navigationItem.rightBarButtonItems = @[addImageItem, cleanFileItem];
     
     // create directory
-    NSString *directory = [self fileDirectory];
+    NSString *directory = [[ImageIO sharedImageIO] fileDirectory];
     if (![[NSFileManager defaultManager] fileExistsAtPath:directory]) {
         [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:NO attributes:nil error:nil];
     }
@@ -100,13 +96,14 @@
 - (void)clean {
     [self showLoadingMessage:@"remove image files in imageIO directory"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSString *imageDirectory = [self fileDirectory];
+        NSString *imageDirectory = [[ImageIO sharedImageIO] fileDirectory];
         NSDirectoryEnumerator<NSString *> *enumerator = [[NSFileManager defaultManager] enumeratorAtPath:imageDirectory];
         NSString *file = nil;
         while ((file = [enumerator nextObject]) != nil) {
-            BOOL res = [[NSFileManager defaultManager] removeItemAtPath:file error:nil];
+            NSError *error = nil;
+            BOOL res = [[NSFileManager defaultManager] removeItemAtPath:file error:&error];
             if (!res) {
-                NSLog(@"remove file %@ failed", file);
+                NSLog(@"remove file %@ failed %@", file, error);
             }
         }
         
@@ -126,7 +123,7 @@
     NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *name = [NSString stringWithFormat:@"%d", (int)[[NSDate date] timeIntervalSince1970]];
-        NSString *path = [[self fileDirectory] stringByAppendingPathComponent:name];
+        NSString *path = [[[ImageIO sharedImageIO] fileDirectory] stringByAppendingPathComponent:name];
         
         // add gps info
 //        if (!newMetadata[(__bridge id)kCGImagePropertyGPSDictionary]) {
@@ -139,7 +136,7 @@
         
         
         NSURL *url = [NSURL fileURLWithPath:path];
-        BOOL res = [image writePNGDataWithMetadata:dictMetadata toURL:url];
+        BOOL res = [image writeJPEGDataWithMetadata:dictMetadata compressQuality:0.7 toURL:url];
         if (res) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self addImageToViewWithURL:url];

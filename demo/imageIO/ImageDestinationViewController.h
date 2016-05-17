@@ -303,6 +303,45 @@
 }
 */
 
+/** JPEG without metadata，直接使用函数UIImageJPEGRepresentation将UIImage转换成JPEG，就拿到了orientation的值
+2016-05-18 07:13:04.021 demo[268:18798] container property:{
+    FileSize = 1289430;
+}
+2016-05-18 07:13:04.022 demo[268:18798] image at index 0 property:{
+    ColorModel = RGB;
+    Depth = 8;
+    Orientation = 6;
+    PixelHeight = 2448;
+    PixelWidth = 3264;
+    ProfileName = "sRGB IEC61966-2.1";
+    "{Exif}" =     {
+        ColorSpace = 1;
+        PixelXDimension = 3264;
+        PixelYDimension = 2448;
+    };
+    "{JFIF}" =     {
+        DensityUnit = 0;
+        JFIFVersion =         (
+                               1,
+                               0,
+                               1
+                               );
+        XDensity = 72;
+        YDensity = 72;
+    };
+    "{TIFF}" =     {
+        Orientation = 6;
+    };
+}
+*/
+
+/**
+ 图片的数据源是Camera和PhotoAlbum，从数据源中拿到UIImage和metadata
+ 1.将图片转换成PNG或JPEG格式，写入到文件中并保持其metadata，注意：PNG文件没有orientation属性，而我们使用图片时默认值为UP(比如[UIImage imageWithCGImage:]或者[UIImage imageWithData:])，如果写入PNG图片的时候不根据UIImage的imageOrientation指定CGImageDestinationAddImageFromSource的kCGImagePropertyOrientation属性，那么可能会导致图片翻转（除非照片本身的orientation就是UIImageOrientationUp），那么为什么PNG图片没有orientation属性还能让他保持正常呢，主要是写入的时候会根据传入的kCGImagePropertyOrientation直接对图片进行翻转；
+ 不同于PNG，JPEG格式的文件，使用UIImageJPEGRepresentation转换拿到的NSData就包含一些Exif和Orientation的信息，即使在写入文件时不传入metadata，它的方向也是对的
+ 2.将UIImage写回到相册中，并保持其metadata
+ */
+
 @interface ImageDestinationViewController : BaseViewController
 
 @end
