@@ -21,6 +21,7 @@
 		A773F6841CE9A3220098F1C8 /* ImageSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6831CE9A3220098F1C8 /* ImageSourceViewController.m */; };
 		A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6881CE9D6710098F1C8 /* ImageIO.m */; };
 		A773F68C1CE9D6B60098F1C8 /* ImageDestinationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */; };
+		A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6911CEC007D0098F1C8 /* IncrementalImageSourceViewController.m */; };
 		A785B0221CE3218700A7686D /* NSString+File.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0211CE3218700A7686D /* NSString+File.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
@@ -110,6 +111,8 @@
 		A773F6881CE9D6710098F1C8 /* ImageIO.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageIO.m; sourceTree = "<group>"; };
 		A773F68A1CE9D6B60098F1C8 /* ImageDestinationViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageDestinationViewController.h; sourceTree = "<group>"; };
 		A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageDestinationViewController.m; sourceTree = "<group>"; };
+		A773F6901CEC007D0098F1C8 /* IncrementalImageSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncrementalImageSourceViewController.h; sourceTree = "<group>"; };
+		A773F6911CEC007D0098F1C8 /* IncrementalImageSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncrementalImageSourceViewController.m; sourceTree = "<group>"; };
 		A785B0201CE3218700A7686D /* NSString+File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+File.h"; sourceTree = "<group>"; };
 		A785B0211CE3218700A7686D /* NSString+File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+File.m"; sourceTree = "<group>"; };
 		A785B0231CE321B000A7686D /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewController.h; sourceTree = "<group>"; };
@@ -257,13 +260,13 @@
 			isa = PBXGroup;
 			children = (
 				A7F5F0781CE31F7F0064AAB7 /* base */,
-				A785B0751CE32EF800A7686D /* webView */,
-				A785B03F1CE3295D00A7686D /* performance */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
+				A785B03F1CE3295D00A7686D /* performance */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
-				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A7583C751CE31C88007558CB /* urlSession */,
+				A785B0751CE32EF800A7686D /* webView */,
+				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
 				A7583C461CE31BFB007558CB /* Main.storyboard */,
@@ -327,6 +330,8 @@
 				A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */,
 				A773F6821CE9A3220098F1C8 /* ImageSourceViewController.h */,
 				A773F6831CE9A3220098F1C8 /* ImageSourceViewController.m */,
+				A773F6901CEC007D0098F1C8 /* IncrementalImageSourceViewController.h */,
+				A773F6911CEC007D0098F1C8 /* IncrementalImageSourceViewController.m */,
 				A773F68A1CE9D6B60098F1C8 /* ImageDestinationViewController.h */,
 				A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */,
 				A773F6871CE9D6710098F1C8 /* ImageIO.h */,
@@ -689,6 +694,7 @@
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
 				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
+				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
 				A785B06E1CE32D9F00A7686D /* AFSecurityPolicy.m in Sources */,

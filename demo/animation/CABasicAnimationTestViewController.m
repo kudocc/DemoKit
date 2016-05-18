@@ -16,9 +16,11 @@
 
 @implementation CABasicAnimationTestViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
+- (void)dealloc {
+    self.layer.delegate = nil;
+}
+
+- (void)initView {
     self.enableTap = YES;
     
     _layer = [[CALayer alloc] init];
@@ -35,7 +37,6 @@
     basicAni.fromValue = [NSValue valueWithCGPoint:_layer.position];
     basicAni.toValue = [NSValue valueWithCGPoint:p2];
     basicAni.duration = 1.0;
-    basicAni.beginTime = CACurrentMediaTime() + 2.0;
     basicAni.fillMode = kCAFillModeBackwards;
     [_layer addAnimation:basicAni forKey:@"position"];
     

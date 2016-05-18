@@ -10,6 +10,7 @@
 #import <ImageIO/ImageIO.h>
 #import "ImageSourceViewController.h"
 #import "ImageDestinationViewController.h"
+#import "IncrementalImageSourceViewController.h"
 
 @implementation ImageIOViewController
 
@@ -17,8 +18,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.arrayTitle = @[@"Image Source", @"Image Destination"];
-    self.arrayClass = @[[ImageSourceViewController class], [ImageDestinationViewController class]];
+    self.arrayTitle = @[@"Image Source", @"Increamental Image Source", @"Image Destination"];
+    self.arrayClass = @[[ImageSourceViewController class], [IncrementalImageSourceViewController class], [ImageDestinationViewController class]];
     
     CFArrayRef mySourceTypes = CGImageSourceCopyTypeIdentifiers();
     CFShow(mySourceTypes);
