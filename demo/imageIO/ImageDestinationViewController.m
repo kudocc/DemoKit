@@ -14,6 +14,7 @@
 #import "NSString+File.h"
 #import <CoreLocation/CoreLocation.h>
 #import "UIImage+CCKit.h"
+#import "ImagePickerViewControllerHelper.h"
 
 // save meta data to photosalbum in iOS
 // http://stackoverflow.com/questions/7965299/write-uiimage-along-with-metadata-exif-gps-tiff-in-iphones-photo-library
@@ -87,7 +88,7 @@
 }
 
 - (void)addImage {
-    [[ImageIO sharedImageIO] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
+    [[ImagePickerViewControllerHelper sharedHelper] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
 //        [self writeImageToPhotosAlbum:info];
         [self saveImageToDisk:info];
     } viewController:self];

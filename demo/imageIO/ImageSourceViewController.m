@@ -12,6 +12,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "NSString+File.h"
 #import "UIImage+CCKit.h"
+#import "ImagePickerViewControllerHelper.h"
 
 @implementation ImageSourceViewController {
     UIScrollView *scrollView;
@@ -117,7 +118,7 @@
 }
 
 - (void)addImage {
-    [[ImageIO sharedImageIO] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
+    [[ImagePickerViewControllerHelper sharedHelper] presentImagePickerWithBlock:^(NSDictionary<NSString *,id> *info) {
         UIImage *image = info[UIImagePickerControllerOriginalImage];
         NSDictionary *dictMetadata = info[UIImagePickerControllerMediaMetadata];
         NSLog(@"meta:%@", dictMetadata);

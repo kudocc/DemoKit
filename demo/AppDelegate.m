@@ -12,6 +12,7 @@
 #import "PerformanceViewController.h"
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
+#import "CoreImageViewController.h"
 #import "UrlSessionViewController.h"
 #import "AudioViewController.h"
 #import "WebViewController.h"
@@ -22,15 +23,15 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
-    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Image I/O", @"URLSession", @"WebView & WebCache", @"Audio"];
+    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Image I/O", @"Core Image", @"URLSession", @"WebView & WebCache", @"Audio"];
     vc.arrayClass = @[[AnimationViewController class],
                       [PerformanceViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
+                      [CoreImageViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
                       [AudioViewController class]];
