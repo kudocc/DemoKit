@@ -41,6 +41,23 @@
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     
+    CGFloat scale = [UIScreen mainScreen].scale;
+    CGPoint p = CGPointMake(10, 10);
+    p = CGPointApplyAffineTransform(p, CGAffineTransformMakeScale(1/scale, 1/scale));
+    NSLog(@"%@", NSStringFromCGPoint(p));
+    p = CGPointApplyAffineTransform(p, CGAffineTransformMakeScale(1, -1));
+    NSLog(@"%@", NSStringFromCGPoint(p));
+    p = CGPointApplyAffineTransform(p, CGAffineTransformMakeTranslation(0, 100));
+    NSLog(@"%@", NSStringFromCGPoint(p));
+    
+    
+    p = CGPointMake(10, 10);
+    CGAffineTransform transform = CGAffineTransformMakeScale(1/scale, 1/scale);
+    transform = CGAffineTransformScale(transform, 1, -1);
+    transform = CGAffineTransformTranslate(transform, 0, -200);
+    p = CGPointApplyAffineTransform(p, transform);
+    NSLog(@"%@", NSStringFromCGPoint(p));
+    
     return YES;
 }
 

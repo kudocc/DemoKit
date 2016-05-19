@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		816012C200EDA8DE3D92ACBA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CF52941D03A8813262E9A7 /* libPods.a */; };
+		A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */; };
+		A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A757237C1CED54560065AA2E /* FaceDetectorViewController.m */; };
 		A7583C3F1CE31BFB007558CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C3E1CE31BFB007558CB /* main.m */; };
 		A7583C421CE31BFB007558CB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C411CE31BFB007558CB /* AppDelegate.m */; };
 		A7583C481CE31BFB007558CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7583C461CE31BFB007558CB /* Main.storyboard */; };
@@ -88,6 +90,10 @@
 
 /* Begin PBXFileReference section */
 		07CF52941D03A8813262E9A7 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A75723751CED51AC0065AA2E /* BuiltinFilterChainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuiltinFilterChainViewController.h; sourceTree = "<group>"; };
+		A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterChainViewController.m; sourceTree = "<group>"; };
+		A757237B1CED54560065AA2E /* FaceDetectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceDetectorViewController.h; sourceTree = "<group>"; };
+		A757237C1CED54560065AA2E /* FaceDetectorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FaceDetectorViewController.m; sourceTree = "<group>"; };
 		A7583C3A1CE31BFB007558CB /* demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7583C3E1CE31BFB007558CB /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A7583C401CE31BFB007558CB /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -336,6 +342,8 @@
 		A773F67E1CE975C00098F1C8 /* imageIO */ = {
 			isa = PBXGroup;
 			children = (
+				A773F6871CE9D6710098F1C8 /* ImageIO.h */,
+				A773F6881CE9D6710098F1C8 /* ImageIO.m */,
 				A773F67F1CE975DA0098F1C8 /* ImageIOViewController.h */,
 				A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */,
 				A773F6821CE9A3220098F1C8 /* ImageSourceViewController.h */,
@@ -344,8 +352,6 @@
 				A773F6911CEC007D0098F1C8 /* IncrementalImageSourceViewController.m */,
 				A773F68A1CE9D6B60098F1C8 /* ImageDestinationViewController.h */,
 				A773F68B1CE9D6B60098F1C8 /* ImageDestinationViewController.m */,
-				A773F6871CE9D6710098F1C8 /* ImageIO.h */,
-				A773F6881CE9D6710098F1C8 /* ImageIO.m */,
 			);
 			path = imageIO;
 			sourceTree = "<group>";
@@ -357,6 +363,10 @@
 				A773F6961CEC50DF0098F1C8 /* CoreImageViewController.m */,
 				A773F6981CEC51D60098F1C8 /* BuiltinFilterViewController.h */,
 				A773F6991CEC51D60098F1C8 /* BuiltinFilterViewController.m */,
+				A75723751CED51AC0065AA2E /* BuiltinFilterChainViewController.h */,
+				A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */,
+				A757237B1CED54560065AA2E /* FaceDetectorViewController.h */,
+				A757237C1CED54560065AA2E /* FaceDetectorViewController.m */,
 			);
 			path = coreImage;
 			sourceTree = "<group>";
@@ -701,10 +711,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */,
 				A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */,
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
 				A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */,
+				A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */,
 				A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */,
 				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,

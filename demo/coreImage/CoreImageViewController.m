@@ -8,14 +8,20 @@
 
 #import "CoreImageViewController.h"
 #import "BuiltinFilterViewController.h"
+#import "BuiltinFilterChainViewController.h"
+#import "FaceDetectorViewController.h"
 
 @implementation CoreImageViewController
 
 - (void)initView {
-    self.arrayTitle = @[@"builtin filter"];
-    self.arrayClass = @[[BuiltinFilterViewController class]];
+    self.arrayTitle = @[@"builtin filter",
+                        @"builtin chained filter",
+                        @"face detector"];
+    self.arrayClass = @[[BuiltinFilterViewController class],
+                        [BuiltinFilterChainViewController class],
+                        [FaceDetectorViewController class]];
     
-    [self logAllFilters];
+//    [self logAllFilters];
 }
 
 - (void)logAllFilters {

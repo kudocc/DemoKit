@@ -23,23 +23,42 @@
 }
 
 - (void)presentImagePickerWithBlock:(ImagePickerInfoCallback)callback viewController:(UIViewController *)vc {
+    [self presentImagePickerWithBlock:callback flag:ImagePickerFlagAll viewController:vc];
+}
+
+- (void)presentImagePickerWithBlock:(ImagePickerInfoCallback)callback
+                               flag:(ImagePickerFlag)flag
+                     viewController:(UIViewController *)vc {
     _callback = callback;
     
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"选择" message:@"" preferredStyle:UIAlertControllerStyleActionSheet];
     
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+    if (((flag & ImagePickerFlagAlbum) && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) ||
+        ((flag & ImagePickerFlagPhoto) && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary])) {
         // check 相册
         ALAuthorizationStatus al_status = [ALAssetsLibrary authorizationStatus];
         if (al_status == ALAuthorizationStatusAuthorized ||
             al_status == ALAuthorizationStatusNotDetermined) {
-            UIAlertAction *actionPhoto = [UIAlertAction actionWithTitle:@"相册" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-                imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                imagePicker.delegate = self;
-                [vc presentViewController:imagePicker animated:YES completion:nil];
-            }];
-            
-            [alertController addAction:actionPhoto];
+            if ((flag & ImagePickerFlagAlbum) && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeSavedPhotosAlbum]) {
+                UIAlertAction *actionPhoto = [UIAlertAction actionWithTitle:@"相册-PhotosAlbum" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypeSavedPhotosAlbum;
+                    imagePicker.delegate = self;
+                    [vc presentViewController:imagePicker animated:YES completion:nil];
+                }];
+                
+                [alertController addAction:actionPhoto];
+            }
+            if ((flag & ImagePickerFlagPhoto) && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {
+                UIAlertAction *actionPhoto = [UIAlertAction actionWithTitle:@"相册-PhotoLibrary" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                    imagePicker.delegate = self;
+                    [vc presentViewController:imagePicker animated:YES completion:nil];
+                }];
+                
+                [alertController addAction:actionPhoto];
+            }
         } else {
             // ALAuthorizationStatusRestricted || ALAuthorizationStatusDenied
             // can't access
@@ -53,19 +72,35 @@
         }
     }
     
-    if ([UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
+    if (((flag & ImagePickerFlagCameraFront) || (flag & ImagePickerFlagCameraRear)) &&
+        [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypeCamera]) {
         // check 相机
         AVAuthorizationStatus status = [AVCaptureDevice authorizationStatusForMediaType:AVMediaTypeVideo];
         if (status == AVAuthorizationStatusAuthorized ||
             status == AVAuthorizationStatusNotDetermined) {
-            UIAlertAction *actionCamera = [UIAlertAction actionWithTitle:@"相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-                UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
-                imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                imagePicker.delegate = self;
-                [vc presentViewController:imagePicker animated:YES completion:nil];
-            }];
             
-            [alertController addAction:actionCamera];
+            if ((flag & ImagePickerFlagCameraRear) &&
+                [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceRear]) {
+                UIAlertAction *actionCamera = [UIAlertAction actionWithTitle:@"后置相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceRear;
+                    imagePicker.delegate = self;
+                    [vc presentViewController:imagePicker animated:YES completion:nil];
+                }];
+                [alertController addAction:actionCamera];
+            }
+            if ((flag & ImagePickerFlagCameraFront) &&
+                [UIImagePickerController isCameraDeviceAvailable:UIImagePickerControllerCameraDeviceFront]) {
+                UIAlertAction *actionCamera = [UIAlertAction actionWithTitle:@"前置相机" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                    UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    imagePicker.cameraDevice = UIImagePickerControllerCameraDeviceFront;
+                    imagePicker.delegate = self;
+                    [vc presentViewController:imagePicker animated:YES completion:nil];
+                }];
+                [alertController addAction:actionCamera];
+            }
         } else {
             // can't access
             if (status == AVAuthorizationStatusDenied) {
