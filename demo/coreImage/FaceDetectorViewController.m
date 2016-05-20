@@ -35,7 +35,6 @@
     
     UIImage *image = [UIImage imageNamed:@"face_detect"];
     [self handleImage:image];
-    
 }
 
 - (void)addImage {
@@ -74,9 +73,8 @@
     }
     
     CGFloat scale = [UIScreen mainScreen].scale;
-    CGAffineTransform transform = CGAffineTransformMakeScale(1/scale, 1/scale);
-    transform = CGAffineTransformScale(transform, 1, -1);
-    transform = CGAffineTransformTranslate(transform, 0, -scale * _imageView.height);
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _imageView.height);
+    transform = CGAffineTransformScale(transform, 1/scale, -1/scale);
     
     NSDictionary *opts = nil;
     if ([[ciImage properties] valueForKey:(__bridge id)kCGImagePropertyOrientation]) {
