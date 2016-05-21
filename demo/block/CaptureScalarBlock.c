@@ -110,43 +110,6 @@ struct __AtAutoreleasePool {
 
 __attribute__((visibility("default"))) __attribute__((availability(macosx,introduced=10_8)))
 
-#ifndef _REWRITER_typedef_NSXPCInterface
-#define _REWRITER_typedef_NSXPCInterface
-typedef struct objc_object NSXPCInterface;
-typedef struct {} _objc_exc_NSXPCInterface;
-#endif
-
-struct NSXPCInterface_IMPL {
-	struct NSObject_IMPL NSObject_IVARS;
-	Protocol *_protocol;
-	CFMutableDictionaryRef _methods2;
-	id _reserved1;
-};
-
-
-
-// + (NSXPCInterface *)interfaceWithProtocol:(Protocol *)protocol;
-
-
-// @property (assign) Protocol *protocol;
-
-
-
-// - (void)setClasses:(NSSet<Class> *)classes forSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-// - (NSSet<Class> *)classesForSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-
-
-// - (void)setInterface:(NSXPCInterface *)ifc forSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-// - (nullable NSXPCInterface *)interfaceForSelector:(SEL)sel argumentIndex:(NSUInteger)arg ofReply:(BOOL)ofReply;
-
-/* @end */
-
-
-
-
-
-__attribute__((visibility("default"))) __attribute__((availability(macosx,introduced=10_8)))
-
 #ifndef _REWRITER_typedef_NSXPCListenerEndpoint
 #define _REWRITER_typedef_NSXPCListenerEndpoint
 typedef struct objc_object NSXPCListenerEndpoint;
@@ -165,13 +128,20 @@ typedef void(*captureScalar)(void);
 
 captureScalar _block;
 
+struct __Block_byref_mutableA_0 {
+  void *__isa;
+__Block_byref_mutableA_0 *__forwarding;
+ int __flags;
+ int __size;
+ int mutableA;
+};
 
 struct __blockMethod_block_impl_0 {
   struct __block_impl impl;
   struct __blockMethod_block_desc_0* Desc;
   int a;
-  NSObject *o;
-  __blockMethod_block_impl_0(void *fp, struct __blockMethod_block_desc_0 *desc, int _a, NSObject *_o, int flags=0) : a(_a), o(_o) {
+  __Block_byref_mutableA_0 *mutableA; // by ref
+  __blockMethod_block_impl_0(void *fp, struct __blockMethod_block_desc_0 *desc, int _a, __Block_byref_mutableA_0 *_mutableA, int flags=0) : a(_a), mutableA(_mutableA->__forwarding) {
     impl.isa = &_NSConcreteStackBlock;
     impl.Flags = flags;
     impl.FuncPtr = fp;
@@ -179,16 +149,16 @@ struct __blockMethod_block_impl_0 {
   }
 };
 static void __blockMethod_block_func_0(struct __blockMethod_block_impl_0 *__cself) {
+  __Block_byref_mutableA_0 *mutableA = __cself->mutableA; // bound by ref
   int a = __cself->a; // bound by copy
-  NSObject *o = __cself->o; // bound by copy
 
         int b = a;
         ++b;
-        NSObject *oo = o;
+        (mutableA->__forwarding->mutableA) = 1024;
     }
-static void __blockMethod_block_copy_0(struct __blockMethod_block_impl_0*dst, struct __blockMethod_block_impl_0*src) {_Block_object_assign((void*)&dst->o, (void*)src->o, 3/*BLOCK_FIELD_IS_OBJECT*/);}
+static void __blockMethod_block_copy_0(struct __blockMethod_block_impl_0*dst, struct __blockMethod_block_impl_0*src) {_Block_object_assign((void*)&dst->mutableA, (void*)src->mutableA, 8/*BLOCK_FIELD_IS_BYREF*/);}
 
-static void __blockMethod_block_dispose_0(struct __blockMethod_block_impl_0*src) {_Block_object_dispose((void*)src->o, 3/*BLOCK_FIELD_IS_OBJECT*/);}
+static void __blockMethod_block_dispose_0(struct __blockMethod_block_impl_0*src) {_Block_object_dispose((void*)src->mutableA, 8/*BLOCK_FIELD_IS_BYREF*/);}
 
 static struct __blockMethod_block_desc_0 {
   size_t reserved;
@@ -198,8 +168,8 @@ static struct __blockMethod_block_desc_0 {
 } __blockMethod_block_desc_0_DATA = { 0, sizeof(struct __blockMethod_block_impl_0), __blockMethod_block_copy_0, __blockMethod_block_dispose_0};
 void blockMethod() {
     int a = 10;
-    NSObject *o = ((NSObject *(*)(id, SEL))(void *)objc_msgSend)((id)objc_getClass("NSObject"), sel_registerName("new"));
-    captureScalar block = ((void (*)())&__blockMethod_block_impl_0((void *)__blockMethod_block_func_0, &__blockMethod_block_desc_0_DATA, a, o, 570425344));
+    __attribute__((__blocks__(byref))) __Block_byref_mutableA_0 mutableA = {(void*)0,(__Block_byref_mutableA_0 *)&mutableA, 0, sizeof(__Block_byref_mutableA_0), 100};
+    captureScalar block = ((void (*)())&__blockMethod_block_impl_0((void *)__blockMethod_block_func_0, &__blockMethod_block_desc_0_DATA, a, (__Block_byref_mutableA_0 *)&mutableA, 570425344));
 
     ((id (*)(id, SEL))(void *)objc_msgSend)((id)block, sel_registerName("copy"));
 }

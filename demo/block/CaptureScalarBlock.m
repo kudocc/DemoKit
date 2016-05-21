@@ -14,11 +14,11 @@ captureScalar _block;
 
 void blockMethod() {
     int a = 10;
-    NSObject *o = [NSObject new];
+    __block int mutableA = 100;
     captureScalar block = ^() {
         int b = a;
         ++b;
-        NSObject *oo = o;
+        mutableA = 1024;
     };
     
     [block copy];
