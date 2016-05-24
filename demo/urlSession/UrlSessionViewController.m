@@ -13,10 +13,7 @@
 
 @implementation UrlSessionViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    
+- (void)initView {
     self.arrayTitle = @[@"Basic Authentication", @"HTTPS", @"Test download task"];
     self.arrayClass = @[[DataTaskBasicAuthViewController class],
                         [DataTaskHttpsServerAuthViewController class],

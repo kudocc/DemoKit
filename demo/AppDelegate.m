@@ -16,6 +16,7 @@
 #import "UrlSessionViewController.h"
 #import "AudioViewController.h"
 #import "WebViewController.h"
+#import "NetworkViewController.h"
 
 @interface AppDelegate ()
 
@@ -26,7 +27,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
-    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Image I/O", @"Core Image", @"URLSession", @"WebView & WebCache", @"Audio"];
+    vc.arrayTitle = @[@"Animation", @"Performance", @"Quartz 2D", @"Image I/O", @"Core Image", @"URLSession", @"WebView & WebCache", @"Audio", @"NetworkViewController"];
     vc.arrayClass = @[[AnimationViewController class],
                       [PerformanceViewController class],
                       [Quartz2DViewController class],
@@ -34,7 +35,8 @@
                       [CoreImageViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
-                      [AudioViewController class]];
+                      [AudioViewController class],
+                      [NetworkViewController class]];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
