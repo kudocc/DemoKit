@@ -61,6 +61,10 @@
     }
 }
 
+- (void)showRightBarButtonItemWithName:(NSString *)rightItemName {
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:rightItemName style:UIBarButtonItemStylePlain target:self action:@selector(rightBarButtonItemClick:)];
+}
+
 #pragma mark - show text tips
 
 - (MBProgressHUD *)hudText {
@@ -110,6 +114,10 @@
 }
 
 - (void)tapClick:(UITapGestureRecognizer *)gr {
+    
+}
+
+- (void)rightBarButtonItemClick:(UIBarButtonItem *)rightBarButtonItem {
     
 }
 

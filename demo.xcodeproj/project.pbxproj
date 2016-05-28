@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		816012C200EDA8DE3D92ACBA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CF52941D03A8813262E9A7 /* libPods.a */; };
+		A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A70EC73D1CF585DC008C4254 /* ImageBlendViewController.m */; };
+		A7147EA61CF69A390090FCCB /* NSObject+CC_JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */; };
+		A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA81CF6FD450090FCCB /* ModelClass.m */; };
+		A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAC1CF7F0130090FCCB /* ModelViewController.m */; };
 		A734D11A1CF428D2008276C9 /* CCHttpSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C91CF2ACA9008D5924 /* CCHttpSessionManager.m */; };
 		A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11C1CF42BA9008276C9 /* NetworkViewController.m */; };
 		A734D1201CF42BCB008276C9 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11F1CF42BCB008276C9 /* HttpViewController.m */; };
@@ -100,11 +104,19 @@
 		A70E90C31CF2A902008D5924 /* CCHttpTaskGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCHttpTaskGroup.m; sourceTree = "<group>"; };
 		A70E90C81CF2ACA9008D5924 /* CCHttpSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCHttpSessionManager.h; sourceTree = "<group>"; };
 		A70E90C91CF2ACA9008D5924 /* CCHttpSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCHttpSessionManager.m; sourceTree = "<group>"; };
+		A70EC73C1CF585DC008C4254 /* ImageBlendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageBlendViewController.h; sourceTree = "<group>"; };
+		A70EC73D1CF585DC008C4254 /* ImageBlendViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageBlendViewController.m; sourceTree = "<group>"; };
 		A7127FA41CEE8C4F0023E4FB /* CaptureScalarBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureScalarBlock.m; sourceTree = "<group>"; };
 		A7127FA61CEE8D3B0023E4FB /* CaptureScalarBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CaptureScalarBlock.c; sourceTree = "<group>"; };
 		A7127FA91CEE90090023E4FB /* CaptureObjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureObjectBlock.m; sourceTree = "<group>"; };
 		A7127FAB1CEE90E30023E4FB /* CaptureObjectBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CaptureObjectBlock.c; sourceTree = "<group>"; };
 		A7127FAE1CEEA1A50023E4FB /* CaptureWeakObjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureWeakObjectBlock.m; sourceTree = "<group>"; };
+		A7147EA41CF69A390090FCCB /* NSObject+CC_JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+CC_JSON.h"; path = "model/NSObject+CC_JSON.h"; sourceTree = "<group>"; };
+		A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+CC_JSON.m"; path = "model/NSObject+CC_JSON.m"; sourceTree = "<group>"; };
+		A7147EA71CF6FD450090FCCB /* ModelClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelClass.h; path = model/ModelClass.h; sourceTree = "<group>"; };
+		A7147EA81CF6FD450090FCCB /* ModelClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelClass.m; path = model/ModelClass.m; sourceTree = "<group>"; };
+		A7147EAB1CF7F0130090FCCB /* ModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelViewController.h; sourceTree = "<group>"; };
+		A7147EAC1CF7F0130090FCCB /* ModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelViewController.m; sourceTree = "<group>"; };
 		A734D11B1CF42BA9008276C9 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkViewController.h; sourceTree = "<group>"; };
 		A734D11C1CF42BA9008276C9 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkViewController.m; sourceTree = "<group>"; };
 		A734D11E1CF42BCB008276C9 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
@@ -313,6 +325,26 @@
 			path = block;
 			sourceTree = "<group>";
 		};
+		A7147EA31CF699F90090FCCB /* model */ = {
+			isa = PBXGroup;
+			children = (
+				A7147EA41CF69A390090FCCB /* NSObject+CC_JSON.h */,
+				A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */,
+				A7147EA71CF6FD450090FCCB /* ModelClass.h */,
+				A7147EA81CF6FD450090FCCB /* ModelClass.m */,
+			);
+			name = model;
+			sourceTree = "<group>";
+		};
+		A7147EAA1CF7EFE00090FCCB /* model */ = {
+			isa = PBXGroup;
+			children = (
+				A7147EAB1CF7F0130090FCCB /* ModelViewController.h */,
+				A7147EAC1CF7F0130090FCCB /* ModelViewController.m */,
+			);
+			path = model;
+			sourceTree = "<group>";
+		};
 		A7583C311CE31BFB007558CB = {
 			isa = PBXGroup;
 			children = (
@@ -349,6 +381,7 @@
 				A785B0751CE32EF800A7686D /* webView */,
 				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A70E90BD1CF2A862008D5924 /* network */,
+				A7147EAA1CF7EFE00090FCCB /* model */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
 				A7583C461CE31BFB007558CB /* Main.storyboard */,
@@ -459,6 +492,8 @@
 				A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */,
 				A785B0901CE3355F00A7686D /* CoordinateViewController.h */,
 				A785B0911CE3355F00A7686D /* CoordinateViewController.m */,
+				A70EC73C1CF585DC008C4254 /* ImageBlendViewController.h */,
+				A70EC73D1CF585DC008C4254 /* ImageBlendViewController.m */,
 			);
 			path = quartz2D;
 			sourceTree = "<group>";
@@ -546,6 +581,7 @@
 		A7F5F0781CE31F7F0064AAB7 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				A7147EA31CF699F90090FCCB /* model */,
 				A7F5F0791CE31F7F0064AAB7 /* category */,
 				A7F5F07A1CE31F7F0064AAB7 /* subclass */,
 				A773F69B1CEC545D0098F1C8 /* other */,
@@ -806,8 +842,10 @@
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
+				A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */,
 				A773F69A1CEC51D60098F1C8 /* BuiltinFilterViewController.m in Sources */,
 				A7F5F0731CE31E420064AAB7 /* CAKeyframeViewController.m in Sources */,
+				A7147EA61CF69A390090FCCB /* NSObject+CC_JSON.m in Sources */,
 				A785B0921CE3355F00A7686D /* CoordinateViewController.m in Sources */,
 				A785B0831CE32EF800A7686D /* UIWebViewViewController.m in Sources */,
 				A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */,
@@ -819,12 +857,14 @@
 				A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */,
 				A785B0611CE32B5A00A7686D /* CornerRadiusView+WebCache.m in Sources */,
 				A785B0531CE3295D00A7686D /* TableViewPerformanceViewController.m in Sources */,
+				A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */,
 				A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,
 				A7583C421CE31BFB007558CB /* AppDelegate.m in Sources */,
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
 				A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */,
+				A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */,
 				A7F5F0741CE31E420064AAB7 /* CAShapeLayerTestViewController.m in Sources */,
 				A7583C3F1CE31BFB007558CB /* main.m in Sources */,
 				A734D1261CF42C0D008276C9 /* HttpChainedRequestsViewController.m in Sources */,
@@ -976,7 +1016,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = demo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -989,7 +1029,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = demo/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -11,6 +11,10 @@
 
 @implementation ImageMaskViewController
 
+- (void)dealloc {
+    NSLog(@"%@", @"dealloc");
+}
+
 - (NSString *)kc_description:(CGImageRef)imageRef {
     CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef);
     NSString *strAlphaInfo = @"";
@@ -111,10 +115,8 @@
     return labelImage;
 }
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
+- (void)initView {
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     _scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
     [self.view addSubview:_scrollView];
     
@@ -281,6 +283,32 @@
     }
     
     _scrollView.contentSize = CGSizeMake(ScreenWidth, y);
+    _scrollView.delegate = self;
+//    _scrollView.bounds = CGRectMake(0, 0, 100, 100);
+//    _scrollView.contentInset = UIEdgeInsetsMake(100, 100, 0, 0);
+    [self showRightBarButtonItemWithName:@"right"];
+}
+
+- (void)rightBarButtonItemClick:(UIBarButtonItem *)rightBarButtonItem {
+    
+    [self.navigationController popViewControllerAnimated:NO];
+    
+    // 对UIImageView应用bounds看不出效果...
+//    _imageViewResultMaskWithColor.bounds = CGRectMake(100, 100, _imageViewResultMaskWithColor.width, _imageViewResultMaskWithColor.height);
+    
+    // 对UIView可以看到效果
+    //self.view.bounds = CGRectMake(100, 100, self.view.width, self.view.height);
+    
+    // bounds不变，frame改变
+    //self.view.transform = CGAffineTransformMakeTranslation(100, 100);
+    //NSLog(@"%@, %@", NSStringFromCGRect(self.view.bounds), NSStringFromCGRect(self.view.frame));
+    // {{0, 0}, {375, 667}}, {{100, 100}, {375, 667}}
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    NSLog(@"%@, %@", NSStringFromCGPoint(scrollView.contentOffset), NSStringFromCGRect(scrollView.bounds));
 }
 
 @end

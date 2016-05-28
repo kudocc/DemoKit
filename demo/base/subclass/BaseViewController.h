@@ -24,6 +24,8 @@
 - (void)showLoadingMessage:(NSString *)message;
 - (void)hideLoadingMessage;
 
+- (void)showRightBarButtonItemWithName:(NSString *)rightItemName;
+
 @end
 
 @interface BaseViewController (need_override)
@@ -32,5 +34,7 @@
 - (void)initView;
 
 - (void)tapClick:(UITapGestureRecognizer *)gr;
+
+- (void)rightBarButtonItemClick:(UIBarButtonItem *)rightBarButtonItem;
 
 @end

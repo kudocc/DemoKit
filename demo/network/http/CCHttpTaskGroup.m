@@ -38,7 +38,6 @@
 - (id)init {
     self = [super init];
     if (self) {
-        _mutableArrayNextTasks = [NSMutableArray array];
         _dependencies = [NSMutableArray array];
         _post = YES;
     }
@@ -53,10 +52,7 @@
 }
 
 - (void)addDependencyTask:(CCHttpTask *)task {
-    // self依赖于task
     [_dependencies addObject:task];
-    // task->self有一条边，表示task完成后要检查self是否可以执行
-    [task.mutableArrayNextTasks addObject:self];
 }
 
 - (BOOL)ready {
@@ -81,13 +77,13 @@
     AFHTTPSessionManager *manager = [[CCHttpSessionManager sharedManager] sessionManagerForBaseURL:baseURL];
     
     if (_post) {
-        _dataTask = [manager POST:[_url absoluteString] parameters:_params success:^(NSURLSessionDataTask *task, id responseObject) {
+        _dataTask = [manager POST:[_url absoluteString] parameters:_params progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             [wself taskDidSuccess:responseObject];
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             [wself taskDidFailedWithError:error];
         }];
     } else {
-        _dataTask = [manager GET:[_url absoluteString] parameters:_params success:^(NSURLSessionDataTask *task, id responseObject) {
+        _dataTask = [manager GET:[_url absoluteString] parameters:_params progress:nil success:^(NSURLSessionDataTask *task, id responseObject) {
             [wself taskDidSuccess:responseObject];
         } failure:^(NSURLSessionDataTask *task, NSError *error) {
             [wself taskDidFailedWithError:error];
@@ -101,9 +97,6 @@
     
     NSHTTPURLResponse *response = (NSHTTPURLResponse *)self.dataTask.response;
     [self.delegate task:self didFinishWithResponseData:responseObject httpResponseStatus:(int)response.statusCode];
-    
-    // 移除边，防止retain cycle
-    [self.mutableArrayNextTasks removeAllObjects];
 }
 
 - (void)taskDidFailedWithError:(NSError *)error {
@@ -321,7 +314,7 @@
     }
 }
 
-// 检查是否存在环
+/// return YES if exits a cycle
 - (BOOL)dfs {
     [self cleanAndInitDFS];
     
@@ -337,7 +330,7 @@
     return hasCycle;
 }
 
-// YES:有环
+/// return YES if exits a cycle
 - (BOOL)dfs_visit:(NSString *)taskIdentifier insertIntoArray:(NSMutableArray *)mutableArray {
     // gray
     _color[taskIdentifier] = @1;

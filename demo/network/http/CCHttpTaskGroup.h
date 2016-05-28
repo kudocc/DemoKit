@@ -23,29 +23,35 @@
 @end
 
 
-/**
- 可以把task加到CCHttpTaskGroup里，也可以直接使用。
- 
- 如果直接使用CCHttpTask，`addDependencyTask:`将无效，并且要自己实现`CCHttpTaskDelegate`；
- */
 @interface CCHttpTask : NSObject <CCHttpTaskOperation>
 
+/// task name, used when debug
 @property (nonatomic, copy) NSString *taskName;
+
+/// task identifier, used to identify a task
 @property (nonatomic, readonly) NSString *taskIdentifier;
 
 @property (nonatomic, copy) NSURL *url;
 
+/// if post is YES, it is the parameters for contentType:application/x-www-form-urlencoded
+/// else it is composed as parameter part of the url
 @property (nonatomic, copy) NSDictionary *params;
 
-// default is YES
+/// default is YES
 @property (nonatomic, assign) BOOL post;
 
 @property (nonatomic, weak) id<CCHttpTaskDelegate> delegate;
 
 @property (nonatomic, readonly) NSArray<CCHttpTask*> *dependencies;
 
+/**
+ Add dependency task, so self will execute after the task finishs.
+ */
 - (void)addDependencyTask:(CCHttpTask *)task;
 
+/**
+ if you use this method to start the task, the dependency would be ignored.
+ */
 - (void)startTask;
 
 @end
@@ -76,7 +82,7 @@
 - (void)groupTaskWillStart:(CCHttpTaskGroup *)groupTask;
 - (void)groupTaskDidEnd:(CCHttpTaskGroup *)groupTask;
 
-// invoke just before the task starts, this is the last chance for you to modify its properties
+/// invoke just before the task starts, this is the last chance for you to modify its properties
 - (void)taskWillStart:(CCHttpTask *)task inGroup:(CCHttpTaskGroup *)groupTask;
 
 @end
