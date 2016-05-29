@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		816012C200EDA8DE3D92ACBA /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 07CF52941D03A8813262E9A7 /* libPods.a */; };
 		A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A70EC73D1CF585DC008C4254 /* ImageBlendViewController.m */; };
-		A7147EA61CF69A390090FCCB /* NSObject+CC_JSON.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */; };
+		A7147EA61CF69A390090FCCB /* NSObject+CCModel.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA51CF69A390090FCCB /* NSObject+CCModel.m */; };
 		A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA81CF6FD450090FCCB /* ModelClass.m */; };
 		A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAC1CF7F0130090FCCB /* ModelViewController.m */; };
 		A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAF1CF9C0E10090FCCB /* NSObject+CCKit.m */; };
@@ -114,8 +114,8 @@
 		A7127FA91CEE90090023E4FB /* CaptureObjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureObjectBlock.m; sourceTree = "<group>"; };
 		A7127FAB1CEE90E30023E4FB /* CaptureObjectBlock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = CaptureObjectBlock.c; sourceTree = "<group>"; };
 		A7127FAE1CEEA1A50023E4FB /* CaptureWeakObjectBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureWeakObjectBlock.m; sourceTree = "<group>"; };
-		A7147EA41CF69A390090FCCB /* NSObject+CC_JSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+CC_JSON.h"; path = "model/NSObject+CC_JSON.h"; sourceTree = "<group>"; };
-		A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+CC_JSON.m"; path = "model/NSObject+CC_JSON.m"; sourceTree = "<group>"; };
+		A7147EA41CF69A390090FCCB /* NSObject+CCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSObject+CCModel.h"; path = "model/NSObject+CCModel.h"; sourceTree = "<group>"; };
+		A7147EA51CF69A390090FCCB /* NSObject+CCModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSObject+CCModel.m"; path = "model/NSObject+CCModel.m"; sourceTree = "<group>"; };
 		A7147EA71CF6FD450090FCCB /* ModelClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ModelClass.h; path = model/ModelClass.h; sourceTree = "<group>"; };
 		A7147EA81CF6FD450090FCCB /* ModelClass.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ModelClass.m; path = model/ModelClass.m; sourceTree = "<group>"; };
 		A7147EAB1CF7F0130090FCCB /* ModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModelViewController.h; sourceTree = "<group>"; };
@@ -339,8 +339,8 @@
 			children = (
 				A7147EA71CF6FD450090FCCB /* ModelClass.h */,
 				A7147EA81CF6FD450090FCCB /* ModelClass.m */,
-				A7147EA41CF69A390090FCCB /* NSObject+CC_JSON.h */,
-				A7147EA51CF69A390090FCCB /* NSObject+CC_JSON.m */,
+				A7147EA41CF69A390090FCCB /* NSObject+CCModel.h */,
+				A7147EA51CF69A390090FCCB /* NSObject+CCModel.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -862,7 +862,7 @@
 				A7147EB61CF9D25E0090FCCB /* JsonObjectAndModelViewController.m in Sources */,
 				A773F69A1CEC51D60098F1C8 /* BuiltinFilterViewController.m in Sources */,
 				A7F5F0731CE31E420064AAB7 /* CAKeyframeViewController.m in Sources */,
-				A7147EA61CF69A390090FCCB /* NSObject+CC_JSON.m in Sources */,
+				A7147EA61CF69A390090FCCB /* NSObject+CCModel.m in Sources */,
 				A785B0921CE3355F00A7686D /* CoordinateViewController.m in Sources */,
 				A785B0831CE32EF800A7686D /* UIWebViewViewController.m in Sources */,
 				A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */,

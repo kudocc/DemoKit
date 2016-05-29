@@ -1,5 +1,5 @@
 //
-//  NSObject+CC_JSON.h
+//  NSObject+CCModel.h
 //  demo
 //
 //  Created by KudoCC on 16/5/26.
@@ -37,49 +37,49 @@
  ______________________________________________________________________________________
  */
 
-@interface NSObject (CCKit_JSON)
+@interface NSObject (CCModel)
 
 /// json must be NSDictionary or NSString or NSData
-+ (id)ccjson_modelWithJSON:(id)json;
++ (id)ccmodel_modelWithJSON:(id)json;
 
 /// model to json object
-- (NSDictionary *)ccjson_jsonObject;
+- (NSDictionary *)ccmodel_jsonObject;
 
 /// debug information
-- (NSString *)ccjson_debugDescription;
+- (NSString *)ccmodel_debugDescription;
 
 /// NSCopying
-- (id)ccjson_copyWithZone:(NSZone *)zone;
+- (id)ccmodel_copyWithZone:(NSZone *)zone;
 
 /// NSCoding
-- (id)ccjson_initWithCoder:(NSCoder *)coder;
-- (void)ccjson_encodeWithCoder:(NSCoder *)coder;
+- (id)ccmodel_initWithCoder:(NSCoder *)coder;
+- (void)ccmodel_encodeWithCoder:(NSCoder *)coder;
 
 @end
 
 
-@interface NSArray (CCKit_JSON)
+@interface NSArray (CCModel)
 
 /**
  Create a NSArray with json object
  @param json it must be NSArray or NSString or NSData
  @param typeObject describe the value type
  */
-+ (id)ccjson_arrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
++ (id)ccmodel_arrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
 
-- (NSArray *)ccjson_jsonObjectArrayWithValueType:(ContainerTypeObject *)typeObject;
+- (NSArray *)ccmodel_jsonObjectArrayWithValueType:(ContainerTypeObject *)typeObject;
 
 @end
 
 
-@interface NSDictionary (CCKit_JSON)
+@interface NSDictionary (CCModel)
 
 /// json must be NSDictionary or NSString or NSData
-+ (id)ccjson_dictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
-+ (id)ccjson_dictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
++ (id)ccmodel_dictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
++ (id)ccmodel_dictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
 
 
-- (NSDictionary *)ccjson_jsonObjectDictionaryWithValueType:(ContainerTypeObject *)typeObject;
-- (NSDictionary *)ccjson_jsonObjectDictionaryWithKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
+- (NSDictionary *)ccmodel_jsonObjectDictionaryWithValueType:(ContainerTypeObject *)typeObject;
+- (NSDictionary *)ccmodel_jsonObjectDictionaryWithKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
 
 @end
