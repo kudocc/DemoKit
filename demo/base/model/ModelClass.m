@@ -93,24 +93,28 @@ CCEncodingType CCEncodingPropertyType(CCEncodingType type) {
 }
 
 CCObjectType CCObjectTypeFromClass(Class classObj) {
-    if (classObj == [NSDecimalNumber class]) {
-        return CCObjectTypeNSDecimalNumber;
-    } else if (classObj == [NSNumber class]) {
-        return CCObjectTypeNSNumber;
+    if (classObj == [NSString class]) {
+        return CCObjectTypeNSString;
     } else if (classObj == [NSMutableString class]) {
         return CCObjectTypeNSMutableString;
-    } else if (classObj == [NSString class]) {
-        return CCObjectTypeNSString;
+    } else if (classObj == [NSNumber class]) {
+        return CCObjectTypeNSNumber;
+    } else if (classObj == [NSDecimalNumber class]) {
+        return CCObjectTypeNSDecimalNumber;
+    } else if (classObj == [NSNull class]) {
+        return CCObjectTypeNSNull;
+    } else if (classObj == [NSURL class]) {
+        return CCObjectTypeNSURL;
     } else if (classObj == [NSDate class]) {
         return CCObjectTypeNSDate;
-    } else if (classObj == [NSMutableArray class]) {
-        return CCObjectTypeNSMutableArray;
     } else if (classObj == [NSArray class]) {
         return CCObjectTypeNSArray;
-    } else if (classObj == [NSMutableDictionary class]) {
-        return CCObjectTypeNSMutableDictionary;
+    } else if (classObj == [NSMutableArray class]) {
+        return CCObjectTypeNSMutableArray;
     } else if (classObj == [NSDictionary class]) {
         return CCObjectTypeNSDictionary;
+    } else if (classObj == [NSMutableDictionary class]) {
+        return CCObjectTypeNSMutableDictionary;
     }
     return CCObjectTypeNotSupport;
 }
@@ -121,6 +125,11 @@ BOOL isNumberTypeOfEncodingType(CCEncodingType type) {
         return YES;
     }
     return NO;
+}
+
+BOOL isObjectTypeOfEncodingType(CCEncodingType type) {
+    type = CCEncodingTypeMask & type;
+    return type == CCEncodingTypeObject;
 }
 
 BOOL isContainerTypeForObjectType(CCObjectType type) {
@@ -141,6 +150,26 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
     return o;
 }
 
++ (id)arrayContainerTypeObjectWithValueClass:(Class)valueClass {
+    ContainerTypeObject *o = [[self alloc] initWithClass:[NSArray class]];
+    ContainerTypeObject *value = [[self alloc] initWithClass:valueClass];
+    o.valueClassObj = value;
+    return o;
+}
+
++ (id)dictionaryContainerTypeObjectWithValueClass:(Class)valueClass {
+    ContainerTypeObject *o = [[self alloc] initWithClass:[NSDictionary class]];
+    ContainerTypeObject *value = [[self alloc] initWithClass:valueClass];
+    o.valueClassObj = value;
+    return o;
+}
+
++ (id)dictionaryContainerTypeObjectWithKeyToValueClass:(NSDictionary<NSString *, ContainerTypeObject *> *)valueClass {
+    ContainerTypeObject *o = [[self alloc] initWithClass:[NSArray class]];
+    o.keyToClass = valueClass;
+    return o;
+}
+
 - (id)initWithClass:(Class)classObj {
     self = [super init];
     if (self) {
@@ -153,6 +182,8 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 
 @interface CCClass ()
 
+@property (nonatomic, readwrite) CCClass *superClass;
+@property (nonatomic, readwrite) BOOL isSystemClass;
 @property (nonatomic, readwrite) NSDictionary<NSString *, CCProperty *> *properties;
 
 @property (nonatomic, readwrite) NSDictionary<NSString *, NSString *> *propertyNameToJsonKeyMap;
@@ -162,12 +193,69 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 
 @implementation CCClass
 
-+ (CCClass *)classWithRuntime:(Class)classObject
-     propertyNameToJsonKeyMap:(NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap
-propertyNameToContainerTypeObjectMap:(NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap {
+// TODO:MARK 他们也用className作为key么
++ (CCClass *)classWithClassObject:(Class)classObject {
+    static dispatch_once_t onceToken;
+    static NSMutableDictionary *mutableDictionary = nil;
+    static dispatch_semaphore_t semaphore;
+    dispatch_once(&onceToken, ^{
+        mutableDictionary = [NSMutableDictionary dictionary];
+        semaphore = dispatch_semaphore_create(1);
+    });
+    dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+    NSString *className = NSStringFromClass(classObject);
+    CCClass *classInfo = mutableDictionary[className];
+    dispatch_semaphore_signal(semaphore);
+    
+    if (classInfo) {
+        return classInfo;
+    } else {
+        classInfo = [CCClass classWithRuntime:classObject];
+        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+        mutableDictionary[className] = classInfo;
+        dispatch_semaphore_signal(semaphore);
+        return classInfo;
+    }
+}
+
++ (BOOL)isSystemClass:(Class)classObject {
+    static NSSet *systemClassSets = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        systemClassSets = [NSSet setWithObjects:
+                           [NSString class],
+                           [NSMutableString class],
+                           [NSNumber class],
+                           [NSDecimalNumber class],
+                           [NSData class],
+                           [NSURL class],
+                           [NSDate class],
+                           [NSArray class],
+                           [NSMutableArray class],
+                           [NSDictionary class],
+                           [NSMutableDictionary class],
+                           nil];
+    });
+    return [systemClassSets containsObject:classObject];
+}
+
++ (CCClass *)classWithRuntime:(Class)classObject {
     CCClass *c = [[CCClass alloc] init];
-    c.propertyNameToJsonKeyMap = [propertyNameToJsonKeyMap copy];
-    c.propertyNameToContainerTypeObjectMap = [propertyNameToContainerTypeObjectMap copy];
+    c.isSystemClass = [self isSystemClass:classObject];
+    Class superClass = class_getSuperclass(classObject);
+    if (superClass != [NSObject class]) {
+        c.superClass = [CCClass classWithClassObject:superClass];
+    }
+    
+    if ([classObject conformsToProtocol:@protocol(CCModel)]) {
+        id<CCModel> ccmodel = (id<CCModel>)classObject;
+        if ([ccmodel respondsToSelector:@selector(propertyNameToJsonKeyMap)]) {
+            c.propertyNameToJsonKeyMap = [ccmodel propertyNameToJsonKeyMap];
+        }
+        if ([ccmodel respondsToSelector:@selector(propertyNameToContainerTypeObjectMap)]) {
+            c.propertyNameToContainerTypeObjectMap = [ccmodel propertyNameToContainerTypeObjectMap];
+        }
+    }
     
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     unsigned int propertyCount = 0;
@@ -176,7 +264,8 @@ propertyNameToContainerTypeObjectMap:(NSDictionary<NSString *, ContainerTypeObje
         for (unsigned int i = 0; i < propertyCount; ++i) {
             objc_property_t property = *(propertyList + i);
             CCProperty *propertyObj = [CCProperty propertyWithRuntime:property];
-            NSString *jsonKey = propertyNameToJsonKeyMap[propertyObj.propertyName];
+            CCObjectTypeFromClass(propertyObj.propertyClass);
+            NSString *jsonKey = c.propertyNameToJsonKeyMap[propertyObj.propertyName];
             if (jsonKey) {
                 propertyObj.jsonKey = jsonKey;
             } else {

@@ -6,10 +6,8 @@
 //  Copyright © 2016年 KudoCC. All rights reserved.
 //
 
-#import "BaseViewController.h"
+#import "HomeTableViewController.h"
 
-@interface ModelViewController : BaseViewController
-
-@property double dValue;
+@interface ModelViewController : HomeTableViewController
 
 @end

@@ -7,15 +7,142 @@
 //
 
 #import "NSObject+CC_JSON.h"
+#import "NSObject+CCKit.h"
 
-static char kClassInfo;
+@interface NSObject (CC_JSON_Util)
+
+/**
+ serialize is from JSON object to model or other Objective-C object
+ @param containerTypeObj if classObject indicates its a container, then containerTypeObj describes the container
+ */
+- (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
+
+/**
+ deserialize is from model or other Objective-C object to JSON object
+ @param containerTypeObj if classObject indicates its a container, then containerTypeObj describes the container
+ */
+- (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
+
+@end
+
+@implementation NSObject (CC_JSON_Util)
+
+- (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
+    CCObjectType type = CCObjectTypeFromClass(classObject);
+    
+    if (type == CCObjectTypeNSString ||
+        type == CCObjectTypeNSMutableString) {
+        // NSString/NSNumber
+        if ([jsonObj isKindOfClass:[NSNumber class]]) {
+            jsonObj = [jsonObj stringValue];
+        }
+        if ([jsonObj isKindOfClass:[NSString class]]) {
+            if (type == CCObjectTypeNSMutableString) {
+                return [jsonObj mutableCopy];
+            } else {
+                return jsonObj;
+            }
+        }
+    } else if (type == CCObjectTypeNSNumber) {
+        // support NSString / NSNumber
+        if ([jsonObj isKindOfClass:[NSString class]]) {
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            jsonObj = [f numberFromString:jsonObj];
+        }
+        if ([jsonObj isKindOfClass:[NSNumber class]]) {
+            return jsonObj;
+        }
+    } else if (type == CCObjectTypeNSDecimalNumber) {
+        if ([jsonObj isKindOfClass:[NSNumber class]]) {
+            jsonObj = [jsonObj stringValue];
+        }
+        if ([jsonObj isKindOfClass:[NSString class]]) {
+            jsonObj = [NSDecimalNumber decimalNumberWithString:jsonObj];
+        }
+        if ([jsonObj isKindOfClass:[NSDecimalNumber class]]) {
+            return jsonObj;
+        }
+    } else if (type == CCObjectTypeNSNull) {
+        return [NSNull null];
+    } else if (type == CCObjectTypeNSURL) {
+        if ([jsonObj isKindOfClass:[NSString class]]) {
+            return [NSURL URLWithString:jsonObj];
+        }
+    } else if (type == CCObjectTypeNSDate) {
+        // NSNumber/NSString, it should be a timestamp
+        if ([jsonObj isKindOfClass:[NSString class]] || [jsonObj isKindOfClass:[NSNumber class]]) {
+            double timestamp = [jsonObj doubleValue];
+            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
+            return date;
+        }
+    } else if (type == CCObjectTypeNSArray ||
+               type == CCObjectTypeNSMutableArray) {
+        NSParameterAssert(containerTypeObj.valueClassObj);
+        NSArray *array = [NSArray ccjson_arrayWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
+        if (type == CCObjectTypeNSMutableArray) {
+            return [array mutableCopy];
+        }
+        return array;
+    } else if (type == CCObjectTypeNSDictionary ||
+               type == CCObjectTypeNSMutableDictionary) {
+        NSDictionary *dict = nil;
+        if (containerTypeObj.keyToClass) {
+            dict = [NSDictionary ccjson_dictionaryWithJSON:jsonObj withKeyToValueType:containerTypeObj.keyToClass];
+        } else if (containerTypeObj.valueClassObj) {
+            dict = [NSDictionary ccjson_dictionaryWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
+        }
+        if (dict && type == CCObjectTypeNSMutableDictionary) {
+            return [dict mutableCopy];
+        }
+        return dict;
+    } else if ([jsonObj isKindOfClass:[NSDictionary class]]) {
+        // try to convert to class
+        return [classObject ccjson_modelWithJSON:jsonObj];
+    }
+    NSLog(@"%@, don't support the class:%@", NSStringFromSelector(_cmd), classObject);
+    return nil;
+}
+
+- (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
+    CCObjectType type = CCObjectTypeFromClass(classObject);
+    if (type == CCObjectTypeNSString ||
+        type == CCObjectTypeNSMutableString ||
+        type == CCObjectTypeNSDecimalNumber ||
+        type == CCObjectTypeNSNumber ||
+        type == CCObjectTypeNSNull) {
+        return obj;
+    } else if (type == CCObjectTypeNSURL) {
+        return [((NSURL *)obj) absoluteString];
+    } else if (type == CCObjectTypeNSDate) {
+        NSDate *date = obj;
+        return @([date timeIntervalSince1970]);
+    } else if (type == CCObjectTypeNSArray ||
+               type == CCObjectTypeNSMutableArray) {
+        NSParameterAssert(containerTypeObj.valueClassObj);
+        return [obj ccjson_jsonObjectArrayWithValueType:containerTypeObj.valueClassObj];
+    } else if (type == CCObjectTypeNSDictionary ||
+               type == CCObjectTypeNSMutableDictionary) {
+        if (containerTypeObj.keyToClass) {
+            return [obj ccjson_jsonObjectDictionaryWithKeyToValueType:containerTypeObj.keyToClass];
+        } else if (containerTypeObj.valueClassObj) {
+            return [obj ccjson_jsonObjectDictionaryWithValueType:containerTypeObj.valueClassObj];
+        }
+    } else {
+        // TODO: obj may be a model, may be not, if not, how to deal with??????
+        return [obj ccjson_jsonObject];
+    }
+    return nil;
+}
+
+@end
 
 @implementation NSObject (CC_JSON)
 
 - (NSString *)ccjson_debugDescription {
     NSMutableString *mutableString = [@"class begin\n" mutableCopy];
     [mutableString appendFormat:@"class name:%@\n", self.class];
-    CCClass *classInfo = [self getClassInfo];
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
     for (CCProperty *property in [classInfo.properties allValues]) {
         [mutableString appendFormat:@"%@ ", property.propertyName];
     }
@@ -24,20 +151,87 @@ static char kClassInfo;
 
 #pragma mark - NSCopying
 
-//- (id)ccjson_copyWithZone:(NSZone *)zone {
-//    self.class obj = [[self.class alloc] init];
-//    
-//}
-
-#pragma mark - Class info
-
-- (void)setClassInfo:(CCClass *)class {
-    objc_setAssociatedObject(self, &kClassInfo, class, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+- (id)ccjson_copyWithZone:(NSZone *)zone {
+    id target = [[self.class alloc] init];
+    
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    while (classInfo) {
+        for (CCProperty *property in classInfo.properties) {
+            if (!property.setter || !property.getterName) {
+                continue;
+            }
+            
+            if (isNumberTypeOfEncodingType(property.encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                if (number) {
+                    [target setNumberProperty:property withJsonObj:number];
+                }
+            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
+                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
+                id copyObj = nil;
+                if (property.objectType == CCObjectTypeNSMutableString ||
+                    property.objectType == CCObjectTypeNSMutableArray ||
+                    property.objectType == CCObjectTypeNSMutableDictionary) {
+                    copyObj = [obj mutableCopy];
+                } else {
+                    copyObj = [obj copy];
+                }
+                if (copyObj) {
+                    ((void (*)(id, SEL, id))objc_msgSend)(target, property.setter, copyObj);
+                }
+            }
+        }
+        
+        classInfo = classInfo.superClass;
+    }
+    return target;
 }
 
-- (CCClass *)getClassInfo {
-    CCClass *obj = objc_getAssociatedObject(self, &kClassInfo);
-    return obj;
+#pragma mar - NSCoding
+
+- (id)ccjson_initWithCoder:(NSCoder *)coder {
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.getter || !property.setter) continue;
+            
+            if (isNumberTypeOfEncodingType(property.encodingType)) {
+                id number = [coder decodeObjectForKey:property.propertyName];
+                if (number) {
+                    [self setNumberProperty:property withJsonObj:number];
+                }
+            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
+                id obj = [coder decodeObjectForKey:property.propertyName];
+                ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, obj);
+            }
+        }
+        
+        classInfo = classInfo.superClass;
+    }
+    return self;
+}
+
+- (void)ccjson_encodeWithCoder:(NSCoder *)coder {
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.getter || !property.setter) continue;
+            
+            if (isNumberTypeOfEncodingType(property.encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                if (number) {
+                    [coder encodeObject:number forKey:property.propertyName];
+                }
+            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
+                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
+                if (obj) {
+                    [coder encodeObject:obj forKey:property.propertyName];
+                }
+            }
+        }
+        
+        classInfo = classInfo.superClass;
+    }
 }
 
 #pragma mark - init
@@ -69,87 +263,71 @@ static char kClassInfo;
 
 - (id)initWithJSONDictionary:(NSDictionary *)jsonDictionary {
     self = [self init];
-    if (self) {
-        static dispatch_once_t onceToken;
-        static NSMutableDictionary *mutableDictionary = nil;
-        static dispatch_semaphore_t semaphore;
-        dispatch_once(&onceToken, ^{
-            mutableDictionary = [NSMutableDictionary dictionary];
-            semaphore = dispatch_semaphore_create(1);
-        });
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        NSString *className = NSStringFromClass(self.class);
-        CCClass *classInfo = mutableDictionary[className];
-        dispatch_semaphore_signal(semaphore);
-        
-        if (classInfo) {
-            [self setClassInfo:classInfo];
-        } else {
-            NSDictionary *mapPropertyNameToJsonKey = nil;
-            NSDictionary *mapPropertyNameToContainerTypeObject = nil;
-            if ([self conformsToProtocol:@protocol(CCModel)]) {
-                id<CCModel> ccmodel = (id<CCModel>)self;
-                if ([ccmodel respondsToSelector:@selector(propertyNameToJsonKeyMap)]) {
-                    mapPropertyNameToJsonKey = [ccmodel propertyNameToJsonKeyMap];
-                }
-                if ([ccmodel respondsToSelector:@selector(propertyNameToContainerTypeObjectMap)]) {
-                    mapPropertyNameToContainerTypeObject = [ccmodel propertyNameToContainerTypeObjectMap];
+    if (!self) return nil;
+    
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.setter || !property.getter) {
+                continue;
+            }
+            id jsonObj = jsonDictionary[property.jsonKey];
+            if (!jsonObj) continue;
+            
+            CCEncodingType encodingType = property.encodingType;
+            if (isNumberTypeOfEncodingType(encodingType)) {
+                [self setNumberProperty:property withJsonObj:jsonObj];
+            } else if (isObjectTypeOfEncodingType(encodingType)) {
+                if (isContainerTypeForObjectType(property.objectType)) {
+                    ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
+                    NSAssert(containerTypeObject, @"container need description");
+                    if (!containerTypeObject) continue;
+                    [self setContainerProperty:property withJsonObj:jsonObj containerTypeObject:containerTypeObject];
+                } else {
+                    [self setObjectProperty:property withJsonObj:jsonObj];
                 }
             }
-            
-            classInfo = [CCClass classWithRuntime:self.class
-                         propertyNameToJsonKeyMap:mapPropertyNameToJsonKey
-             propertyNameToContainerTypeObjectMap:mapPropertyNameToContainerTypeObject];
-            
-            [self setClassInfo:classInfo];
-            
-            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-            mutableDictionary[className] = classInfo;
-            dispatch_semaphore_signal(semaphore);
         }
         
-        [self setPropertyWithJsonDictionary:jsonDictionary];
+        classInfo = classInfo.superClass;
     }
     return self;
 }
 
-- (void)setPropertyWithJsonDictionary:(NSDictionary *)jsonDictionary {
-    CCClass *classInfo = [self getClassInfo];
-    for (CCProperty *property in [classInfo.properties allValues]) {
-        if (!property.setter || ![self respondsToSelector:property.setter]) {
-            continue;
-        }
-        id jsonObj = jsonDictionary[property.jsonKey];
-        if (!jsonObj) continue;
-        
-        CCEncodingType encodingType = property.encodingType;
-        if (isNumberTypeOfEncodingType(encodingType)) {
-            [self setNumberProperty:property withJsonObj:jsonObj];
-        } else if ((encodingType & CCEncodingTypeMask) == CCEncodingTypeObject) {
-            [self setObjectProperty:property withJsonObj:jsonObj];
-        }
-    }
-}
-
 - (NSDictionary *)ccjson_jsonObject {
-    CCClass *classInfo = [self getClassInfo];
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
-    for (CCProperty *property in [classInfo.properties allValues]) {
-        if (!property.getter || ![self respondsToSelector:property.getter]) {
-            continue;
-        }
-        CCEncodingType encodingType = property.encodingType;
-        if (isNumberTypeOfEncodingType(encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
-            if (number) {
-                mutableDictionary[property.jsonKey] = number;
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.getter || !property.setter) {
+                continue;
             }
-        } else if ((encodingType & CCEncodingTypeMask) == CCEncodingTypeObject) {
-            id jsonObj = [self getObjectProperty:property];
-            if (jsonObj) {
-                mutableDictionary[property.jsonKey] = jsonObj;
+            CCEncodingType encodingType = property.encodingType;
+            if (isNumberTypeOfEncodingType(encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                if (number) {
+                    mutableDictionary[property.jsonKey] = number;
+                }
+            } else if (isObjectTypeOfEncodingType(encodingType)) {
+                if (isContainerTypeForObjectType(property.objectType)) {
+                    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+                    ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
+                    NSAssert(containerTypeObject, @"container need description");
+                    if (!containerTypeObject) continue;
+                    id jsonObj = [self getContainerProperty:property withContainerTypeObject:containerTypeObject];
+                    if (jsonObj) {
+                        mutableDictionary[property.jsonKey] = jsonObj;
+                    }
+                } else {
+                    id jsonObj = [self getObjectProperty:property];
+                    if (jsonObj) {
+                        mutableDictionary[property.jsonKey] = jsonObj;
+                    }
+                }
             }
         }
+        
+        classInfo = classInfo.superClass;
     }
     return [mutableDictionary copy];
 }
@@ -189,170 +367,84 @@ static char kClassInfo;
 }
 
 - (id)getObjectProperty:(CCProperty *)property {
-    CCClass *classInfo = [self getClassInfo];
-    ContainerTypeObject *containerTypeObject = nil;
-    if (isContainerTypeForObjectType(property.objectType)) {
-        containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
-        NSAssert(containerTypeObject, @"container need description");
-        if (!containerTypeObject) return nil;
-    }
     id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
-    return [self jsonObjectFromProperty:obj fromClass:property.propertyClass withContainerTypeObject:containerTypeObject];
+    return [self deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:nil];
+}
+
+- (id)getContainerProperty:(CCProperty *)property withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
+    id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
+    return [self deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:containerTypeObj];
 }
 
 - (void)setNumberProperty:(CCProperty *)property withJsonObj:(id)jsonObj {
-    // jsonObj can be NSString/NSNumber
-    if ([jsonObj isKindOfClass:[NSString class]]) {
+    // support NSString/NSNumber/NSNull
+    if (jsonObj == [NSNull null]) {
+        jsonObj = @0;
+    } else if ([jsonObj isKindOfClass:[NSString class]]) {
         NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
         f.numberStyle = NSNumberFormatterDecimalStyle;
         jsonObj = [f numberFromString:jsonObj];
     }
-    if ([jsonObj isKindOfClass:[NSNumber class]]) {
-        switch (property.encodingType & CCEncodingTypeMask) {
-            case CCEncodingTypeChar:
-                ((void (*)(id, SEL, char))objc_msgSend)(self, property.setter, [jsonObj charValue]);
-                break;
-            case CCEncodingTypeUnsignedChar:
-                ((void (*)(id, SEL, unsigned char))objc_msgSend)(self, property.setter, [jsonObj unsignedCharValue]);
-                break;
-            case CCEncodingTypeInt:
-                ((void (*)(id, SEL, int))objc_msgSend)(self, property.setter, [jsonObj intValue]);
-                break;
-            case CCEncodingTypeUnsignedInt:
-                ((void (*)(id, SEL, unsigned int))objc_msgSend)(self, property.setter, [jsonObj unsignedIntValue]);
-                break;
-            case CCEncodingTypeShort:
-                ((void (*)(id, SEL, short))objc_msgSend)(self, property.setter, [jsonObj shortValue]);
-                break;
-            case CCEncodingTypeUnsignedShort:
-                ((void (*)(id, SEL, unsigned short))objc_msgSend)(self, property.setter, [jsonObj unsignedShortValue]);
-                break;
-            case CCEncodingTypeLong:
-                ((void (*)(id, SEL, long))objc_msgSend)(self, property.setter, [jsonObj longValue]);
-                break;
-            case CCEncodingTypeUnsignedLong:
-                ((void (*)(id, SEL, unsigned long))objc_msgSend)(self, property.setter, [jsonObj unsignedLongValue]);
-                break;
-            case CCEncodingTypeLongLong:
-                ((void (*)(id, SEL, long long))objc_msgSend)(self, property.setter, [jsonObj longLongValue]);
-                break;
-            case CCEncodingTypeUnsignedLongLong:
-                ((void (*)(id, SEL, unsigned long long))objc_msgSend)(self, property.setter, [jsonObj unsignedLongLongValue]);
-                break;
-            case CCEncodingTypeFloat:
-                ((void (*)(id, SEL, float))objc_msgSend)(self, property.setter, [jsonObj floatValue]);
-                break;
-            case CCEncodingTypeDouble:
-                ((void (*)(id, SEL, double))objc_msgSend)(self, property.setter, [jsonObj doubleValue]);
-                break;
-            case CCEncodingTypeBool:
-                ((void (*)(id, SEL, bool))objc_msgSend)(self, property.setter, [jsonObj boolValue]);
-                break;
-            default:
-                break;
-        }
+    
+    if (![jsonObj isKindOfClass:[NSNumber class]]) return;
+    
+    switch (property.encodingType & CCEncodingTypeMask) {
+        case CCEncodingTypeChar:
+            ((void (*)(id, SEL, char))objc_msgSend)(self, property.setter, [jsonObj charValue]);
+            break;
+        case CCEncodingTypeUnsignedChar:
+            ((void (*)(id, SEL, unsigned char))objc_msgSend)(self, property.setter, [jsonObj unsignedCharValue]);
+            break;
+        case CCEncodingTypeInt:
+            ((void (*)(id, SEL, int))objc_msgSend)(self, property.setter, [jsonObj intValue]);
+            break;
+        case CCEncodingTypeUnsignedInt:
+            ((void (*)(id, SEL, unsigned int))objc_msgSend)(self, property.setter, [jsonObj unsignedIntValue]);
+            break;
+        case CCEncodingTypeShort:
+            ((void (*)(id, SEL, short))objc_msgSend)(self, property.setter, [jsonObj shortValue]);
+            break;
+        case CCEncodingTypeUnsignedShort:
+            ((void (*)(id, SEL, unsigned short))objc_msgSend)(self, property.setter, [jsonObj unsignedShortValue]);
+            break;
+        case CCEncodingTypeLong:
+            ((void (*)(id, SEL, long))objc_msgSend)(self, property.setter, [jsonObj longValue]);
+            break;
+        case CCEncodingTypeUnsignedLong:
+            ((void (*)(id, SEL, unsigned long))objc_msgSend)(self, property.setter, [jsonObj unsignedLongValue]);
+            break;
+        case CCEncodingTypeLongLong:
+            ((void (*)(id, SEL, long long))objc_msgSend)(self, property.setter, [jsonObj longLongValue]);
+            break;
+        case CCEncodingTypeUnsignedLongLong:
+            ((void (*)(id, SEL, unsigned long long))objc_msgSend)(self, property.setter, [jsonObj unsignedLongLongValue]);
+            break;
+        case CCEncodingTypeFloat:
+            ((void (*)(id, SEL, float))objc_msgSend)(self, property.setter, [jsonObj floatValue]);
+            break;
+        case CCEncodingTypeDouble:
+            ((void (*)(id, SEL, double))objc_msgSend)(self, property.setter, [jsonObj doubleValue]);
+            break;
+        case CCEncodingTypeBool:
+            ((void (*)(id, SEL, bool))objc_msgSend)(self, property.setter, [jsonObj boolValue]);
+            break;
+        default:
+            break;
     }
 }
 
 - (void)setObjectProperty:(CCProperty *)property withJsonObj:(id)jsonObj {
-    CCClass *classInfo = [self getClassInfo];
-    ContainerTypeObject *containerTypeObject = nil;
-    if (isContainerTypeForObjectType(property.objectType)) {
-        containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
-        NSAssert(containerTypeObject, @"container need description");
-        if (!containerTypeObject) return;
-    }
-    
-    jsonObj = [self convertJsonObj:jsonObj toClass:property.propertyClass withContainerTypeObject:containerTypeObject];
-    if (jsonObj) {
-        ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, jsonObj);
+    id obj = [self serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:nil];
+    if (obj) {
+        ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, obj);
     }
 }
 
-#pragma mark - utility
-
-// NOTE:if type indicates its a container, then containerTypeObj describes the container, this is very important!!!!!
-- (id)convertJsonObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
-    CCObjectType type = CCObjectTypeFromClass(classObject);
-    if (type == CCObjectTypeNSDate) {
-        // NSNumber/NSString, it should be a timestamp
-        if ([jsonObj isKindOfClass:[NSString class]] || [jsonObj isKindOfClass:[NSNumber class]]) {
-            double timestamp = [jsonObj doubleValue];
-            NSDate *date = [NSDate dateWithTimeIntervalSince1970:timestamp];
-            return date;
-        }
-    } else if (type == CCObjectTypeNSDecimalNumber) {
-        if ([jsonObj isKindOfClass:[NSNumber class]]) {
-            jsonObj = [jsonObj stringValue];
-        }
-        if ([jsonObj isKindOfClass:[NSString class]]) {
-            jsonObj = [NSDecimalNumber decimalNumberWithString:jsonObj];
-        }
-        if ([jsonObj isKindOfClass:[NSDecimalNumber class]]) {
-            return jsonObj;
-        }
-    } else if (type == CCObjectTypeNSNumber) {
-        // support NSString / NSNumber
-        if ([jsonObj isKindOfClass:[NSString class]]) {
-            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-            f.numberStyle = NSNumberFormatterDecimalStyle;
-            jsonObj = [f numberFromString:jsonObj];
-        }
-        if ([jsonObj isKindOfClass:[NSNumber class]]) {
-            return jsonObj;
-        }
-    } else if (type == CCObjectTypeNSString) {
-        // NSString / NSNumber
-        if ([jsonObj isKindOfClass:[NSNumber class]]) {
-            jsonObj = [jsonObj stringValue];
-        }
-        if ([jsonObj isKindOfClass:[NSString class]]) {
-            return jsonObj;
-        }
-    } else if (type == CCObjectTypeNSArray) {
-        NSParameterAssert(containerTypeObj.valueClassObj);
-        NSArray *array = [NSArray ccjson_arrayWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
-        return array;
-    } else if (type == CCObjectTypeNSDictionary) {
-        if (containerTypeObj.keyToClass) {
-            NSDictionary *dict = [NSDictionary ccjson_dictionaryWithJSON:jsonObj withKeyToValueType:containerTypeObj.keyToClass];
-            return dict;
-        } else if (containerTypeObj.valueClassObj) {
-            NSDictionary *dict = [NSDictionary ccjson_dictionaryWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
-            return dict;
-        }
-    } else if ([jsonObj isKindOfClass:[NSDictionary class]]) {
-        // try to convert to class
-        return [classObject ccjson_modelWithJSON:jsonObj];
+- (void)setContainerProperty:(CCProperty *)property withJsonObj:(id)jsonObj containerTypeObject:(ContainerTypeObject *)containerTypeObj {
+    id obj = [self serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:containerTypeObj];
+    if (obj) {
+        ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, obj);
     }
-    return nil;
-}
-
-- (id)jsonObjectFromProperty:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
-    CCObjectType type = CCObjectTypeFromClass(classObject);
-    if (type == CCObjectTypeNSDate) {
-        // from NSDate to NSNumber
-        NSDate *date = obj;
-        return @([date timeIntervalSince1970]);
-    } else if (type == CCObjectTypeNSDecimalNumber ||
-               type == CCObjectTypeNSNumber) {
-        return obj;
-    } else if (type == CCObjectTypeNSString) {
-        return obj;
-    } else if (type == CCObjectTypeNSArray) {
-        NSParameterAssert(containerTypeObj.valueClassObj);
-        return [obj ccjson_jsonObjectArrayWithValueType:containerTypeObj.valueClassObj];
-    } else if (type == CCObjectTypeNSDictionary) {
-        if (containerTypeObj.keyToClass) {
-            return [obj ccjson_jsonObjectDictionaryWithKeyToValueType:containerTypeObj.keyToClass];
-        } else if (containerTypeObj.valueClassObj) {
-            return [obj ccjson_jsonObjectDictionaryWithValueType:containerTypeObj.valueClassObj];
-        }
-    } else {
-        // TODO: obj may be a model, may be not, if not, how to deal with??????
-        return [obj ccjson_jsonObject];
-    }
-    return nil;
 }
 
 @end
@@ -383,7 +475,7 @@ static char kClassInfo;
 + (id)ccjson_arrayWithJSONArray:(NSArray *)jsonArray withValueType:(ContainerTypeObject *)typeObject {
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id json in jsonArray) {
-        id obj = [self convertJsonObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [self serializeJSONObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
         [mutableArray addObject:obj];
     }
     return [mutableArray copy];
@@ -392,7 +484,7 @@ static char kClassInfo;
 - (NSArray *)ccjson_jsonObjectArrayWithValueType:(ContainerTypeObject *)typeObject {
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id obj in self) {
-        id jsonObj = [self jsonObjectFromProperty:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         [mutableArray addObject:jsonObj];
     }
     return [mutableArray copy];
@@ -430,7 +522,7 @@ static char kClassInfo;
     }
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull jsonObj, BOOL * _Nonnull stop) {
-        id obj = [self convertJsonObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [self serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (obj) {
             mutableDictionary[key] = obj;
         }
@@ -466,7 +558,7 @@ static char kClassInfo;
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull jsonObj, BOOL * _Nonnull stop) {
         ContainerTypeObject *typeObject = keyToValueType[key];
-        id obj = [self convertJsonObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [self serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (obj) {
             mutableDictionary[key] = obj;
         }
@@ -483,7 +575,7 @@ static char kClassInfo;
     }
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [self enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        id jsonObj = [self jsonObjectFromProperty:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (jsonObj) {
             mutableDictionary[key] = jsonObj;
         }
@@ -499,7 +591,7 @@ static char kClassInfo;
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [self enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         ContainerTypeObject *typeObject = keyToValueType[key];
-        id jsonObj = [self jsonObjectFromProperty:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (jsonObj) {
             mutableDictionary[key] = jsonObj;
         }

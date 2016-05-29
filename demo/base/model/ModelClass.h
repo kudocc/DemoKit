@@ -9,32 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <objc/runtime.h>
 
-/*
- c A char
- i An int
- s A short
- l A long, l is treated as a 32-bit quantity on 64-bit programs.
- q A long long
- C An unsigned char
- I An unsigned int
- S An unsigned short
- L An unsigned long
- Q An unsigned long long
- f A float
- d A double
- B A C++ bool or a C99 _Bool
- v A void
- * A character string (char *)
- @ An object (whether statically typed or typed id)
- # A class object (Class)
- : A method selector (SEL)
- [array type] An array
- {name=type...} A structure
- (name=type...) A union
- bnum A bit field of num bits
- ^type A pointer to type
- ? An unknown type (among other things, this code is used for function pointers)
- */
+// Type Encodings
+// https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Articles/ocrtTypeEncodings.html#//apple_ref/doc/uid/TP40008048-CH100-SW1
 typedef NS_OPTIONS(NSUInteger, CCEncodingType) {
     CCEncodingTypeMask = 0xff,
     CCEncodingTypeChar = 0,
@@ -74,18 +50,17 @@ typedef NS_OPTIONS(NSUInteger, CCEncodingType) {
 };
 
 typedef NS_ENUM(NSUInteger, CCObjectType) {
-    CCObjectTypeNSDate,
-    CCObjectTypeNSDecimalNumber,
-    CCObjectTypeNSNumber,
-    CCObjectTypeNSMutableString,
     CCObjectTypeNSString,
-    
-    
+    CCObjectTypeNSMutableString,
+    CCObjectTypeNSNumber,
+    CCObjectTypeNSDecimalNumber,
+    CCObjectTypeNSNull,
+    CCObjectTypeNSURL,
+    CCObjectTypeNSDate,
     CCObjectTypeNSArray,
     CCObjectTypeNSMutableArray,
     CCObjectTypeNSDictionary,
     CCObjectTypeNSMutableDictionary,
-    
     CCObjectTypeNotSupport,
 };
 
@@ -108,6 +83,10 @@ typedef NS_ENUM(NSUInteger, CCObjectType) {
 @property (nonatomic) NSDictionary<NSString *, ContainerTypeObject *> *keyToClass;
 
 + (id)containerTypeObjectWithClass:(Class)classObj;
++ (id)arrayContainerTypeObjectWithValueClass:(Class)valueClass;
++ (id)dictionaryContainerTypeObjectWithValueClass:(Class)valueClass;
++ (id)dictionaryContainerTypeObjectWithKeyToValueClass:(NSDictionary<NSString *, ContainerTypeObject *> *)valueClass;
+
 - (id)initWithClass:(Class)classObj;
 
 @end
@@ -117,10 +96,25 @@ extern CCEncodingType CCEncodingPropertyType(CCEncodingType type);
 extern CCObjectType CCObjectTypeFromClass(Class classObj);
 
 extern BOOL isNumberTypeOfEncodingType(CCEncodingType type);
+extern BOOL isObjectTypeOfEncodingType(CCEncodingType type);
 extern BOOL isContainerTypeForObjectType(CCObjectType type);
+
+
+@protocol CCModel <NSObject>
+@optional
+/// property name to json key
++ (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap;
+/// property name to container value type description
++ (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap;
+@end
 
 @class CCProperty;
 @interface CCClass : NSObject
+
+@property (nonatomic, readonly) CCClass *superClass;
+
+/// is the class a system class like NSString/NSNumber
+@property (nonatomic, readonly) BOOL isSystemClass;
 
 /// property key to CCProperty, not property name
 @property (nonatomic, readonly) NSDictionary<NSString *, CCProperty *> *properties;
@@ -131,9 +125,7 @@ extern BOOL isContainerTypeForObjectType(CCObjectType type);
 /// map from propertyName to ContainerTypeObject
 @property (nonatomic, readonly) NSDictionary<NSString *, ContainerTypeObject *> *propertyNameToContainerTypeObjectMap;
 
-+ (CCClass *)classWithRuntime:(Class)classObject
-     propertyNameToJsonKeyMap:(NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap
-propertyNameToContainerTypeObjectMap:(NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap;
++ (CCClass *)classWithClassObject:(Class)classObject;
 
 @end
 

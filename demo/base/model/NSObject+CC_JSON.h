@@ -11,6 +11,32 @@
 #import <objc/message.h>
 #import "ModelClass.h"
 
+/*
+ Apple says in NSJSONSerialization,
+ An object that may be converted to JSON must have the following properties:
+ 1. The top level object is an NSArray or NSDictionary.
+ 2. All objects are instances of NSString, NSNumber, NSArray, NSDictionary, or NSNull.
+ 3. All dictionary keys are instances of NSString.
+ 4. Numbers are not NaN or infinity.
+ 
+ So the model property type is limited, but I will try to support as many as I could
+ ______________________________________________________________________________________
+ property                   JSON object
+ ______________________________________________________________________________________
+ NSString               NSString/NSNumber,
+ NSMutableString
+ NSNumber               NSString/NSNumber,
+ NSDecimalNumber        NSString/NSNumber,
+ NSNull                 NSNull,
+ NSURL                  NSString with `URLWithString:`
+ NSDate                 NSNumber/NSString it's a timestamp value
+ NSArray
+ NSMutableArray
+ NSDictionary
+ NSMutableDictionary
+ ______________________________________________________________________________________
+ */
+
 @interface NSObject (CCKit_JSON)
 
 /// json must be NSDictionary or NSString or NSData
@@ -22,7 +48,12 @@
 /// debug information
 - (NSString *)ccjson_debugDescription;
 
-//- (id)ccjson_copyWithZone:(NSZone *)zone;
+/// NSCopying
+- (id)ccjson_copyWithZone:(NSZone *)zone;
+
+/// NSCoding
+- (id)ccjson_initWithCoder:(NSCoder *)coder;
+- (void)ccjson_encodeWithCoder:(NSCoder *)coder;
 
 @end
 
@@ -50,16 +81,5 @@
 
 - (NSDictionary *)ccjson_jsonObjectDictionaryWithValueType:(ContainerTypeObject *)typeObject;
 - (NSDictionary *)ccjson_jsonObjectDictionaryWithKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
-
-@end
-
-
-@protocol CCModel <NSObject>
-
-@optional
-// the key is property name
-- (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap;
-
-- (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap;
 
 @end
