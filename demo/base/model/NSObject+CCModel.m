@@ -129,7 +129,7 @@
         }
     } else {
         // TODO: obj may be a model, may be not, if not, how to deal with??????
-        return [obj ccmodel_jsonObject];
+        return [obj ccmodel_jsonObjectDictionary];
     }
     return nil;
 }
@@ -139,92 +139,83 @@
 @implementation NSObject (CCModel)
 
 - (NSString *)ccmodel_debugDescription {
-    NSMutableString *mutableString = [@"class begin\n" mutableCopy];
+    NSMutableString *mutableString = [@"" mutableCopy];
     [mutableString appendFormat:@"class name:%@\n", self.class];
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
     for (CCProperty *property in [classInfo.properties allValues]) {
-        [mutableString appendFormat:@"%@ ", property.propertyName];
+        [mutableString appendFormat:@"%@\n", property];
     }
     return mutableString;
 }
 
 #pragma mark - NSObject
 
-//- (BOOL)ccmodel_isEqualTo:(id)obj {
-//    if ([self class] != [obj class]) {
-//        return NO;
-//    }
-//    if (self == obj) {
-//        return YES;
-//    }
-//    CCClass *classInfo = [CCClass classWithClassObject:self.class];
-//    while (classInfo) {
-//        for (CCProperty *property in [classInfo.properties allValues]) {
-//            if (!property.setter || !property.getterName) {
-//                continue;
-//            }
-//            
-//            if (isNumberTypeOfEncodingType(property.encodingType)) {
-//                NSNumber *number = [self getNumberProperty:property];
-//                NSNumber *numberTarget = [obj getNumberProperty:property];
-//                if (number && numberTarget) {
-//                    if (![number isEqualToNumber:numberTarget]) {
-//                        return NO;
-//                    }
-//                } else if (number != numberTarget) {
-//                    return NO;
-//                }
-//            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
-//                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
-//                id objTarget = ((id (*)(id, SEL))objc_msgSend)(obj, property.getter);
-//                if (obj && objTarget) {
-//                    if (![obj isEqual:objTarget]) {
-//                        return NO;
-//                    }
-//                } else if (obj != objTarget) {
-//                    return NO;
-//                }
-//            }
-//        }
-//        classInfo = classInfo.superClass;
-//    }
-//    return YES;
-//}
-//
-//- (NSUInteger)hash {
-//    CCClass *classInfo = [CCClass classWithClassObject:self.class];
-//    while (classInfo) {
-//        for (CCProperty *property in [classInfo.properties allValues]) {
-//            if (!property.setter || !property.getterName) {
-//                continue;
-//            }
-//            
-//            if (isNumberTypeOfEncodingType(property.encodingType)) {
-//                NSNumber *number = [self getNumberProperty:property];
-//                NSNumber *numberTarget = [obj getNumberProperty:property];
-//                if (number && numberTarget) {
-//                    if (![number isEqualToNumber:numberTarget]) {
-//                        return NO;
-//                    }
-//                } else if (number != numberTarget) {
-//                    return NO;
-//                }
-//            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
-//                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
-//                id objTarget = ((id (*)(id, SEL))objc_msgSend)(obj, property.getter);
-//                if (obj && objTarget) {
-//                    if (![obj isEqual:objTarget]) {
-//                        return NO;
-//                    }
-//                } else if (obj != objTarget) {
-//                    return NO;
-//                }
-//            }
-//        }
-//        classInfo = classInfo.superClass;
-//    }
-//    return YES;
-//}
+- (BOOL)ccmodel_isEqual:(id)object {
+    if ([self class] != [object class]) return NO;
+    if (self == object) return YES;
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if ([classInfo.propertyNameCalculateHash count] == 0) return NO;
+    
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.setter || !property.getterName) {
+                continue;
+            }
+            
+            if (isNumberTypeOfEncodingType(property.encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                NSNumber *numberTarget = [object getNumberProperty:property];
+                if (number && numberTarget) {
+                    if (![number isEqualToNumber:numberTarget]) {
+                        return NO;
+                    }
+                } else if (number != numberTarget) {
+                    return NO;
+                }
+            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
+                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
+                id objTarget = ((id (*)(id, SEL))objc_msgSend)(object, property.getter);
+                if (obj && objTarget) {
+                    if (![obj isEqual:objTarget]) {
+                        return NO;
+                    }
+                } else if (obj != objTarget) {
+                    return NO;
+                }
+            }
+        }
+        classInfo = classInfo.superClass;
+    }
+    return YES;
+}
+
+- (NSUInteger)ccmodel_hash {
+    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if ([classInfo.propertyNameCalculateHash count] == 0) {
+        return (NSUInteger)(__bridge void *)self;
+    }
+    
+    NSUInteger hash = 0;
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.setter || !property.getterName) {
+                continue;
+            }
+            if (![classInfo.propertyNameCalculateHash containsObject:property.propertyName]) {
+                continue;
+            }
+            if (isNumberTypeOfEncodingType(property.encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                hash ^= [number hash];
+            } else if (isObjectTypeOfEncodingType(property.encodingType)) {
+                id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
+                hash ^= [obj hash];
+            }
+        }
+        classInfo = classInfo.superClass;
+    }
+    return hash;
+}
 
 #pragma mark - NSCopying
 
@@ -311,7 +302,7 @@
     }
 }
 
-#pragma mark - init
+#pragma mark - JSON object to Model
 
 + (id)ccmodel_modelWithJSON:(id)json {
     NSDictionary *dict = nil;
@@ -368,10 +359,20 @@
         
         classInfo = classInfo.superClass;
     }
+    
+    if ([self conformsToProtocol:@protocol(CCModel)]) {
+        id model = (id<CCModel>)self;
+        if ([model respondsToSelector:@selector(modelFinishConstructFromJSONObject:)]) {
+            [model modelFinishConstructFromJSONObject:jsonDictionary];
+        }
+    }
+    
     return self;
 }
 
-- (NSDictionary *)ccmodel_jsonObject {
+#pragma mark - Model To JSON object
+
+- (NSDictionary *)ccmodel_jsonObjectDictionary {
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     while (classInfo) {
@@ -406,7 +407,31 @@
         
         classInfo = classInfo.superClass;
     }
+    
+    if ([self conformsToProtocol:@protocol(CCModel)]) {
+        id model = (id<CCModel>)self;
+        if ([model respondsToSelector:@selector(JSONObjectFinishConstructFromModel:)]) {
+            [model JSONObjectFinishConstructFromModel:mutableDictionary];
+        }
+    }
+    
     return [mutableDictionary copy];
+}
+
+- (NSData *)ccmodel_jsonObjectData {
+    NSDictionary *dict = [self ccmodel_jsonObjectDictionary];
+    if (dict) {
+        return [NSJSONSerialization dataWithJSONObject:dict options:0 error:nil];
+    }
+    return nil;
+}
+
+- (NSString *)ccmodel_jsonObjectString {
+    NSData *data = [self ccmodel_jsonObjectData];
+    if (data) {
+        return [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    }
+    return nil;
 }
 
 - (NSNumber *)getNumberProperty:(CCProperty *)property {

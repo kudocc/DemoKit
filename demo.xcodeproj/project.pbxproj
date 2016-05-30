@@ -126,6 +126,7 @@
 		A7147EB21CF9D2040090FCCB /* NSCopyingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCopyingViewController.m; sourceTree = "<group>"; };
 		A7147EB41CF9D25E0090FCCB /* JsonObjectAndModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonObjectAndModelViewController.h; sourceTree = "<group>"; };
 		A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonObjectAndModelViewController.m; sourceTree = "<group>"; };
+		A7147EBD1CFC15E20090FCCB /* CCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCModel.h; path = model/CCModel.h; sourceTree = "<group>"; };
 		A734D11B1CF42BA9008276C9 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkViewController.h; sourceTree = "<group>"; };
 		A734D11C1CF42BA9008276C9 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkViewController.m; sourceTree = "<group>"; };
 		A734D11E1CF42BCB008276C9 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
@@ -337,6 +338,7 @@
 		A7147EA31CF699F90090FCCB /* model */ = {
 			isa = PBXGroup;
 			children = (
+				A7147EBD1CFC15E20090FCCB /* CCModel.h */,
 				A7147EA71CF6FD450090FCCB /* ModelClass.h */,
 				A7147EA81CF6FD450090FCCB /* ModelClass.m */,
 				A7147EA41CF69A390090FCCB /* NSObject+CCModel.h */,

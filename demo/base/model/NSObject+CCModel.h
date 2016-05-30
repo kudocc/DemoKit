@@ -43,10 +43,9 @@
 + (id)ccmodel_modelWithJSON:(id)json;
 
 /// model to json object
-- (NSDictionary *)ccmodel_jsonObject;
-
-/// debug information
-- (NSString *)ccmodel_debugDescription;
+- (NSDictionary *)ccmodel_jsonObjectDictionary;
+- (NSData *)ccmodel_jsonObjectData;
+- (NSString *)ccmodel_jsonObjectString;
 
 /// NSCopying
 - (id)ccmodel_copyWithZone:(NSZone *)zone;
@@ -54,6 +53,13 @@
 /// NSCoding
 - (id)ccmodel_initWithCoder:(NSCoder *)coder;
 - (void)ccmodel_encodeWithCoder:(NSCoder *)coder;
+
+/// NSObject
+- (BOOL)ccmodel_isEqual:(id)object;
+- (NSUInteger)ccmodel_hash;
+
+/// debug information
+- (NSString *)ccmodel_debugDescription;
 
 @end
 

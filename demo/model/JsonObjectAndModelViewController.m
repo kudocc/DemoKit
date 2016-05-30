@@ -7,12 +7,9 @@
 //
 
 #import "JsonObjectAndModelViewController.h"
-
 #import "NSObject+CCModel.h"
-#import "NSObject+CCKit.h"
 
 @interface ScalarNumberModel : NSObject <NSCopying>
-
 @property char charTest;
 @property unsigned char ucharTest;
 @property int intTest;
@@ -25,63 +22,43 @@
 @property unsigned long long ullongTest;
 @property float floatTest;
 @property double doubleTest;
-
 @end
-
 @implementation ScalarNumberModel
-
 - (id)copyWithZone:(NSZone *)zone {
     return [self ccmodel_copyWithZone:zone];
 }
-
 @end
 
 
 @interface NSBaseObject : NSObject
-
 @property NSString *name;
-
 @end
-
 @implementation NSBaseObject
-
 @end
-
 @interface NSObjectModel : NSBaseObject
-
 @property NSString *stringCount;
 @property NSNumber *numCount;
 @property NSNumber *numCountFromString;
-
 @end
-
 @implementation NSObjectModel
 @end
 
 
 @interface NSObjectModelPropertyKey : NSObject <CCModel>
-
 @property NSString *myName;
 @property NSString *count;
-
 @end
-
 @implementation NSObjectModelPropertyKey
-
 + (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap {
     return @{@"myName":@"name", @"count":@"numCountFromString"};
 }
-
 @end
 
 
 @interface NSObjectModelContainer : NSObject <CCModel>
-
 @property NSArray<NSObjectModelPropertyKey *> *arrayModel;
 @property NSDictionary<NSString *, NSObjectModelPropertyKey *> *dictModel;
-
 @end
-
 @implementation NSObjectModelContainer
 + (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap {
     ContainerTypeObject *objArray = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[NSObjectModelPropertyKey class]];
@@ -96,23 +73,23 @@
     NSString *jsonString = @"{\"charTest\":1, \"ucharTest\":2, \"intTest\":3, \"uintTest\":4, \"shortTest\":5, \"ushortTest\":6, \"longTest\":7, \"ulongTest\":8, \"llongTest\":9, \"ullongTest\":10, \"floatTest\":122.222, \"doubleTest\":1333.333}";
     id model = [ScalarNumberModel ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);
-    NSDictionary *dictModel = [model ccmodel_jsonObject];
+    NSDictionary *dictModel = [model ccmodel_jsonObjectDictionary];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
 }
 
 - (void)testSimpleObjectModel {
-    NSString *jsonString = @"{\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}";
+    NSString *jsonString = @"{\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}";
     id model = [NSObjectModel ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);
-    NSDictionary *dictModel = [model ccmodel_jsonObject];
+    NSDictionary *dictModel = [model ccmodel_jsonObjectDictionary];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
 }
 
 - (void)testPropertyKeyObjectModel {
-    NSString *jsonString = @"{\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}";
+    NSString *jsonString = @"{\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}";
     id model = [NSObjectModelPropertyKey ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);
-    NSDictionary *dictModel = [model ccmodel_jsonObject];
+    NSDictionary *dictModel = [model ccmodel_jsonObjectDictionary];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
 }
 
@@ -137,7 +114,7 @@
 
 - (void)testNestedArrayWithModel {
     // nested array with Model
-    NSString *jsonString = @"[[{\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}, {\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}], [{\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}, {\"name\":\"GoodName, 苑睿\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}]]";
+    NSString *jsonString = @"[[{\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}, {\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}], [{\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}, {\"name\":\"GoodName, KudoCC\", \"stringCount\":-10, \"numCount\":10, \"numCountFromString\":\"20\"}]]";
     ContainerTypeObject *container = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[NSObjectModelPropertyKey class]];
     NSArray *array = [NSArray ccmodel_arrayWithJSON:jsonString withValueType:container];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), array);
@@ -155,17 +132,6 @@
 }
 
 - (void)testNestedDictionary {
-    /* nested dictionary
-     habbit =     {
-     count = 10;
-     value = (
-     basketball,
-     reading,
-     football
-     );
-     };
-     name = KudoCC;
-     */
     NSString *jsonString = @"{\"name\":\"KudoCC\", \"habbit\":{\"count\":10, \"value\":[\"basketball\", \"reading\", \"football\"]}}";
     ContainerTypeObject *objectForName = [ContainerTypeObject containerTypeObjectWithClass:[NSString class]];
     ContainerTypeObject *objectForHabbit = [ContainerTypeObject containerTypeObjectWithClass:[NSDictionary class]];
@@ -179,11 +145,20 @@
 }
 
 - (void)testObjectWithArrayDictionary {
-    // object with array and dictionary
-    NSString *jsonString = @"{\"arrayModel\":[{\"name\":\"GoodName, 苑睿\", \"numCountFromString\":\"20\"}, {\"name\":\"GoodName, 苑睿\", \"numCountFromString\":\"20\"}], \"dictModel\":{\"goodboy\":{\"name\":\"GoodName, 苑睿\", \"numCountFromString\":\"20\"}, \"bad boy\":{\"name\":\"GoodName, 苑睿\", \"numCountFromString\":\"20\"}}}";
+    NSString *jsonString = @"{\
+    \"arrayModel\":\
+        [{\"name\":\"GoodName, KudoCC\", \"numCountFromString\":\"20\"},\
+        {\"name\":\"GoodName, KudoCC\", \"numCountFromString\":\"20\"}],\
+    \"dictModel\":\
+        {\"goodboy\":\
+            {\"name\":\"GoodName, KudoCC\", \"numCountFromString\":\"20\"},\
+        \"bad boy\":\
+            {\"name\":\"GoodName, KudoCC\", \"numCountFromString\":\"20\"}\
+        }\
+    }";
     id model = [NSObjectModelContainer ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);
-    NSDictionary *dictModel = [model ccmodel_jsonObject];
+    NSDictionary *dictModel = [model ccmodel_jsonObjectDictionary];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
 }
 

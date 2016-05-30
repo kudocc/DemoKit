@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "CCModel.h"
 #import <objc/runtime.h>
 
 // Type Encodings
@@ -100,14 +101,6 @@ extern BOOL isObjectTypeOfEncodingType(CCEncodingType type);
 extern BOOL isContainerTypeForObjectType(CCObjectType type);
 
 
-@protocol CCModel <NSObject>
-@optional
-/// property name to json key
-+ (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap;
-/// property name to container value type description
-+ (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap;
-@end
-
 @class CCProperty;
 @interface CCClass : NSObject
 
@@ -118,6 +111,12 @@ extern BOOL isContainerTypeForObjectType(CCObjectType type);
 
 /// property key to CCProperty, not property name
 @property (nonatomic, readonly) NSDictionary<NSString *, CCProperty *> *properties;
+
+/// black list property name
+@property (nonatomic, readonly) NSSet<NSString *> *propertyNameBlackList;
+
+/// hash property name
+@property (nonatomic, readonly) NSSet<NSString *> *propertyNameCalculateHash;
 
 /// map from propertyName to jsonKey
 @property (nonatomic, readonly) NSDictionary<NSString *, NSString *> *propertyNameToJsonKeyMap;

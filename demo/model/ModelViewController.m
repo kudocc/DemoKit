@@ -12,6 +12,7 @@
 
 @interface ModelObject : NSObject <NSCoding>
 
+@property (nonatomic, assign) NSInteger mainKey;
 @property (nonatomic, copy) NSString *name;
 
 @end
@@ -19,15 +20,29 @@
 @implementation ModelObject
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeInteger:_mainKey forKey:@"mainKey"];
     [aCoder encodeObject:_name forKey:@"name"];
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
     if (self) {
+        _mainKey = [aDecoder decodeIntegerForKey:@"mainKey"];
         _name = [aDecoder decodeObjectForKey:@"name"];
     }
     return self;
+}
+
+- (BOOL)isEqual:(id)object {
+    if (self.class != [object class]) {
+        return NO;
+    }
+    ModelObject *mObj = object;
+    return _mainKey == mObj.mainKey;
+}
+
+- (NSUInteger)hash {
+    return _mainKey;
 }
 
 @end
@@ -58,6 +73,21 @@
 @implementation ModelViewController
 
 - (void)initView {
+    
+    ModelObject *mo = [[ModelObject alloc] init];
+    mo.mainKey = 1;
+    NSMutableSet *mutableSet = [NSMutableSet set];
+    [mutableSet addObject:mo];
+    NSLog(@"%@", mutableSet);
+    
+//    mo.mainKey = 2;
+    [mutableSet addObject:mo];
+    
+    NSLog(@"%@", mutableSet);
+    
+    [mutableSet addObject:mo];
+    NSLog(@"%@", mutableSet);
+    
 //    ModelObject *base = [[ModelObject alloc] init];
 //    base.name = @"caonima";
 //    NSArray *arr = @[base];

@@ -185,6 +185,8 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 @property (nonatomic, readwrite) CCClass *superClass;
 @property (nonatomic, readwrite) BOOL isSystemClass;
 @property (nonatomic, readwrite) NSDictionary<NSString *, CCProperty *> *properties;
+@property (nonatomic, readwrite) NSSet<NSString *> *propertyNameBlackList;
+@property (nonatomic, readwrite) NSSet<NSString *> *propertyNameCalculateHash;
 
 @property (nonatomic, readwrite) NSDictionary<NSString *, NSString *> *propertyNameToJsonKeyMap;
 @property (nonatomic, readwrite) NSDictionary<NSString *, ContainerTypeObject *> *propertyNameToContainerTypeObjectMap;
@@ -255,6 +257,12 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
         if ([ccmodel respondsToSelector:@selector(propertyNameToContainerTypeObjectMap)]) {
             c.propertyNameToContainerTypeObjectMap = [ccmodel propertyNameToContainerTypeObjectMap];
         }
+        if ([ccmodel respondsToSelector:@selector(propertyNameBlackList)]) {
+            c.propertyNameBlackList = [ccmodel propertyNameBlackList];
+        }
+        if ([ccmodel respondsToSelector:@selector(propertyNameCalculateHash)]) {
+            c.propertyNameCalculateHash = [ccmodel propertyNameCalculateHash];
+        }
     }
     
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
@@ -276,6 +284,7 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
         free(propertyList);
     }
     c.properties = [mutableDictionary copy];
+    
     return c;
 }
 
