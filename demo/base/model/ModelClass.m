@@ -165,7 +165,7 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 }
 
 + (id)dictionaryContainerTypeObjectWithKeyToValueClass:(NSDictionary<NSString *, ContainerTypeObject *> *)valueClass {
-    ContainerTypeObject *o = [[self alloc] initWithClass:[NSArray class]];
+    ContainerTypeObject *o = [[self alloc] initWithClass:[NSDictionary class]];
     o.keyToClass = valueClass;
     return o;
 }

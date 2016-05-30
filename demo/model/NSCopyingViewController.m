@@ -70,7 +70,7 @@
     return [self ccmodel_hash];
 }
 
-#pragma mark - CCModel
+#pragma mark - CCModel use base
 
 @end
 

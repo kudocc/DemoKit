@@ -142,8 +142,37 @@
     NSMutableString *mutableString = [@"" mutableCopy];
     [mutableString appendFormat:@"class name:%@\n", self.class];
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
-    for (CCProperty *property in [classInfo.properties allValues]) {
-        [mutableString appendFormat:@"%@\n", property];
+    while (classInfo) {
+        for (CCProperty *property in [classInfo.properties allValues]) {
+            if (!property.getter) {
+                continue;
+            }
+            CCEncodingType encodingType = property.encodingType;
+            if (isNumberTypeOfEncodingType(encodingType)) {
+                NSNumber *number = [self getNumberProperty:property];
+                if (number) {
+                    [mutableString appendFormat:@"%@:%@\n", property.propertyName, number];
+                }
+            } else if (isObjectTypeOfEncodingType(encodingType)) {
+                if (isContainerTypeForObjectType(property.objectType)) {
+                    CCClass *classInfo = [CCClass classWithClassObject:self.class];
+                    ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
+                    NSAssert(containerTypeObject, @"container need description");
+                    if (!containerTypeObject) continue;
+                    id jsonObj = [self getContainerProperty:property withContainerTypeObject:containerTypeObject];
+                    if (jsonObj) {
+                        [mutableString appendFormat:@"%@:%@\n", property.propertyName, jsonObj];
+                    }
+                } else {
+                    id jsonObj = [self getObjectProperty:property];
+                    if (jsonObj) {
+                        [mutableString appendFormat:@"%@:%@\n", property.propertyName, jsonObj];
+                    }
+                }
+            }
+        }
+        
+        classInfo = classInfo.superClass;
     }
     return mutableString;
 }
