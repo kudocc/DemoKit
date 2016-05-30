@@ -142,6 +142,10 @@
     NSMutableString *mutableString = [@"" mutableCopy];
     [mutableString appendFormat:@"class name:%@\n", self.class];
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return @"";
+    }
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.getter) {
             continue;
@@ -154,7 +158,6 @@
             }
         } else if (isObjectTypeOfEncodingType(encodingType)) {
             if (isContainerTypeForObjectType(property.objectType)) {
-                CCClass *classInfo = [CCClass classWithClassObject:self.class];
                 ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
                 NSAssert(containerTypeObject, @"container need description");
                 if (!containerTypeObject) continue;
@@ -179,6 +182,10 @@
     if ([self class] != [object class]) return NO;
     if (self == object) return YES;
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return NO;
+    }
     if ([classInfo.propertyNameCalculateHash count] == 0) return NO;
     
     for (CCProperty *property in [classInfo.properties allValues]) {
@@ -217,6 +224,10 @@
 
 - (NSUInteger)ccmodel_hash {
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return (NSUInteger)(__bridge void *)self;
+    }
     if ([classInfo.propertyNameCalculateHash count] == 0) {
         return (NSUInteger)(__bridge void *)self;
     }
@@ -244,9 +255,13 @@
 #pragma mark - NSCopying
 
 - (id)ccmodel_copyWithZone:(NSZone *)zone {
-    id target = [[self.class alloc] init];
-    
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return nil;
+    }
+    
+    id target = [[self.class alloc] init];
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.setter || !property.getterName) {
             continue;
@@ -283,6 +298,11 @@
 
 - (id)ccmodel_initWithCoder:(NSCoder *)coder {
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return nil;
+    }
+    
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.getter || !property.setter) continue;
         
@@ -305,6 +325,11 @@
 
 - (void)ccmodel_encodeWithCoder:(NSCoder *)coder {
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return;
+    }
+    
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.getter || !property.setter) continue;
         
@@ -358,6 +383,10 @@
     if (!self) return nil;
     
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return nil;
+    }
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.setter || !property.getter) {
             continue;
@@ -403,6 +432,10 @@
 
 - (NSDictionary *)ccmodel_jsonObjectDictionary {
     CCClass *classInfo = [CCClass classWithClassObject:self.class];
+    if (!classInfo) {
+        NSAssert(NO, @"you can't mess it up with system class");
+        return nil;
+    }
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     for (CCProperty *property in [classInfo.properties allValues]) {
         if (!property.getter || !property.setter) {
@@ -422,7 +455,6 @@
             }
         } else if (isObjectTypeOfEncodingType(encodingType)) {
             if (isContainerTypeForObjectType(property.objectType)) {
-                CCClass *classInfo = [CCClass classWithClassObject:self.class];
                 ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
                 NSAssert(containerTypeObject, @"container need description");
                 if (!containerTypeObject) continue;

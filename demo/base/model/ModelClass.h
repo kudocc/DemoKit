@@ -106,9 +106,6 @@ extern BOOL isContainerTypeForObjectType(CCObjectType type);
 
 @property (nonatomic, readonly) CCClass *superClass;
 
-/// is the class a system class like NSString/NSNumber
-@property (nonatomic, readonly) BOOL isSystemClass;
-
 /// property key to CCProperty, not property name
 @property (nonatomic, readonly) NSDictionary<NSString *, CCProperty *> *properties;
 

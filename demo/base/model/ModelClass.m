@@ -183,7 +183,6 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 @interface CCClass ()
 
 @property (nonatomic, readwrite) CCClass *superClass;
-@property (nonatomic, readwrite) BOOL isSystemClass;
 @property (nonatomic, readwrite) NSDictionary<NSString *, CCProperty *> *properties;
 @property (nonatomic, readwrite) NSSet<NSString *> *propertyNameBlackList;
 @property (nonatomic, readwrite) NSSet<NSString *> *propertyNameCalculateHash;
@@ -213,9 +212,11 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
         return classInfo;
     } else {
         classInfo = [CCClass classWithRuntime:classObject];
-        dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        mutableDictionary[className] = classInfo;
-        dispatch_semaphore_signal(semaphore);
+        if (classInfo) {
+            dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
+            mutableDictionary[className] = classInfo;
+            dispatch_semaphore_signal(semaphore);
+        }
         return classInfo;
     }
 }
@@ -242,8 +243,10 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
 }
 
 + (CCClass *)classWithRuntime:(Class)classObject {
+    if ([self isSystemClass:classObject]) {
+        return nil;
+    }
     CCClass *c = [[CCClass alloc] init];
-    c.isSystemClass = [self isSystemClass:classObject];
     Class superClass = class_getSuperclass(classObject);
     if (superClass != [NSObject class]) {
         c.superClass = [CCClass classWithClassObject:superClass];
