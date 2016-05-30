@@ -267,6 +267,19 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
             c.propertyNameCalculateHash = [ccmodel propertyNameCalculateHash];
         }
     }
+#ifdef DEBUG
+    else {
+        if ([classObject respondsToSelector:@selector(propertyNameToJsonKeyMap)]) {
+            NSLog(@"You may forget to conform to CCModel in class:%@", classObject);
+        } else if ([classObject respondsToSelector:@selector(propertyNameToContainerTypeObjectMap)]) {
+            NSLog(@"You may forget to conform to CCModel in class:%@", classObject);
+        } else if ([classObject respondsToSelector:@selector(propertyNameBlackList)]) {
+            NSLog(@"You may forget to conform to CCModel in class:%@", classObject);
+        } else if ([classObject respondsToSelector:@selector(propertyNameCalculateHash)]) {
+            NSLog(@"You may forget to conform to CCModel in class:%@", classObject);
+        }
+    }
+#endif
     
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     Class currentClass = classObject;
