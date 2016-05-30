@@ -272,7 +272,6 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
         for (unsigned int i = 0; i < propertyCount; ++i) {
             objc_property_t property = *(propertyList + i);
             CCProperty *propertyObj = [CCProperty propertyWithRuntime:property];
-            CCObjectTypeFromClass(propertyObj.propertyClass);
             NSString *jsonKey = c.propertyNameToJsonKeyMap[propertyObj.propertyName];
             if (jsonKey) {
                 propertyObj.jsonKey = jsonKey;
