@@ -266,21 +266,25 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
     }
     
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
-    unsigned int propertyCount = 0;
-    objc_property_t *propertyList = class_copyPropertyList(classObject, &propertyCount);
-    if (propertyList) {
-        for (unsigned int i = 0; i < propertyCount; ++i) {
-            objc_property_t property = *(propertyList + i);
-            CCProperty *propertyObj = [CCProperty propertyWithRuntime:property];
-            NSString *jsonKey = c.propertyNameToJsonKeyMap[propertyObj.propertyName];
-            if (jsonKey) {
-                propertyObj.jsonKey = jsonKey;
-            } else {
-                propertyObj.jsonKey = propertyObj.propertyName;
+    Class currentClass = classObject;
+    while (currentClass && currentClass != [NSObject class]) {
+        unsigned int propertyCount = 0;
+        objc_property_t *propertyList = class_copyPropertyList(currentClass, &propertyCount);
+        if (propertyList) {
+            for (unsigned int i = 0; i < propertyCount; ++i) {
+                objc_property_t property = *(propertyList + i);
+                CCProperty *propertyObj = [CCProperty propertyWithRuntime:property];
+                NSString *jsonKey = c.propertyNameToJsonKeyMap[propertyObj.propertyName];
+                if (jsonKey) {
+                    propertyObj.jsonKey = jsonKey;
+                } else {
+                    propertyObj.jsonKey = propertyObj.propertyName;
+                }
+                mutableDictionary[propertyObj.jsonKey] = propertyObj;
             }
-            mutableDictionary[propertyObj.jsonKey] = propertyObj;
+            free(propertyList);
         }
-        free(propertyList);
+        currentClass = class_getSuperclass(currentClass);
     }
     c.properties = [mutableDictionary copy];
     
