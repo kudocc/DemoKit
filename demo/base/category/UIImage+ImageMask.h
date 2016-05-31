@@ -12,8 +12,6 @@
 
 - (UIImage *)imageMask;
 
-+ (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage;
-
 
 - (UIImage *)kc_maskImageWithColor:(UIColor *)color;
 

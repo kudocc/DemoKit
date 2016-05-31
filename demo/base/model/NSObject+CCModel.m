@@ -14,19 +14,19 @@
  serialize is from JSON object to model or other Objective-C object
  @param containerTypeObj if classObject indicates its a container, then containerTypeObj describes the container
  */
-- (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
++ (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
 
 /**
  deserialize is from model or other Objective-C object to JSON object
  @param containerTypeObj if classObject indicates its a container, then containerTypeObj describes the container
  */
-- (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
++ (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj;
 
 @end
 
 @implementation NSObject (CCModel_Util)
 
-- (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
++ (id)serializeJSONObj:(id)jsonObj toClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
     CCObjectType type = CCObjectTypeFromClass(classObject);
     
     if (type == CCObjectTypeNSString ||
@@ -103,7 +103,7 @@
     return nil;
 }
 
-- (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
++ (id)deserializeFromObject:(id)obj fromClass:(Class)classObject withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
     CCObjectType type = CCObjectTypeFromClass(classObject);
     if (type == CCObjectTypeNSString ||
         type == CCObjectTypeNSMutableString ||
@@ -533,12 +533,12 @@
 
 - (id)getObjectProperty:(CCProperty *)property {
     id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
-    return [self deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:nil];
+    return [NSObject deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:nil];
 }
 
 - (id)getContainerProperty:(CCProperty *)property withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
     id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
-    return [self deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:containerTypeObj];
+    return [NSObject deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:containerTypeObj];
 }
 
 - (void)setNumberProperty:(CCProperty *)property withJsonObj:(id)jsonObj {
@@ -599,14 +599,14 @@
 }
 
 - (void)setObjectProperty:(CCProperty *)property withJsonObj:(id)jsonObj {
-    id obj = [self serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:nil];
+    id obj = [NSObject serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:nil];
     if (obj) {
         ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, obj);
     }
 }
 
 - (void)setContainerProperty:(CCProperty *)property withJsonObj:(id)jsonObj containerTypeObject:(ContainerTypeObject *)containerTypeObj {
-    id obj = [self serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:containerTypeObj];
+    id obj = [NSObject serializeJSONObj:jsonObj toClass:property.propertyClass withContainerTypeObject:containerTypeObj];
     if (obj) {
         ((void (*)(id, SEL, id))objc_msgSend)(self, property.setter, obj);
     }
@@ -640,7 +640,7 @@
 + (id)ccmodel_arrayWithJSONArray:(NSArray *)jsonArray withValueType:(ContainerTypeObject *)typeObject {
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id json in jsonArray) {
-        id obj = [self serializeJSONObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [NSObject serializeJSONObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
         [mutableArray addObject:obj];
     }
     return [mutableArray copy];
@@ -649,7 +649,7 @@
 - (NSArray *)ccmodel_jsonObjectArrayWithValueType:(ContainerTypeObject *)typeObject {
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id obj in self) {
-        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [NSObject deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         [mutableArray addObject:jsonObj];
     }
     return [mutableArray copy];
@@ -687,7 +687,7 @@
     }
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull jsonObj, BOOL * _Nonnull stop) {
-        id obj = [self serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [NSObject serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (obj) {
             mutableDictionary[key] = obj;
         }
@@ -723,7 +723,7 @@
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [jsonDictionary enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull jsonObj, BOOL * _Nonnull stop) {
         ContainerTypeObject *typeObject = keyToValueType[key];
-        id obj = [self serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id obj = [NSObject serializeJSONObj:jsonObj toClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (obj) {
             mutableDictionary[key] = obj;
         }
@@ -740,7 +740,7 @@
     }
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [self enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [NSObject deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (jsonObj) {
             mutableDictionary[key] = jsonObj;
         }
@@ -756,7 +756,7 @@
     NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
     [self enumerateKeysAndObjectsUsingBlock:^(NSString *  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         ContainerTypeObject *typeObject = keyToValueType[key];
-        id jsonObj = [self deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
+        id jsonObj = [NSObject deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
         if (jsonObj) {
             mutableDictionary[key] = jsonObj;
         }

@@ -14,11 +14,8 @@
 
 @implementation HomeTableViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
-    
-    UITableView *tableView = [[UITableView alloc] initWithFrame:[UIScreen mainScreen].bounds];
+- (void)initView {
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenHeight, ScreenHeight-64)];
     [self.view addSubview:tableView];
     tableView.tableFooterView = [UIView new];
     tableView.backgroundColor = [UIColor whiteColor];

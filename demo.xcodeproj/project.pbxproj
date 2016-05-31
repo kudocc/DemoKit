@@ -15,6 +15,10 @@
 		A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAF1CF9C0E10090FCCB /* NSObject+CCKit.m */; };
 		A7147EB31CF9D2040090FCCB /* NSCopyingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EB21CF9D2040090FCCB /* NSCopyingViewController.m */; };
 		A7147EB61CF9D25E0090FCCB /* JsonObjectAndModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */; };
+		A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC01CFD24B70090FCCB /* CoreTextViewController.m */; };
+		A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */; };
+		A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */; };
+		A7147ECC1CFD82FC0090FCCB /* chat.plist in Resources */ = {isa = PBXBuildFile; fileRef = A7147ECB1CFD82FC0090FCCB /* chat.plist */; };
 		A734D11A1CF428D2008276C9 /* CCHttpSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C91CF2ACA9008D5924 /* CCHttpSessionManager.m */; };
 		A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11C1CF42BA9008276C9 /* NetworkViewController.m */; };
 		A734D1201CF42BCB008276C9 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11F1CF42BCB008276C9 /* HttpViewController.m */; };
@@ -127,6 +131,13 @@
 		A7147EB41CF9D25E0090FCCB /* JsonObjectAndModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonObjectAndModelViewController.h; sourceTree = "<group>"; };
 		A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonObjectAndModelViewController.m; sourceTree = "<group>"; };
 		A7147EBD1CFC15E20090FCCB /* CCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCModel.h; path = model/CCModel.h; sourceTree = "<group>"; };
+		A7147EBF1CFD24B70090FCCB /* CoreTextViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextViewController.h; sourceTree = "<group>"; };
+		A7147EC01CFD24B70090FCCB /* CoreTextViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextViewController.m; sourceTree = "<group>"; };
+		A7147EC21CFD24F30090FCCB /* CoreTextChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextChatViewController.h; sourceTree = "<group>"; };
+		A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextChatViewController.m; sourceTree = "<group>"; };
+		A7147EC51CFD26070090FCCB /* SimpleChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleChatViewController.h; sourceTree = "<group>"; };
+		A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleChatViewController.m; sourceTree = "<group>"; };
+		A7147ECB1CFD82FC0090FCCB /* chat.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = chat.plist; sourceTree = "<group>"; };
 		A734D11B1CF42BA9008276C9 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkViewController.h; sourceTree = "<group>"; };
 		A734D11C1CF42BA9008276C9 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkViewController.m; sourceTree = "<group>"; };
 		A734D11E1CF42BCB008276C9 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
@@ -360,6 +371,19 @@
 			path = model;
 			sourceTree = "<group>";
 		};
+		A7147EBE1CFD24900090FCCB /* coreText */ = {
+			isa = PBXGroup;
+			children = (
+				A7147EBF1CFD24B70090FCCB /* CoreTextViewController.h */,
+				A7147EC01CFD24B70090FCCB /* CoreTextViewController.m */,
+				A7147EC51CFD26070090FCCB /* SimpleChatViewController.h */,
+				A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */,
+				A7147EC21CFD24F30090FCCB /* CoreTextChatViewController.h */,
+				A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */,
+			);
+			path = coreText;
+			sourceTree = "<group>";
+		};
 		A7583C311CE31BFB007558CB = {
 			isa = PBXGroup;
 			children = (
@@ -392,6 +416,7 @@
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
 				A773F6941CEC50CE0098F1C8 /* coreImage */,
+				A7147EBE1CFD24900090FCCB /* coreText */,
 				A7583C751CE31C88007558CB /* urlSession */,
 				A785B0751CE32EF800A7686D /* webView */,
 				A7F5F0551CE31DE60064AAB7 /* audio */,
@@ -399,6 +424,7 @@
 				A7147EAA1CF7EFE00090FCCB /* model */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
+				A7147ECB1CFD82FC0090FCCB /* chat.plist */,
 				A7583C461CE31BFB007558CB /* Main.storyboard */,
 				A7583C491CE31BFB007558CB /* Assets.xcassets */,
 				A7583C4B1CE31BFB007558CB /* LaunchScreen.storyboard */,
@@ -751,6 +777,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7147ECC1CFD82FC0090FCCB /* chat.plist in Resources */,
 				A7583C4D1CE31BFB007558CB /* LaunchScreen.storyboard in Resources */,
 				A785B0711CE32D9F00A7686D /* server.cer in Resources */,
 				A7583C4A1CE31BFB007558CB /* Assets.xcassets in Resources */,
@@ -842,6 +869,7 @@
 				A785B03E1CE326F700A7686D /* UIImage+ImageMask.m in Sources */,
 				A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */,
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,
+				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
 				A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */,
 				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
@@ -860,6 +888,7 @@
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
+				A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */,
 				A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */,
 				A7147EB61CF9D25E0090FCCB /* JsonObjectAndModelViewController.m in Sources */,
 				A773F69A1CEC51D60098F1C8 /* BuiltinFilterViewController.m in Sources */,
@@ -878,6 +907,7 @@
 				A785B0531CE3295D00A7686D /* TableViewPerformanceViewController.m in Sources */,
 				A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */,
 				A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */,
+				A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,
 				A7583C421CE31BFB007558CB /* AppDelegate.m in Sources */,
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,

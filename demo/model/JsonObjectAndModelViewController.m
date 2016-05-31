@@ -78,18 +78,19 @@
 - (void)testScalarNumberModel {
     NSString *jsonString =
     @"{\
-    \"charTest\":1,\
-    \"ucharTest\":2,\
-    \"intTest\":3,\
-    \"uintTest\":4,\
-    \"shortTest\":5,\
-    \"ushortTest\":6,\
-    \"longTest\":7,\
-    \"ulongTest\":8,\
-    \"llongTest\":9,\
-    \"ullongTest\":10,\
-    \"floatTest\":122.222,\
-    \"doubleTest\":1333.333}";
+        \"charTest\":1,\
+        \"ucharTest\":2,\
+        \"intTest\":3,\
+        \"uintTest\":4,\
+        \"shortTest\":5,\
+        \"ushortTest\":6,\
+        \"longTest\":7,\
+        \"ulongTest\":8,\
+        \"llongTest\":9,\
+        \"ullongTest\":10,\
+        \"floatTest\":122.222,\
+        \"doubleTest\":1333.333\
+    }";
     
     id model = [ScalarNumberModel ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);

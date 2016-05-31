@@ -60,27 +60,6 @@
     return image;
 }
 
-+ (UIImage*) maskImage:(UIImage *)image withMask:(UIImage *)maskImage {
-    
-    CGImageRef maskRef = maskImage.CGImage;
-    
-    CGImageRef mask = CGImageMaskCreate(CGImageGetWidth(maskRef),
-                                        CGImageGetHeight(maskRef),
-                                        CGImageGetBitsPerComponent(maskRef),
-                                        CGImageGetBitsPerPixel(maskRef),
-                                        CGImageGetBytesPerRow(maskRef),
-                                        CGImageGetDataProvider(maskRef), NULL, false);
-    
-    CGImageRef maskedImageRef = CGImageCreateWithMask([image CGImage], mask);
-    UIImage *maskedImage = [UIImage imageWithCGImage:maskedImageRef];
-    
-    CGImageRelease(mask);
-    CGImageRelease(maskedImageRef);
-    
-    // returns new image with mask applied
-    return maskedImage;
-}
-
 
 - (UIImage *)kc_maskImageWithColor:(UIColor *)color {
     CGRect rect = CGRectMake(0, 0, self.size.width, self.size.height);

@@ -13,6 +13,7 @@
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
+#import "CoreTextViewController.h"
 #import "UrlSessionViewController.h"
 #import "AudioViewController.h"
 #import "WebViewController.h"
@@ -33,6 +34,7 @@
                       @"Quartz 2D",
                       @"Image I/O",
                       @"Core Image",
+                      @"Core Text",
                       @"URLSession",
                       @"WebView & WebCache",
                       @"Audio",
@@ -43,6 +45,7 @@
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
                       [CoreImageViewController class],
+                      [CoreTextViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
                       [AudioViewController class],
