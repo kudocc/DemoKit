@@ -1,39 +1,16 @@
 //
-//  SimpleChatViewController.m
+//  ChatViewController.m
 //  demo
 //
-//  Created by KudoCC on 16/5/31.
+//  Created by KudoCC on 16/6/1.
 //  Copyright © 2016年 KudoCC. All rights reserved.
 //
 
-#import "SimpleChatViewController.h"
+#import "ChatViewController.h"
+#import "CCTextLayout.h"
+#import "CCLabel.h"
 
-@interface ChatMsgView : UIView
-
-@property (nonatomic) NSAttributedString *content;
-
-@end
-
-@implementation ChatMsgView
-
-- (void)setContent:(NSAttributedString *)content {
-    if ([_content isEqualToAttributedString:content]) {
-        return;
-    }
-    _content = content;
-    
-    [self setNeedsDisplay];
-}
-
-- (void)drawRect:(CGRect)rect {
-    if (_content) {
-        [_content drawInRect:self.bounds];
-    }
-}
-
-@end
-
-@interface ChatCell : NSObject
+@interface ChatMessage : NSObject
 
 + (CGFloat)constraintWidth;
 + (CGFloat)paddingY;
@@ -46,9 +23,11 @@
 @property (nonatomic, readonly) CGFloat contentHeight;
 @property (nonatomic) BOOL left;
 
+@property (nonatomic) CCTextLayout *textLayout;
+
 @end
 
-@implementation ChatCell
+@implementation ChatMessage
 
 + (CGFloat)constraintWidth {
     static CGFloat width = 0;
@@ -70,10 +49,11 @@
         _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
         _left = left;
         
-        CGSize constraintSize = CGSizeMake([self.class constraintWidth], CGFLOAT_MAX);
-        CGRect boundingRect = [_content boundingRectWithSize:constraintSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
-        _contentWidth = ceil(boundingRect.size.width);
-        _contentHeight = ceil(boundingRect.size.height);
+        CGSize constraint = CGSizeMake([self.class constraintWidth], 1024);
+        _textLayout = [CCTextLayout textLayoutWithSize:constraint attributedText:_content];
+        
+        _contentWidth = _textLayout.textBounds.width;
+        _contentHeight = _textLayout.textBounds.height;
         _cellHeight = _contentHeight + [self.class paddingY];
     }
     return self;
@@ -81,65 +61,74 @@
 
 @end
 
-@interface SimpleChatCell : UITableViewCell
 
-@property (nonatomic) ChatCell *chatCell;
-@property (nonatomic) ChatMsgView *viewChatMsg;
+@interface ChatTableViewCell : UITableViewCell
+
+@property (nonatomic) ChatMessage *chatMessage;
+@property (nonatomic) CCLabel *label;
 
 @end
 
-@implementation SimpleChatCell
+@implementation ChatTableViewCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        _viewChatMsg = [[ChatMsgView alloc] init];
-        [self.contentView addSubview:_viewChatMsg];
-        _viewChatMsg.backgroundColor = [UIColor whiteColor];
+        _label = [[CCLabel alloc] init];
+        [self.contentView addSubview:_label];
     }
     return self;
 }
 
-- (void)setChatCell:(ChatCell *)chatCell {
-    if (_chatCell == chatCell) return;
+- (void)setChatMessage:(ChatMessage *)chatMessage {
+    if (_chatMessage == chatMessage) return;
     
-    _chatCell = chatCell;
-    _viewChatMsg.content = chatCell.content;
+    _chatMessage = chatMessage;
+    if (_chatMessage.left) {
+        _label.backgroundColor = [UIColor whiteColor];
+    } else {
+        _label.backgroundColor = [UIColor greenColor];
+    }
+    _label.textLayout = chatMessage.textLayout;
+    
     [self setNeedsLayout];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
     
-    CGRect frame = CGRectMake(0, [ChatCell paddingY], _chatCell.contentWidth, _chatCell.contentHeight);
-    if (!_chatCell.left) {
+    CGRect frame = CGRectMake(0, [ChatMessage paddingY], _chatMessage.contentWidth, _chatMessage.contentHeight);
+    if (!_chatMessage.left) {
         frame = CGRectOffset(frame, self.contentView.width-frame.size.width, 0);
     }
-    _viewChatMsg.frame = frame;
+    _label.frame = frame;
 }
 
 @end
 
-@implementation SimpleChatViewController {
+
+@implementation ChatViewController {
     UITableView *_tableView;
-    NSArray<ChatCell *> *_chatMsgs;
+    NSArray<ChatMessage *> *_chatMsgs;
 }
 
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];
-    [_tableView registerClass:[SimpleChatCell class] forCellReuseIdentifier:@"cell"];
+    [_tableView registerClass:[ChatTableViewCell class] forCellReuseIdentifier:@"cell"];
     
     [self showLoadingMessage:@"Loading"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSString *path = [[NSBundle mainBundle] pathForResource:@"chat" ofType:@"plist"];
         NSArray *dataSource = [[NSArray alloc] initWithContentsOfFile:path];
+        
         NSMutableArray *mutableArray = [NSMutableArray array];
         for (NSDictionary *dict in dataSource) {
-            ChatCell *data = [[ChatCell alloc] initWithContent:dict[@"content"] left:[dict[@"left"] boolValue]];
+            ChatMessage *data = [[ChatMessage alloc] initWithContent:dict[@"content"] left:[dict[@"left"] boolValue]];
             [mutableArray addObject:data];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -154,7 +143,7 @@
 #pragma mark - UITableViewDelegate
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ChatCell *chatCell = [_chatMsgs objectAtIndex:indexPath.row];
+    ChatMessage *chatCell = [_chatMsgs objectAtIndex:indexPath.row];
     return chatCell.cellHeight;
 }
 
@@ -165,8 +154,8 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    SimpleChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
-    cell.chatCell = [_chatMsgs objectAtIndex:indexPath.row];
+    ChatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
+    cell.chatMessage = [_chatMsgs objectAtIndex:indexPath.row];
     return cell;
 }
 

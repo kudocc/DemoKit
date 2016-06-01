@@ -19,6 +19,11 @@
 		A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */; };
 		A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */; };
 		A7147ECC1CFD82FC0090FCCB /* chat.plist in Resources */ = {isa = PBXBuildFile; fileRef = A7147ECB1CFD82FC0090FCCB /* chat.plist */; };
+		A7147ECF1CFE788E0090FCCB /* CCAsyncLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147ECE1CFE788E0090FCCB /* CCAsyncLayer.m */; };
+		A7147ED21CFE84BC0090FCCB /* CCTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147ED11CFE84BC0090FCCB /* CCTextLayout.m */; };
+		A7147ED81CFE84EB0090FCCB /* CCTextLine.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147ED71CFE84EB0090FCCB /* CCTextLine.m */; };
+		A7147EDB1CFE8D750090FCCB /* CCLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EDA1CFE8D750090FCCB /* CCLabel.m */; };
+		A7147EDE1CFEAF650090FCCB /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EDD1CFEAF650090FCCB /* ChatViewController.m */; };
 		A734D11A1CF428D2008276C9 /* CCHttpSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C91CF2ACA9008D5924 /* CCHttpSessionManager.m */; };
 		A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11C1CF42BA9008276C9 /* NetworkViewController.m */; };
 		A734D1201CF42BCB008276C9 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11F1CF42BCB008276C9 /* HttpViewController.m */; };
@@ -138,6 +143,16 @@
 		A7147EC51CFD26070090FCCB /* SimpleChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleChatViewController.h; sourceTree = "<group>"; };
 		A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleChatViewController.m; sourceTree = "<group>"; };
 		A7147ECB1CFD82FC0090FCCB /* chat.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = chat.plist; sourceTree = "<group>"; };
+		A7147ECD1CFE788E0090FCCB /* CCAsyncLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAsyncLayer.h; sourceTree = "<group>"; };
+		A7147ECE1CFE788E0090FCCB /* CCAsyncLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAsyncLayer.m; sourceTree = "<group>"; };
+		A7147ED01CFE84BC0090FCCB /* CCTextLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextLayout.h; sourceTree = "<group>"; };
+		A7147ED11CFE84BC0090FCCB /* CCTextLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextLayout.m; sourceTree = "<group>"; };
+		A7147ED61CFE84EB0090FCCB /* CCTextLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextLine.h; sourceTree = "<group>"; };
+		A7147ED71CFE84EB0090FCCB /* CCTextLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextLine.m; sourceTree = "<group>"; };
+		A7147ED91CFE8D750090FCCB /* CCLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLabel.h; sourceTree = "<group>"; };
+		A7147EDA1CFE8D750090FCCB /* CCLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLabel.m; sourceTree = "<group>"; };
+		A7147EDC1CFEAF650090FCCB /* ChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChatViewController.h; sourceTree = "<group>"; };
+		A7147EDD1CFEAF650090FCCB /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		A734D11B1CF42BA9008276C9 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkViewController.h; sourceTree = "<group>"; };
 		A734D11C1CF42BA9008276C9 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkViewController.m; sourceTree = "<group>"; };
 		A734D11E1CF42BCB008276C9 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
@@ -380,6 +395,8 @@
 				A7147EC61CFD26070090FCCB /* SimpleChatViewController.m */,
 				A7147EC21CFD24F30090FCCB /* CoreTextChatViewController.h */,
 				A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */,
+				A7147EDC1CFEAF650090FCCB /* ChatViewController.h */,
+				A7147EDD1CFEAF650090FCCB /* ChatViewController.m */,
 			);
 			path = coreText;
 			sourceTree = "<group>";
@@ -514,6 +531,14 @@
 			children = (
 				A773F69C1CEC54920098F1C8 /* ImagePickerViewControllerHelper.h */,
 				A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */,
+				A7147ED91CFE8D750090FCCB /* CCLabel.h */,
+				A7147EDA1CFE8D750090FCCB /* CCLabel.m */,
+				A7147ECD1CFE788E0090FCCB /* CCAsyncLayer.h */,
+				A7147ECE1CFE788E0090FCCB /* CCAsyncLayer.m */,
+				A7147ED61CFE84EB0090FCCB /* CCTextLine.h */,
+				A7147ED71CFE84EB0090FCCB /* CCTextLine.m */,
+				A7147ED01CFE84BC0090FCCB /* CCTextLayout.h */,
+				A7147ED11CFE84BC0090FCCB /* CCTextLayout.m */,
 			);
 			path = other;
 			sourceTree = "<group>";
@@ -873,8 +898,11 @@
 				A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */,
 				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
+				A7147ED81CFE84EB0090FCCB /* CCTextLine.m in Sources */,
 				A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */,
+				A7147EDE1CFEAF650090FCCB /* ChatViewController.m in Sources */,
 				A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */,
+				A7147EDB1CFE8D750090FCCB /* CCLabel.m in Sources */,
 				A7F5F0711CE31E420064AAB7 /* CAActionTestViewController.m in Sources */,
 				A785B0731CE32D9F00A7686D /* UIDownloadTaskViewController.m in Sources */,
 				A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */,
@@ -909,8 +937,10 @@
 				A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */,
 				A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,
+				A7147ECF1CFE788E0090FCCB /* CCAsyncLayer.m in Sources */,
 				A7583C421CE31BFB007558CB /* AppDelegate.m in Sources */,
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,
+				A7147ED21CFE84BC0090FCCB /* CCTextLayout.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
 				A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */,
 				A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */,

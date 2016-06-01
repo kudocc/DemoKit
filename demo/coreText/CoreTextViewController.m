@@ -9,8 +9,9 @@
 #import "CoreTextViewController.h"
 #import "SimpleChatViewController.h"
 #import "CoreTextChatViewController.h"
-/*
+#import "ChatViewController.h"
 #import <CoreText/CoreText.h>
+
 @interface CoreView : UIView
 @end
 
@@ -24,7 +25,11 @@
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        _attributedString = [[NSAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+        
+        NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+        [attriString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 10)];
+        _attributedString = [attriString copy];
+        
         _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
         CGRect bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
         CGPathRef path = CGPathCreateWithRect(bounds, NULL);
@@ -58,21 +63,23 @@
     CTLineDraw(line, context);
 }
 @end
-*/
+
 @implementation CoreTextViewController
 
 - (void)initView {
     [super initView];
     
     self.arrayTitle = @[@"Simple Chat",
-                        @"Core Text Chat"];
+                        @"Core Text Chat",
+                        @"Asynchonized Text"];
     
     self.arrayClass = @[[SimpleChatViewController class],
-                        [CoreTextChatViewController class]];
+                        [CoreTextChatViewController class],
+                        [ChatViewController class]];
     
-//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-//    v.backgroundColor = [UIColor greenColor];
-//    [self.view addSubview:v];
+    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+    v.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:v];
 }
 
 @end

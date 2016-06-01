@@ -155,16 +155,13 @@
         CGPoint positions[count];
         CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), positions);
         CGPoint bottomPosition = positions[count-1];
-        CGFloat total = 0;
         NSMutableArray *mArray = [NSMutableArray array];
         for (CFIndex i = count-1; i >= 0; --i) {
             CTLineRef line = CFArrayGetValueAtIndex(_lines, i);
             CGFloat ascent, descent, leading;
             CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            CGFloat h = ascent+descent+leading;
-            NSLog(@"a:%f, d:%f, l:%f, total:%f", ascent, descent, leading, h);
-            total += h;
-            
+//            CGFloat h = ascent+descent+leading;
+//            NSLog(@"a:%f, d:%f, l:%f, total:%f", ascent, descent, leading, h);
             CGPoint po = positions[i];
             CCLine *ccLine = [[CCLine alloc] init];
             ccLine.position = CGPointMake(po.x, ceil(po.y-bottomPosition.y + descent + leading));
@@ -174,9 +171,7 @@
         _ccLines = [mArray copy];
         
         CGSize size = [self.class measureFrame:_frame];
-        NSLog(@"total:%f, contentWidth:%f", total, size.height);
-        
-        NSLog(@"%@, %@", strContent, NSStringFromCGSize(size));
+//        NSLog(@"%@, %@", strContent, NSStringFromCGSize(size));
         _contentWidth = ceil(size.width);
         _contentHeight = ceil(size.height);
         _cellHeight = _contentHeight + [self.class paddingY];
@@ -211,6 +206,11 @@
     
     _chatCell = chatCell;
     _viewChatMsg.lines = chatCell.ccLines;
+    if (_chatCell.left) {
+        _viewChatMsg.backgroundColor = [UIColor whiteColor];
+    } else {
+        _viewChatMsg.backgroundColor = [UIColor greenColor];
+    }
     
     [self setNeedsLayout];
 }
@@ -236,6 +236,7 @@
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];
