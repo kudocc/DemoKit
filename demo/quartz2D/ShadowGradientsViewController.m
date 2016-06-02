@@ -39,6 +39,10 @@
                                  myStartRadius, myEndPoint, myEndRadius, 0);
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
+    
+    CGGradientRelease(myGradient);
+    CGColorSpaceRelease(myColorspace);
+    
     return image;
 }
 

@@ -12,12 +12,7 @@
 
 @interface CCLabel : UIView
 
-@property (nonatomic) NSString *text;
-
 @property (nonatomic) NSAttributedString *attributedText;
-
-@property (nonatomic) UIFont *font;
-@property (nonatomic) UIColor *textColor;
 
 @property (nonatomic) CCTextLayout *textLayout;
 

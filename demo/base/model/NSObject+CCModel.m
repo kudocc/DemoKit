@@ -248,7 +248,6 @@
             hash ^= [obj hash];
         }
     }
-    classInfo = classInfo.superClass;
     return hash;
 }
 

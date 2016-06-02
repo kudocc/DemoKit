@@ -149,6 +149,7 @@
         CGRect constraint = CGRectMake(0, 0, [self.class constraintWidth], 1024);
         CGPathRef path = CGPathCreateWithRect(constraint, NULL);
         _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_content length]), path, NULL);
+        CGPathRelease(path);
         
         _lines = CTFrameGetLines(_frame);
         CFIndex count = CFArrayGetCount(_lines);

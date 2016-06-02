@@ -23,6 +23,12 @@
     return textLayout;
 }
 
+- (void)dealloc {
+    if (_ctFramesetter) {
+        CFRelease(_ctFramesetter);
+    }
+}
+
 - (id)initWithSize:(CGSize)size attributedString:(NSAttributedString *)attributedText {
     self = [super init];
     if (self) {
@@ -84,7 +90,7 @@
     _textLines = [mutableArray copy];
     
     CGSize size = [CCTextLayout measureFrame:_ctFrame];
-    _textBounds = CGSizeMake(ceil(size.width), ceil(size.height));
+    _textBounds = size;
 }
 
 - (void)drawInContext:(CGContextRef)context size:(CGSize)size isCancel:(BOOL(^)(void))isCancel {
@@ -92,7 +98,6 @@
         NSLog(@"good before draw cancel");
         return;
     }
-    CGPoint p = CGContextGetTextPosition(context);
     CGContextSaveGState(context);
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextTranslateCTM(context, 0, size.height);
@@ -106,7 +111,6 @@
         CTLineDraw(line.line, context);
     }
     CGContextRestoreGState(context);
-    p = CGContextGetTextPosition(context);
 }
 
 @end

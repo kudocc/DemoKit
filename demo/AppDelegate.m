@@ -9,7 +9,6 @@
 #import "AppDelegate.h"
 #import "HomeTableViewController.h"
 #import "AnimationViewController.h"
-#import "PerformanceViewController.h"
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
@@ -30,7 +29,6 @@
     // Override point for customization after application launch.
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
     vc.arrayTitle = @[@"Animation",
-                      @"Performance",
                       @"Quartz 2D",
                       @"Image I/O",
                       @"Core Image",
@@ -41,7 +39,6 @@
                       @"Network - Dependency HTTP Task",
                       @"Model"];
     vc.arrayClass = @[[AnimationViewController class],
-                      [PerformanceViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
                       [CoreImageViewController class],

@@ -252,6 +252,7 @@
 //        const CGFloat myMaskingColors[6] = {0, 0, 0, 0, 0, 0};
         CGImageRef imageMaskedRef = CGImageCreateWithMaskingColors(imageBg.CGImage, myMaskingColors);
         UIImage *imageMasked = [UIImage imageWithCGImage:imageMaskedRef];
+        CGImageRelease(imageMaskedRef);
         _imageViewResultMaskWithColor = [[UIImageView alloc] initWithImage:imageMasked];
         _imageViewResultMaskWithColor.frame = (CGRect){(CGPoint){x, y}, imageBg.size};
         [_scrollView addSubview:_imageViewResultMaskWithColor];

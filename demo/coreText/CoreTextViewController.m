@@ -12,6 +12,32 @@
 #import "ChatViewController.h"
 #import <CoreText/CoreText.h>
 
+@interface TestLayer : CALayer
+
+@property (nonatomic) UIImage *image;
+
+@end
+
+@implementation TestLayer
+
+- (void)display {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    self.contents = (__bridge id)_image.CGImage;
+}
+
+@end
+
+@interface TestLayerView : UIView
+@end
+
+@implementation TestLayerView
+
++ (Class)layerClass {
+    return [TestLayer class];
+}
+
+@end
+
 @interface CoreView : UIView
 @end
 
@@ -34,6 +60,7 @@
         CGRect bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
         CGPathRef path = CGPathCreateWithRect(bounds, NULL);
         _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_attributedString length]), path, NULL);
+        CGPathRelease(path);
     }
     return self;
 }
@@ -64,7 +91,9 @@
 }
 @end
 
-@implementation CoreTextViewController
+@implementation CoreTextViewController {
+    TestLayerView *lv;
+}
 
 - (void)initView {
     [super initView];
@@ -77,9 +106,21 @@
                         [CoreTextChatViewController class],
                         [ChatViewController class]];
     
-    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-    v.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:v];
+//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+//    v.backgroundColor = [UIColor greenColor];
+//    [self.view addSubview:v];
+}
+
+- (void)repeate:(id)timer {
+    static int i = 0;
+    ++i;
+    if (i > 6) {
+        i = 0;
+    }
+    NSString *str = [NSString stringWithFormat:@"image%d.jpg", i];
+    UIImage *image = [UIImage imageNamed:str];
+    ((TestLayer *)lv.layer).image = image;
+    lv.frame = CGRectInset(lv.frame, 1, 1);
 }
 
 @end

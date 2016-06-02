@@ -81,7 +81,7 @@
     
     CGImageRef newImageRef = CGBitmapContextCreateImage(context);
     UIImage *imageNew = [UIImage imageWithCGImage:newImageRef];
-    
+    CGImageRelease(newImageRef);
     
     CGContextRelease(contextTop);
     CGContextRelease(context);

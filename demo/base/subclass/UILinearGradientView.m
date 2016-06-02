@@ -61,7 +61,7 @@
     CGSize size = self.bounds.size;
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGPoint startPoint = CGPointMake(0.0, 0.0);
-    CGPoint endPoint = CGPointMake(0.0, size.height);
+    CGPoint endPoint;
     if (axis == UILinerGradientViewAxisX) {
         endPoint = CGPointMake(size.width, 0.0);
     } else {

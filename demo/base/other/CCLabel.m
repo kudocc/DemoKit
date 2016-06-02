@@ -16,7 +16,9 @@
     self = [super init];
     if (self) {
         self.layer.contentsScale = [UIScreen mainScreen].scale;
-        self.contentMode = UIViewContentModeRedraw;
+        NSLog(@"%@", self.layer.contentsGravity);
+        self.contentMode = UIViewContentModeTop;
+        NSLog(@"%@", self.layer.contentsGravity);
         CCAsyncLayer *layer = (CCAsyncLayer *)self.layer;
         layer.asyncDisplay = YES;
     }
@@ -50,21 +52,12 @@
 }
 
 /*
-- (void)setText:(NSString *)text {
-    _text = text;
-}
 
 - (void)setAttributedText:(NSAttributedString *)attributedText {
     _attributedText = attributedText;
 }
 
-- (void)setFont:(UIFont *)font {
-    _font = font;
-}
-
-- (void)setTextColor:(UIColor *)textColor {
-    _textColor = textColor;
-}*/
+*/
 
 + (Class)layerClass {
     return [CCAsyncLayer class];

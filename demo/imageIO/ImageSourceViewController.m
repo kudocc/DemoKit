@@ -96,11 +96,10 @@
                 CGImageRelease(img);
             }
         }
+        CFRelease(imageSource);
     }
     
     scrollView.contentSize = CGSizeMake(ScreenWidth, y);
-    
-    CFRelease(imageSource);
 }
 
 - (void)initView {

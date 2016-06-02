@@ -44,6 +44,8 @@
     [CATransaction setDisableActions:YES];
     _layer.position = CGPathGetCurrentPoint(path);
     [CATransaction commit];
+    
+    CGPathRelease(path);
 }
 
 @end
