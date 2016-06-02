@@ -21,28 +21,11 @@
 @end
 
 @interface CoreTextView : UIView
-//@property (nonatomic) CTFrameRef ctFrame;
-//@property (nonatomic) CFArrayRef lines;
+@property (nonatomic) CTFrameRef ctFrame;
 @property (nonatomic) NSArray<CCLine *> *lines;
 @end
 
-@implementation CoreTextView {
-//    CTFramesetterRef _framesetter;
-//    CTFrameRef _frame;
-//    NSAttributedString *_attributedString;
-}
-
-//- (id)initWithFrame:(CGRect)frame {
-//    self = [super initWithFrame:frame];
-//    if (self) {
-//        _attributedString = [[NSAttributedString alloc] initWithString:@"just test" attributes:@{}];
-//        _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
-//        CGRect constraint = CGRectMake(0, 0, 100, 40);
-//        CGPathRef path = CGPathCreateWithRect(constraint, NULL);
-//        _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_attributedString length]), path, NULL);
-//    }
-//    return self;
-//}
+@implementation CoreTextView
 
 - (void)setLines:(NSArray<CCLine *> *)lines {
     _lines = lines;
@@ -57,24 +40,12 @@
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
     
-//    CFIndex count = CFArrayGetCount(_lines);
-//    CGFloat f = 0;
-//    for (CFIndex i = count-1; i >= 0; --i) {
-//        CTLineRef line = CFArrayGetValueAtIndex(_lines, i);
-//        CGFloat ascent, descent, leading;
-//        CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-//        
-//        CGContextSetTextPosition(context, 0, f+leading);
-//        CTLineDraw(line, context);
-//        
-//        CGFloat height = ascent + descent + leading;
-//        f += height;
+//    for (CCLine *line in _lines) {
+//        CGContextSetTextPosition(context, line.position.x, line.position.y);
+//        CTLineDraw(line.line, context);
 //    }
     
-    for (CCLine *line in _lines) {
-        CGContextSetTextPosition(context, line.position.x, line.position.y);
-        CTLineDraw(line.line, context);
-    }
+    CTFrameDraw(_ctFrame, context);
 }
 @end
 
@@ -114,8 +85,7 @@
     return 20.0;
 }
 
-+ (CGSize)measureFrame:(CTFrameRef)frame
-{
++ (CGSize)measureFrame:(CTFrameRef)frame {
     CGPathRef framePath = CTFrameGetPath(frame);
     CGRect frameRect = CGPathGetBoundingBox(framePath);
     CFArrayRef lines = CTFrameGetLines(frame);
@@ -142,7 +112,8 @@
 - (id)initWithContent:(NSString *)strContent left:(BOOL)left {
     self = [super init];
     if (self) {
-        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
         _left = left;
         
         _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_content);
@@ -151,7 +122,33 @@
         _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_content length]), path, NULL);
         CGPathRelease(path);
         
+        {
+            // debug
+            CGSize size = [self.class measureFrame:_frame];
+            CGRect newConstraint = CGRectMake(0, 0, size.width, size.height);
+            CGPathRef path = CGPathCreateWithRect(newConstraint, NULL);
+            _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_content length]), path, NULL);
+            CGPathRelease(path);
+        }
+        
         _lines = CTFrameGetLines(_frame);
+        
+        {
+            // debug first line
+            CTLineRef line = CFArrayGetValueAtIndex(_lines, 0);
+            CGFloat ascent, descent, leading;
+            CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+            NSLog(@"first line ascent:%@, descent:%@, leading:%@", @(ascent), @(descent), @(leading));
+            
+            // debug second line
+            if (CFArrayGetCount(_lines) > 1) {
+                CTLineRef line = CFArrayGetValueAtIndex(_lines, 1);
+                CGFloat ascent, descent, leading;
+                CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
+                NSLog(@"second line ascent:%@, descent:%@, leading:%@", @(ascent), @(descent), @(leading));
+            }
+        }
+        
         CFIndex count = CFArrayGetCount(_lines);
         CGPoint positions[count];
         CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), positions);
@@ -161,8 +158,6 @@
             CTLineRef line = CFArrayGetValueAtIndex(_lines, i);
             CGFloat ascent, descent, leading;
             CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-//            CGFloat h = ascent+descent+leading;
-//            NSLog(@"a:%f, d:%f, l:%f, total:%f", ascent, descent, leading, h);
             CGPoint po = positions[i];
             CCLine *ccLine = [[CCLine alloc] init];
             ccLine.position = CGPointMake(po.x, ceil(po.y-bottomPosition.y + descent + leading));
@@ -172,7 +167,6 @@
         _ccLines = [mArray copy];
         
         CGSize size = [self.class measureFrame:_frame];
-//        NSLog(@"%@, %@", strContent, NSStringFromCGSize(size));
         _contentWidth = ceil(size.width);
         _contentHeight = ceil(size.height);
         _cellHeight = _contentHeight + [self.class paddingY];
@@ -206,6 +200,7 @@
     if (_chatCell == chatCell) return;
     
     _chatCell = chatCell;
+    _viewChatMsg.ctFrame = chatCell.frame;
     _viewChatMsg.lines = chatCell.ccLines;
     if (_chatCell.left) {
         _viewChatMsg.backgroundColor = [UIColor whiteColor];

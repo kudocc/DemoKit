@@ -32,7 +32,6 @@
 
 - (void)setNeedsDisplay {
     [self cancelCurrentDisplay];
-//    NSLog(@"in setNeedsDisplay %p, %ld", self, (long)_displayCycle);
     [super setNeedsDisplay];
 }
 
@@ -66,7 +65,6 @@
                 return;
             }
             dispatch_async(dispatch_get_main_queue(), ^{
-//                NSLog(@"in global queue %p, %ld, %ld", self, (long)cycle, (long)_displayCycle);
                 if (isCancel()) {
                     NSLog(@"cancel before set content");
                     return;

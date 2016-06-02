@@ -67,7 +67,9 @@
 - (id)initWithContent:(NSString *)strContent left:(BOOL)left {
     self = [super init];
     if (self) {
-        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paragraphStyle.lineSpacing = 0.0;
+        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
         _left = left;
         
         CGSize constraintSize = CGSizeMake([self.class constraintWidth], CGFLOAT_MAX);
@@ -104,6 +106,11 @@
     if (_chatCell == chatCell) return;
     
     _chatCell = chatCell;
+    if (_chatCell.left) {
+        _viewChatMsg.backgroundColor = [UIColor whiteColor];
+    } else {
+        _viewChatMsg.backgroundColor = [UIColor greenColor];
+    }
     _viewChatMsg.content = chatCell.content;
     [self setNeedsLayout];
 }
@@ -128,6 +135,7 @@
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];

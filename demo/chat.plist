@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>content</key>
-		<string>今天在哪里吃饭啊，饿死我了，(⊙o⊙)…无语了 😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄</string>
+		<string>Hi, I&apos;m hungry!!! Let&apos;s go and have a good lunch!!! Do you have some adivce?</string>
 		<key>left</key>
 		<true/>
 	</dict>
@@ -22,13 +22,13 @@
 	</dict>
 	<dict>
 		<key>content</key>
-		<string>好吧，那你看看附近有啥吃的，预算100以内哦</string>
+		<string>好吧，那你看看附近有啥吃的，预算100以内哦😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄😄</string>
 		<key>left</key>
 		<false/>
 	</dict>
 	<dict>
 		<key>content</key>
-		<string>。。。</string>
+		<string>You&apos;re so stingy, haha. Well, it&apos;s OK. I&apos;m hungry @@@@@@</string>
 		<key>left</key>
 		<true/>
 	</dict>

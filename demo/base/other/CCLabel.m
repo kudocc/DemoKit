@@ -16,9 +16,6 @@
     self = [super init];
     if (self) {
         self.layer.contentsScale = [UIScreen mainScreen].scale;
-        NSLog(@"%@", self.layer.contentsGravity);
-        self.contentMode = UIViewContentModeTop;
-        NSLog(@"%@", self.layer.contentsGravity);
         CCAsyncLayer *layer = (CCAsyncLayer *)self.layer;
         layer.asyncDisplay = YES;
     }
