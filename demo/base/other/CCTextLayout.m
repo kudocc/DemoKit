@@ -19,26 +19,18 @@
 }
 
 + (id)textLayoutWithSize:(CGSize)size attributedText:(NSAttributedString *)attributedText {
-    CCTextLayout *textLayout = [[CCTextLayout alloc] initWithSize:size attributedString:attributedText];
+    CCTextContainer *container = [CCTextContainer textContainerWithContentSize:size contentInsets:UIEdgeInsetsZero];
+    return [self textLayoutWithContainer:container attributedText:attributedText];
+}
+
++ (id)textLayoutWithContainer:(CCTextContainer *)textContainer text:(NSString *)text {
+    NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:text];
+    return [self textLayoutWithContainer:textContainer attributedText:attributedString];
+}
+
++ (id)textLayoutWithContainer:(CCTextContainer *)textContainer attributedText:(NSAttributedString *)attributedText {
+    CCTextLayout *textLayout = [[CCTextLayout alloc] initWithContainer:textContainer attributedString:attributedText];
     return textLayout;
-}
-
-- (void)dealloc {
-    if (_ctFramesetter) {
-        CFRelease(_ctFramesetter);
-    }
-}
-
-- (id)initWithSize:(CGSize)size attributedString:(NSAttributedString *)attributedText {
-    self = [super init];
-    if (self) {
-        _textConstraintSize = size;
-        _textConstraintPath = CGPathCreateWithRect(CGRectMake(0, 0, size.width, size.height), NULL);
-        _attributedString = attributedText;
-        
-        [self layout];
-    }
-    return self;
 }
 
 + (CGSize)measureFrame:(CTFrameRef)frame {
@@ -64,30 +56,55 @@
     return CGSizeMake(ceil(maxWidth), ceil(textHeight));
 }
 
+- (void)dealloc {
+    if (_ctFramesetter) {
+        CFRelease(_ctFramesetter);
+    }
+}
+
+- (id)initWithContainer:(CCTextContainer *)container attributedString:(NSAttributedString *)attributedText {
+    self = [super init];
+    if (self) {
+        _textContainer = container;
+        _attributedString = attributedText;
+        
+        [self layout];
+    }
+    return self;
+}
+
 - (void)layout {
+    CGRect boundsContent = CGRectMake(0, 0, _textContainer.contentSize.width, _textContainer.contentSize.height);
+    CGRect textFrame = UIEdgeInsetsInsetRect(boundsContent, _textContainer.contentInsets);
+    CGPathRef textConstraintPath = CGPathCreateWithRect(textFrame, NULL);
+    
     _ctFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
-    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), _textConstraintPath, NULL);
+    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath, NULL);
     
     CFArrayRef lines = CTFrameGetLines(_ctFrame);
     CFIndex count = CFArrayGetCount(lines);
-    CGPoint positions[count];
-    CTFrameGetLineOrigins(_ctFrame, CFRangeMake(0, 0), positions);
-    
-    CTLineRef bottomLine = CFArrayGetValueAtIndex(lines, count-1);
-    CGPoint bottomPosition = positions[count-1];
-    CGFloat bottomLineDescent, bottomLineLeading;
-    CTLineGetTypographicBounds(bottomLine, NULL, &bottomLineDescent, &bottomLineLeading);
-    CGFloat bottom = bottomPosition.y - bottomLineDescent - bottomLineLeading;
-    
-    NSMutableArray *mutableArray = [NSMutableArray array];
-    for (CFIndex i = count-1; i >= 0; --i) {
-        CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-        CGPoint po = positions[i];
-        po = CGPointMake(po.x, ceil(po.y-bottom));
-        CCTextLine *ccLine = [CCTextLine textLineWithPosition:po line:line];
-        [mutableArray addObject:ccLine];
+    if (count > 0) {
+        CGPoint positions[count];
+        CTFrameGetLineOrigins(_ctFrame, CFRangeMake(0, 0), positions);
+        
+        CTLineRef bottomLine = CFArrayGetValueAtIndex(lines, count-1);
+        CGPoint bottomPosition = positions[count-1];
+        CGFloat bottomLineDescent, bottomLineLeading;
+        CTLineGetTypographicBounds(bottomLine, NULL, &bottomLineDescent, &bottomLineLeading);
+        CGFloat bottom = bottomPosition.y - bottomLineDescent - bottomLineLeading;
+        
+        NSMutableArray *mutableArray = [NSMutableArray array];
+        for (CFIndex i = count-1; i >= 0; --i) {
+            CTLineRef line = CFArrayGetValueAtIndex(lines, i);
+            CGPoint po = positions[i];
+            po = CGPointMake(po.x, ceil(po.y-bottom));
+            CCTextLine *ccLine = [CCTextLine textLineWithPosition:po line:line];
+            [mutableArray addObject:ccLine];
+        }
+        _textLines = [mutableArray copy];
+    } else {
+        _textLines = nil;
     }
-    _textLines = [mutableArray copy];
     
     CGSize size = [CCTextLayout measureFrame:_ctFrame];
     _textBounds = size;
@@ -102,12 +119,14 @@
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextTranslateCTM(context, 0, size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
+    
+    CGFloat yOffset = size.height - _textBounds.height;
     for (CCTextLine *line in _textLines) {
         if (isCancel && isCancel()) {
             NSLog(@"not bad before draw line cancel");
             return;
         }
-        CGContextSetTextPosition(context, line.position.x, line.position.y);
+        CGContextSetTextPosition(context, line.position.x, yOffset + line.position.y);
         CTLineDraw(line.line, context);
     }
     CGContextRestoreGState(context);

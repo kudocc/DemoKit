@@ -78,7 +78,7 @@
         task.display(context, self.bounds.size, nil);
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
-        self.contents = image;
+        self.contents = (__bridge id)image.CGImage;
     }
 }
 

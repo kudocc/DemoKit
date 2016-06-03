@@ -7,6 +7,8 @@
 //
 
 #import "SimpleChatViewController.h"
+#import "NSAttributedString+CCKit.h"
+#import "UIImage+CCKit.h"
 
 @interface ChatMsgView : UIView
 
@@ -67,15 +69,61 @@
 - (id)initWithContent:(NSString *)strContent left:(BOOL)left {
     self = [super init];
     if (self) {
+        NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:@"\\[\\w+.(jpeg|jpg|png)\\]" options:0 error:nil];
+        NSArray<NSTextCheckingResult *> *results = [regularExpression matchesInString:strContent options:0 range:NSMakeRange(0, strContent.length)];
+        NSMutableAttributedString *mAttrString = [[NSMutableAttributedString alloc] initWithString:@""];
+        NSUInteger location = 0;
+        for (NSTextCheckingResult *result in results) {
+            NSRange rangeBefore = NSMakeRange(location, result.range.location-location);
+            if (rangeBefore.length > 0) {
+                NSString *subString = [strContent substringWithRange:rangeBefore];
+                NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+                [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+                [subAttrString cc_setColor:[UIColor blackColor]];
+                [mAttrString appendAttributedString:subAttrString];
+            }
+            location = result.range.location + result.range.length;
+            
+            // image found
+            NSRange rangeImageName = NSMakeRange(result.range.location+1, result.range.length-2);
+            NSString *imageName = [strContent substringWithRange:rangeImageName];
+            UIImage *image = [UIImage imageNamed:imageName];
+            image = [UIImage cc_resizeImage:image contentMode:UIViewContentModeScaleToFill size:CGSizeMake(50, 50)];
+            if (image) {
+                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                attachment.image = image;
+                attachment.bounds = CGRectMake(0, 0, image.size.width, image.size.height);
+                NSAttributedString *attrAttach = [NSAttributedString attributedStringWithAttachment:attachment];
+                [mAttrString appendAttributedString:attrAttach];
+            }
+        }
+        if (location < strContent.length) {
+            NSString *subString = [strContent substringFromIndex:location];
+            NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+            [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+            [subAttrString cc_setColor:[UIColor blackColor]];
+            [mAttrString appendAttributedString:subAttrString];
+        }
+        
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         paragraphStyle.lineSpacing = 0.0;
-        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        paragraphStyle.headIndent = 10.0;
+//        paragraphStyle.firstLineHeadIndent = 20.0;
+        paragraphStyle.paragraphSpacing = 100;
+//        paragraphStyle.tailIndent = 2.0;
+//        paragraphStyle.baseWritingDirection = NSWritingDirectionRightToLeft;
+//        paragraphStyle.alignment = NSTextAlignmentCenter;
+        [mAttrString addAttribute:NSParagraphStyleAttributeName
+                            value:paragraphStyle
+                            range:NSMakeRange(0, [mAttrString length])];
+        _content = [mAttrString copy];
         _left = left;
         
-        CGSize constraintSize = CGSizeMake([self.class constraintWidth], CGFLOAT_MAX);
+        CGSize constraintSize = CGSizeMake([self.class constraintWidth], 1040);
         CGRect boundingRect = [_content boundingRectWithSize:constraintSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
         _contentWidth = ceil(boundingRect.size.width);
-        _contentHeight = ceil(boundingRect.size.height);
+        _contentHeight = (ceil(boundingRect.size.height) > constraintSize.height) ? constraintSize.height : ceil(boundingRect.size.height);
         _cellHeight = _contentHeight + [self.class paddingY];
     }
     return self;

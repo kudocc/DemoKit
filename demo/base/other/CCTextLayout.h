@@ -10,15 +10,17 @@
 #import <UIKit/UIKit.h>
 #import <CoreText/CoreText.h>
 #import "CCTextLine.h"
+#import "CCTextContainer.h"
 
 @interface CCTextLayout : NSObject
 
 + (id)textLayoutWithSize:(CGSize)size text:(NSString *)text;
 + (id)textLayoutWithSize:(CGSize)size attributedText:(NSAttributedString *)attributedText;
++ (id)textLayoutWithContainer:(CCTextContainer *)textContainer text:(NSString *)text;
++ (id)textLayoutWithContainer:(CCTextContainer *)textContainer attributedText:(NSAttributedString *)attributedText;
 
+@property (nonatomic, readonly) CCTextContainer *textContainer;
 @property (nonatomic, readonly) NSAttributedString *attributedString;
-@property (nonatomic, readonly) CGSize textConstraintSize;
-@property (nonatomic, readonly) CGPathRef textConstraintPath;
 @property (nonatomic, readonly) CGSize textBounds;
 @property (nonatomic, readonly) NSArray<CCTextLine *> *textLines;
 

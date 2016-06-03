@@ -8,6 +8,8 @@
 
 #import "CoreTextChatViewController.h"
 #import <CoreText/CoreText.h>
+#import "NSAttributedString+CCKit.h"
+#import "UIImage+CCKit.h"
 
 @interface CCLine : NSObject
 
@@ -40,12 +42,12 @@
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
     
-//    for (CCLine *line in _lines) {
-//        CGContextSetTextPosition(context, line.position.x, line.position.y);
-//        CTLineDraw(line.line, context);
-//    }
+    for (CCLine *line in _lines) {
+        CGContextSetTextPosition(context, line.position.x, line.position.y);
+        CTLineDraw(line.line, context);
+    }
     
-    CTFrameDraw(_ctFrame, context);
+//    CTFrameDraw(_ctFrame, context);
 }
 @end
 
@@ -112,8 +114,50 @@
 - (id)initWithContent:(NSString *)strContent left:(BOOL)left {
     self = [super init];
     if (self) {
+        
+        NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:@"\\[\\w+.(jpeg|jpg|png)\\]" options:0 error:nil];
+        NSArray<NSTextCheckingResult *> *results = [regularExpression matchesInString:strContent options:0 range:NSMakeRange(0, strContent.length)];
+        NSMutableAttributedString *mAttrString = [[NSMutableAttributedString alloc] initWithString:@""];
+        NSUInteger location = 0;
+        for (NSTextCheckingResult *result in results) {
+            NSRange rangeBefore = NSMakeRange(location, result.range.location-location);
+            if (rangeBefore.length > 0) {
+                NSString *subString = [strContent substringWithRange:rangeBefore];
+                NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+                [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+                [subAttrString cc_setColor:[UIColor blackColor]];
+                [mAttrString appendAttributedString:subAttrString];
+            }
+            location = result.range.location + result.range.length;
+            
+            // image found
+            NSRange rangeImageName = NSMakeRange(result.range.location+1, result.range.length-2);
+            NSString *imageName = [strContent substringWithRange:rangeImageName];
+            UIImage *image = [UIImage imageNamed:imageName];
+            image = [UIImage cc_resizeImage:image contentMode:UIViewContentModeScaleToFill size:CGSizeMake(50, 50)];
+            if (image) {
+                NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+                attachment.image = image;
+                attachment.bounds = CGRectMake(0, 0, image.size.width, image.size.height);
+                NSAttributedString *attrAttach = [NSAttributedString attributedStringWithAttachment:attachment];
+                [mAttrString appendAttributedString:attrAttach];
+            }
+        }
+        if (location < strContent.length) {
+            NSString *subString = [strContent substringFromIndex:location];
+            NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+            [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+            [subAttrString cc_setColor:[UIColor blackColor]];
+            [mAttrString appendAttributedString:subAttrString];
+        }
+        
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
+        paragraphStyle.lineSpacing = 10.0;
+//        paragraphStyle.alignment = NSTextAlignmentCenter;
+        [mAttrString addAttribute:NSParagraphStyleAttributeName
+                            value:paragraphStyle
+                            range:NSMakeRange(0, [mAttrString length])];
+        _content = [mAttrString copy];
         _left = left;
         
         _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_content);
@@ -121,7 +165,7 @@
         CGPathRef path = CGPathCreateWithRect(constraint, NULL);
         _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_content length]), path, NULL);
         CGPathRelease(path);
-        
+        /*
         {
             // debug
             CGSize size = [self.class measureFrame:_frame];
@@ -129,10 +173,11 @@
             CGPathRef path = CGPathCreateWithRect(newConstraint, NULL);
             _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_content length]), path, NULL);
             CGPathRelease(path);
-        }
+        }*/
         
         _lines = CTFrameGetLines(_frame);
         
+        /*
         {
             // debug first line
             CTLineRef line = CFArrayGetValueAtIndex(_lines, 0);
@@ -147,7 +192,7 @@
                 CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
                 NSLog(@"second line ascent:%@, descent:%@, leading:%@", @(ascent), @(descent), @(leading));
             }
-        }
+        }*/
         
         CFIndex count = CFArrayGetCount(_lines);
         CGPoint positions[count];

@@ -10,6 +10,7 @@
 #import "SimpleChatViewController.h"
 #import "CoreTextChatViewController.h"
 #import "ChatViewController.h"
+#import "CCLabelDemoViewController.h"
 #import <CoreText/CoreText.h>
 
 @interface TestLayer : CALayer
@@ -100,11 +101,13 @@
     
     self.arrayTitle = @[@"Simple Chat",
                         @"Core Text Chat",
-                        @"Asynchonized Text"];
+                        @"Asynchonized Text",
+                        @"CCLabel demo"];
     
     self.arrayClass = @[[SimpleChatViewController class],
                         [CoreTextChatViewController class],
-                        [ChatViewController class]];
+                        [ChatViewController class],
+                        [CCLabelDemoViewController class]];
     
 //    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
 //    v.backgroundColor = [UIColor greenColor];

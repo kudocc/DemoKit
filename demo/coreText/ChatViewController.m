@@ -51,7 +51,7 @@
         _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
         _left = left;
         
-        CGSize constraint = CGSizeMake([self.class constraintWidth], 1024);
+        CGSize constraint = CGSizeMake([self.class constraintWidth], CGFLOAT_MAX);
         _textLayout = [CCTextLayout textLayoutWithSize:constraint attributedText:_content];
         
         _contentWidth = _textLayout.textBounds.width;

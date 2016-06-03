@@ -25,6 +25,10 @@
 		A7147EDB1CFE8D750090FCCB /* CCLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EDA1CFE8D750090FCCB /* CCLabel.m */; };
 		A7147EDE1CFEAF650090FCCB /* ChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EDD1CFEAF650090FCCB /* ChatViewController.m */; };
 		A7147EE41CFEE1470090FCCB /* NSAttributedString+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EE31CFEE1470090FCCB /* NSAttributedString+CCKit.m */; };
+		A7147EEA1D0160E20090FCCB /* CCTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EE91D0160E20090FCCB /* CCTextContainer.m */; };
+		A7147EED1D0172B40090FCCB /* CCLabelDemoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EEC1D0172B40090FCCB /* CCLabelDemoViewController.m */; };
+		A7147EF01D0184D20090FCCB /* CCTextDefine.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EEF1D0184D20090FCCB /* CCTextDefine.m */; };
+		A7147EF31D01859E0090FCCB /* CCTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EF21D01859E0090FCCB /* CCTextRunDelegate.m */; };
 		A734D11A1CF428D2008276C9 /* CCHttpSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C91CF2ACA9008D5924 /* CCHttpSessionManager.m */; };
 		A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11C1CF42BA9008276C9 /* NetworkViewController.m */; };
 		A734D1201CF42BCB008276C9 /* HttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A734D11F1CF42BCB008276C9 /* HttpViewController.m */; };
@@ -156,6 +160,14 @@
 		A7147EDD1CFEAF650090FCCB /* ChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChatViewController.m; sourceTree = "<group>"; };
 		A7147EE21CFEE1470090FCCB /* NSAttributedString+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+CCKit.h"; sourceTree = "<group>"; };
 		A7147EE31CFEE1470090FCCB /* NSAttributedString+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+CCKit.m"; sourceTree = "<group>"; };
+		A7147EE81D0160E20090FCCB /* CCTextContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextContainer.h; sourceTree = "<group>"; };
+		A7147EE91D0160E20090FCCB /* CCTextContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextContainer.m; sourceTree = "<group>"; };
+		A7147EEB1D0172B40090FCCB /* CCLabelDemoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCLabelDemoViewController.h; sourceTree = "<group>"; };
+		A7147EEC1D0172B40090FCCB /* CCLabelDemoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCLabelDemoViewController.m; sourceTree = "<group>"; };
+		A7147EEE1D0183F70090FCCB /* CCTextDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCTextDefine.h; sourceTree = "<group>"; };
+		A7147EEF1D0184D20090FCCB /* CCTextDefine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextDefine.m; sourceTree = "<group>"; };
+		A7147EF11D01859E0090FCCB /* CCTextRunDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextRunDelegate.h; sourceTree = "<group>"; };
+		A7147EF21D01859E0090FCCB /* CCTextRunDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextRunDelegate.m; sourceTree = "<group>"; };
 		A734D11B1CF42BA9008276C9 /* NetworkViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkViewController.h; sourceTree = "<group>"; };
 		A734D11C1CF42BA9008276C9 /* NetworkViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkViewController.m; sourceTree = "<group>"; };
 		A734D11E1CF42BCB008276C9 /* HttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpViewController.h; sourceTree = "<group>"; };
@@ -400,6 +412,8 @@
 				A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */,
 				A7147EDC1CFEAF650090FCCB /* ChatViewController.h */,
 				A7147EDD1CFEAF650090FCCB /* ChatViewController.m */,
+				A7147EEB1D0172B40090FCCB /* CCLabelDemoViewController.h */,
+				A7147EEC1D0172B40090FCCB /* CCLabelDemoViewController.m */,
 			);
 			path = coreText;
 			sourceTree = "<group>";
@@ -534,12 +548,18 @@
 			children = (
 				A773F69C1CEC54920098F1C8 /* ImagePickerViewControllerHelper.h */,
 				A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */,
+				A7147EEE1D0183F70090FCCB /* CCTextDefine.h */,
+				A7147EEF1D0184D20090FCCB /* CCTextDefine.m */,
+				A7147EF11D01859E0090FCCB /* CCTextRunDelegate.h */,
+				A7147EF21D01859E0090FCCB /* CCTextRunDelegate.m */,
 				A7147ED91CFE8D750090FCCB /* CCLabel.h */,
 				A7147EDA1CFE8D750090FCCB /* CCLabel.m */,
 				A7147ECD1CFE788E0090FCCB /* CCAsyncLayer.h */,
 				A7147ECE1CFE788E0090FCCB /* CCAsyncLayer.m */,
 				A7147ED61CFE84EB0090FCCB /* CCTextLine.h */,
 				A7147ED71CFE84EB0090FCCB /* CCTextLine.m */,
+				A7147EE81D0160E20090FCCB /* CCTextContainer.h */,
+				A7147EE91D0160E20090FCCB /* CCTextContainer.m */,
 				A7147ED01CFE84BC0090FCCB /* CCTextLayout.h */,
 				A7147ED11CFE84BC0090FCCB /* CCTextLayout.m */,
 			);
@@ -901,10 +921,12 @@
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,
 				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
 				A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */,
+				A7147EED1D0172B40090FCCB /* CCLabelDemoViewController.m in Sources */,
 				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
 				A7147EE41CFEE1470090FCCB /* NSAttributedString+CCKit.m in Sources */,
 				A7147ED81CFE84EB0090FCCB /* CCTextLine.m in Sources */,
+				A7147EF01D0184D20090FCCB /* CCTextDefine.m in Sources */,
 				A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */,
 				A7147EDE1CFEAF650090FCCB /* ChatViewController.m in Sources */,
 				A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */,
@@ -919,6 +941,7 @@
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
 				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
+				A7147EEA1D0160E20090FCCB /* CCTextContainer.m in Sources */,
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
@@ -954,6 +977,7 @@
 				A7583C3F1CE31BFB007558CB /* main.m in Sources */,
 				A734D1261CF42C0D008276C9 /* HttpChainedRequestsViewController.m in Sources */,
 				A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */,
+				A7147EF31D01859E0090FCCB /* CCTextRunDelegate.m in Sources */,
 				A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */,
 				A734D1231CF42BFC008276C9 /* HttpAsyncRequestsViewController.m in Sources */,
 				A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */,
