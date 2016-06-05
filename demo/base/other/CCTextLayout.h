@@ -23,7 +23,10 @@
 @property (nonatomic, readonly) NSAttributedString *attributedString;
 @property (nonatomic, readonly) CGSize textBounds;
 @property (nonatomic, readonly) NSArray<CCTextLine *> *textLines;
+@property (nonatomic, readonly) NSArray<CCTextAttachment *> *attachments;
+@property (nonatomic, readonly) NSArray<NSValue *> *attachmentFrames;
 
-- (void)drawInContext:(CGContextRef)context size:(CGSize)size isCancel:(BOOL(^)(void))isCancel;
+- (void)drawInContext:(CGContextRef)context
+                 view:(UIView *)view layer:(CALayer *)layer size:(CGSize)size isCancel:(BOOL(^)(void))isCancel;
 
 @end

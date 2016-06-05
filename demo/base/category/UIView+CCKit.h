@@ -31,4 +31,8 @@
 
 - (void)logViewHierarchy;
 
++ (CGRect)cc_frameOfContentWithContentSize:(CGSize)contentSize
+                             containerSize:(CGSize)size
+                               contentMode:(UIViewContentMode)contentMode;
+
 @end

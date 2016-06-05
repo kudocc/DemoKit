@@ -7,6 +7,8 @@
 //
 
 #import "CCTextLayout.h"
+#import "CCTextDefine.h"
+#import "UIView+CCKit.h"
 
 @implementation CCTextLayout {
     CTFramesetterRef _ctFramesetter;
@@ -106,11 +108,21 @@
         _textLines = nil;
     }
     
+    NSMutableArray *attachments = [NSMutableArray array];
+    NSMutableArray *attachmentFrames = [NSMutableArray array];
+    for (CCTextLine *textLine in _textLines) {
+        [attachments addObjectsFromArray:textLine.attachments];
+        [attachmentFrames addObjectsFromArray:textLine.attachmentFrames];
+    }
+    _attachments = [attachments copy];
+    _attachmentFrames = [attachmentFrames copy];
+    
     CGSize size = [CCTextLayout measureFrame:_ctFrame];
     _textBounds = size;
 }
 
-- (void)drawInContext:(CGContextRef)context size:(CGSize)size isCancel:(BOOL(^)(void))isCancel {
+- (void)drawInContext:(CGContextRef)context
+                 view:(UIView *)view layer:(CALayer *)layer size:(CGSize)size isCancel:(BOOL(^)(void))isCancel {
     if (isCancel && isCancel()) {
         NSLog(@"good before draw cancel");
         return;
@@ -128,6 +140,32 @@
         }
         CGContextSetTextPosition(context, line.position.x, yOffset + line.position.y);
         CTLineDraw(line.line, context);
+        
+        for (NSInteger i = 0; i < [line.attachments count]; ++i) {
+            CCTextAttachment *attachment = line.attachments[i];
+            CGRect frame = [line.attachmentFrames[i] CGRectValue];
+            frame.origin.y += yOffset;
+            frame = UIEdgeInsetsInsetRect(frame, attachment.contentInsets);
+            CGRect frameInside = [UIView cc_frameOfContentWithContentSize:attachment.contentSize containerSize:frame.size contentMode:attachment.contentMode];
+            frame = CGRectMake(frame.origin.x+frameInside.origin.x, frame.origin.y+frameInside.origin.y, frameInside.size.width, frameInside.size.height);
+            if ([attachment.content isKindOfClass:[UIImage class]]) {
+                UIImage *image = (UIImage *)attachment.content;
+                CGContextDrawImage(context, frame, image.CGImage);
+            } else {
+                CGAffineTransform transform = CGAffineTransformMakeTranslation(0, size.height);
+                transform = CGAffineTransformScale(transform, 1, -1);
+                frame = CGRectApplyAffineTransform(frame, transform);
+                if ([attachment.content isKindOfClass:[UIView class]]) {
+                    UIView *viewAttachment = (UIView *)attachment.content;
+                    [view addSubview:viewAttachment];
+                    viewAttachment.frame = frame;
+                } else if ([attachment.content isKindOfClass:[CALayer class]]) {
+                    CALayer *layerAttachment = attachment.content;
+                    [layer addSublayer:layerAttachment];
+                    layer.frame = frame;
+                }
+            }
+        }
     }
     CGContextRestoreGState(context);
 }

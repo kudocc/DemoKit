@@ -46,7 +46,6 @@
                     imagePicker.delegate = self;
                     [vc presentViewController:imagePicker animated:YES completion:nil];
                 }];
-                
                 [alertController addAction:actionPhoto];
             }
             if ((flag & ImagePickerFlagPhoto) && [UIImagePickerController isSourceTypeAvailable:UIImagePickerControllerSourceTypePhotoLibrary]) {

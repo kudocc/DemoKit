@@ -13,6 +13,10 @@
 #import "CCLabelDemoViewController.h"
 #import <CoreText/CoreText.h>
 
+// 1.run descent是负值么
+// 2.run position是相对于line的么：对的
+// 3.line 的position.x可能是>0的么：对的，当pragraphStyle设置缩进的时候
+
 @interface TestLayer : CALayer
 
 @property (nonatomic) UIImage *image;

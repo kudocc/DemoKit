@@ -24,7 +24,18 @@
 - (UIColor *)cc_color;
 - (UIColor *)cc_colorAtIndex:(NSUInteger)index;
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content position:(CCTextAttachmentPosition)position;
+
++ (NSAttributedString *)attachmentStringWithContent:(id)content
+                                        contentMode:(UIViewContentMode)contentMode
+                                        contentSize:(CGSize)contentSize
+                                        alignToFont:(UIFont *)font
+                                 attachmentPosition:(CCTextAttachmentPosition)position;
+
++ (NSAttributedString *)attachmentStringWithContent:(id)content
+                                        contentMode:(UIViewContentMode)contentMode
+                                              width:(CGFloat)width
+                                             ascent:(CGFloat)ascent
+                                            descent:(CGFloat)descent;
 
 @end
 

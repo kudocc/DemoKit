@@ -16,9 +16,32 @@
 @property (nonatomic) CTLineRef line;
 @property (nonatomic) CGPoint position;
 
+- (id)initWithLine:(CTLineRef)line;
+
 @end
 
 @implementation CCLine
+
+- (id)initWithLine:(CTLineRef)line {
+    self = [super init];
+    if (self) {
+        _line = line;
+        
+        CFArrayRef runs = CTLineGetGlyphRuns(_line);
+        CFIndex count = CFArrayGetCount(runs);
+        for (CFIndex i = 0; i < count; ++i) {
+            CTRunRef run = CFArrayGetValueAtIndex(runs, i);
+            CFRange range = CTRunGetStringRange(run);
+            CGPoint position;
+            CTRunGetPositions(run, CFRangeMake(0, 1), &position);
+            NSLog(@"CTRunRef index:%@, range.location:%@, range.length:%@, pos.x:%@, pos.y:%@", @(i), @(range.location), @(range.length), @(position.x), @(position.y));
+            CGFloat ascent = 0, descent = 0, leading = 0;
+            CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
+            NSLog(@"width:%@, ascent:%@, descent:%@, leading:%@", @(width), @(ascent), @(descent), @(leading));
+        }
+    }
+    return self;
+}
 
 @end
 
@@ -96,8 +119,7 @@
     CGFloat textHeight = 0;
     CFIndex lastLineIndex = numLines - 1;
     
-    for(CFIndex index = 0; index < numLines; index++)
-    {
+    for(CFIndex index = 0; index < numLines; index++) {
         CGFloat ascent, descent, leading, width;
         CTLineRef line = (CTLineRef) CFArrayGetValueAtIndex(lines, index);
         width = CTLineGetTypographicBounds(line, &ascent,  &descent, &leading);
@@ -153,6 +175,7 @@
         
         NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         paragraphStyle.lineSpacing = 10.0;
+        paragraphStyle.firstLineHeadIndent = 10;
 //        paragraphStyle.alignment = NSTextAlignmentCenter;
         [mAttrString addAttribute:NSParagraphStyleAttributeName
                             value:paragraphStyle
@@ -204,9 +227,9 @@
             CGFloat ascent, descent, leading;
             CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             CGPoint po = positions[i];
-            CCLine *ccLine = [[CCLine alloc] init];
+            NSLog(@"index:%@, pos.x:%@, pos.y:%@", @(i), @(po.x), @(po.y));
+            CCLine *ccLine = [[CCLine alloc] initWithLine:line];
             ccLine.position = CGPointMake(po.x, ceil(po.y-bottomPosition.y + descent + leading));
-            ccLine.line = line;
             [mArray addObject:ccLine];
         }
         _ccLines = [mArray copy];

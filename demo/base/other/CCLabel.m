@@ -9,11 +9,15 @@
 #import "CCLabel.h"
 #import "UIView+CCKit.h"
 #import "NSAttributedString+CCKit.h"
+#import "CCTextDefine.h"
 
 @implementation CCLabel {
     NSMutableAttributedString *_innerAttributedString;
     CCTextContainer *_textContainer;
     BOOL _needUpdateLayout;
+    
+    NSArray<CCTextAttachment *> *_attachmentViews;
+    NSArray<CCTextAttachment *> *_attachmentLayers;
 }
 
 + (UIFont *)defaultLabelFont {
@@ -170,13 +174,39 @@
 
 - (CCAsyncLayerDisplayTask *)newAsyncDisplayTask {
     CCAsyncLayerDisplayTask *task = [CCAsyncLayerDisplayTask new];
+//    if (_needUpdateLayout) {
+//        for (CCTextAttachment *attachment in _attachmentViews) {
+//            UIView *v = attachment.content;
+//            [v removeFromSuperview];
+//        }
+//        for (CCTextAttachment *attachment in _attachmentLayers) {
+//            CALayer *layer = attachment.content;
+//            [layer removeFromSuperlayer];
+//        }
+//    }
+    
+    /*
+    task.willDisplay = ^(CALayer *layer) {
+        
+    };
+    */
+    
     task.display = ^(CGContextRef context, CGSize size, BOOL(^isCancelled)(void)) {
         if (_needUpdateLayout) {
             // TODO:it may occur in background thread
             _textLayout = [CCTextLayout textLayoutWithContainer:_textContainer attributedText:[_innerAttributedString copy]];
         }
         
-        [_textLayout drawInContext:context size:size isCancel:isCancelled];
+        [_textLayout drawInContext:context view:self layer:self.layer size:size isCancel:isCancelled];
+    };
+    
+    task.didDisplay = ^(CALayer *layer, BOOL finished) {
+        CCMainThreadBlock(^() {
+//            NSMutableArray *attachViews = [NSMutableArray array];
+//            NSMutableArray *attachLayers = [NSMutableArray array];
+            
+            _needUpdateLayout = NO;
+        });
     };
     return task;
 }

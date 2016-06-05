@@ -51,11 +51,50 @@
 
 #pragma mark - attachment
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content position:(CCTextAttachmentPosition)position {
++ (NSAttributedString *)attachmentStringWithContent:(id)content
+                                        contentMode:(UIViewContentMode)contentMode
+                                        contentSize:(CGSize)contentSize
+                                        alignToFont:(UIFont *)font
+                                 attachmentPosition:(CCTextAttachmentPosition)position {
+    CGFloat ascent, descent, width;
+    width = contentSize.width;
+    CGSize size = contentSize;
+    switch (position) {
+        case CCTextAttachmentPositionTop:
+            ascent = font.ascender;
+            descent = size.height - ascent;
+            break;
+        case CCTextAttachmentPositionBottom:
+            descent = -font.descender;
+            ascent = size.height-descent;
+            break;
+        default:
+            ascent = font.ascender + (size.height - font.ascender - font.descender)/2;
+            descent = -font.descender + (size.height - font.ascender - font.descender)/2;
+            break;
+    }
+    return [self attachmentStringWithContent:content contentMode:contentMode width:width ascent:ascent descent:descent];
+}
+
++ (NSAttributedString *)attachmentStringWithContent:(id)content
+                                        contentMode:(UIViewContentMode)contentMode
+                                              width:(CGFloat)width
+                                             ascent:(CGFloat)ascent
+                                            descent:(CGFloat)descent {
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:CCAttachmentCharacter];
     
-    CCTextRunDelegate *runDelegate = [CCTextRunDelegate textRunDelegateWithContent:content position:position];
-    [attrString addAttributes:@{CCAttachmentAttributeName:runDelegate} range:NSMakeRange(0, [attrString length])];
+    CCTextAttachment *attachment = [CCTextAttachment textAttachmentWithContent:content];
+    attachment.content = content;
+    attachment.contentMode = contentMode;
+    
+    CCTextRunDelegate *runDelegate = [[CCTextRunDelegate alloc] init];
+    CGSize size = attachment.contentSize;
+    runDelegate.width = size.width;
+    runDelegate.ascent = ascent;
+    runDelegate.descent = descent;
+    CTRunDelegateRef ctRunDelegate = [runDelegate createCTRunDelegateRef];
+    [attrString addAttributes:@{CCAttachmentAttributeName:attachment, (__bridge id)kCTRunDelegateAttributeName: (__bridge id)ctRunDelegate} range:NSMakeRange(0, [attrString length])];
+    CFRelease(ctRunDelegate);
     return attrString;
 }
 
