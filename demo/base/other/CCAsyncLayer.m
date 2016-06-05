@@ -43,33 +43,37 @@
     }
     
     NSInteger cycle = _displayCycle;
-    BOOL(^isCancel)() = ^BOOL() {
+    BOOL(^isCanceled)() = ^BOOL() {
         return cycle != _displayCycle;
     };
+    
+    task.willDisplay(self);
     
     BOOL opaque = self.opaque;
     CGFloat scale = [UIScreen mainScreen].scale;
     if (_asyncDisplay) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            if (isCancel()) {
-                NSLog(@"cancel before create image context");
+            if (isCanceled()) {
+                task.didDisplay(self, NO);
                 return;
             }
             UIGraphicsBeginImageContextWithOptions(self.bounds.size, opaque, scale);
             CGContextRef context = UIGraphicsGetCurrentContext();
-            task.display(context, self.bounds.size, isCancel);
-            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
-            if (isCancel()) {
-                NSLog(@"cancel add block to before set content");
+            task.display(context, self.bounds.size, isCanceled);
+            if (isCanceled()) {
+                UIGraphicsEndImageContext();
+                task.didDisplay(self, NO);
                 return;
             }
+            UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
             dispatch_async(dispatch_get_main_queue(), ^{
-                if (isCancel()) {
-                    NSLog(@"cancel before set content");
+                if (isCanceled()) {
+                    task.didDisplay(self, NO);
                     return;
                 }
                 self.contents = (__bridge id)image.CGImage;
+                task.didDisplay(self, YES);
             });
         });
     } else {
@@ -79,6 +83,7 @@
         UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
         UIGraphicsEndImageContext();
         self.contents = (__bridge id)image.CGImage;
+        task.didDisplay(self, YES);
     }
 }
 

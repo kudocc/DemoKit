@@ -25,6 +25,12 @@ typedef NS_ENUM(NSUInteger, CCTextAttachmentPosition) {
     CCTextAttachmentPositionBottom
 };
 
+typedef NS_ENUM(NSUInteger, CCTextVerticalAlignment) {
+    CCTextVerticalAlignmentTop,
+    CCTextVerticalAlignmentCenter,
+    CCTextVerticalAlignmentBottom
+};
+
 extern NSString *const CCAttachmentAttributeName;
 
 

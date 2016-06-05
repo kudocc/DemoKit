@@ -49,6 +49,8 @@
     _innerAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
     [_innerAttributedString cc_setFont:_font];
     [_innerAttributedString cc_setColor:_textColor];
+    
+    _verticleAlignment = CCTextVerticalAlignmentCenter;
 }
 
 - (void)extractValueFromTextLayout:(CCTextLayout *)textLayout {
@@ -124,6 +126,13 @@
     [self _setNeedsUpdateLayout];
 }
 
+- (void)setVerticleAlignment:(CCTextVerticalAlignment)verticleAlignment {
+    if (_verticleAlignment == verticleAlignment) return;
+    _verticleAlignment = verticleAlignment;
+    
+    [self _setNeedsUpdateLayout];
+}
+
 - (void)setTextLayout:(CCTextLayout *)textLayout {
     _textLayout = textLayout;
     [self extractValueFromTextLayout:_textLayout];
@@ -174,38 +183,69 @@
 
 - (CCAsyncLayerDisplayTask *)newAsyncDisplayTask {
     CCAsyncLayerDisplayTask *task = [CCAsyncLayerDisplayTask new];
-//    if (_needUpdateLayout) {
-//        for (CCTextAttachment *attachment in _attachmentViews) {
-//            UIView *v = attachment.content;
-//            [v removeFromSuperview];
-//        }
-//        for (CCTextAttachment *attachment in _attachmentLayers) {
-//            CALayer *layer = attachment.content;
-//            [layer removeFromSuperlayer];
-//        }
-//    }
-    
-    /*
     task.willDisplay = ^(CALayer *layer) {
-        
+        if (_needUpdateLayout) {
+            for (CCTextAttachment *attachment in _attachmentViews) {
+                UIView *v = attachment.content;
+                [v removeFromSuperview];
+            }
+            for (CCTextAttachment *attachment in _attachmentLayers) {
+                CALayer *layer = attachment.content;
+                [layer removeFromSuperlayer];
+            }
+        }
     };
-    */
+    
+    BOOL needUpdateLayout = _needUpdateLayout;
+    CCTextVerticalAlignment verticalAlignment = _verticleAlignment;
+    NSAttributedString *attributedString = [_innerAttributedString copy];
+    __block CCTextLayout *layout = _textLayout;
     
     task.display = ^(CGContextRef context, CGSize size, BOOL(^isCancelled)(void)) {
-        if (_needUpdateLayout) {
-            // TODO:it may occur in background thread
-            _textLayout = [CCTextLayout textLayoutWithContainer:_textContainer attributedText:[_innerAttributedString copy]];
+        if (needUpdateLayout) {
+            layout = [CCTextLayout textLayoutWithContainer:_textContainer attributedText:attributedString];
         }
         
-        [_textLayout drawInContext:context view:self layer:self.layer size:size isCancel:isCancelled];
+        CGPoint position = CGPointZero;
+        if (verticalAlignment == CCTextVerticalAlignmentCenter) {
+            position.y = (size.height - layout.textBounds.height)/2;
+        } else if (verticalAlignment == CCTextVerticalAlignmentBottom) {
+            position.y = size.height - layout.textBounds.height;
+        }
+        if (position.y < 0) {
+            position.y = 0;
+        }
+        
+        [layout drawInContext:context view:nil layer:nil position:position size:size isCanceled:isCancelled];
     };
     
     task.didDisplay = ^(CALayer *layer, BOOL finished) {
         CCMainThreadBlock(^() {
-//            NSMutableArray *attachViews = [NSMutableArray array];
-//            NSMutableArray *attachLayers = [NSMutableArray array];
+            CGSize size = layer.bounds.size;
+            CGPoint position = CGPointZero;
+            if (verticalAlignment == CCTextVerticalAlignmentCenter) {
+                position.y = (size.height - layout.textBounds.height)/2;
+            } else if (verticalAlignment == CCTextVerticalAlignmentBottom) {
+                position.y = size.height - layout.textBounds.height;
+            }
+            if (position.y < 0) {
+                position.y = 0;
+            }
+            [layout drawInContext:nil view:self layer:self.layer position:position size:size isCanceled:nil];
             
+            NSMutableArray *attachViews = [NSMutableArray array];
+            NSMutableArray *attachLayers = [NSMutableArray array];
+            for (CCTextAttachment *attachment in layout.attachments) {
+                if ([attachment.content isKindOfClass:[UIView class]]) {
+                    [attachViews addObject:attachment];
+                } else if ([attachment.content isKindOfClass:[CALayer class]]) {
+                    [attachLayers addObject:attachment];
+                }
+            }
+            _attachmentViews = [attachViews copy];
+            _attachmentLayers = [attachLayers copy];
             _needUpdateLayout = NO;
+            _textLayout = layout;
         });
     };
     return task;

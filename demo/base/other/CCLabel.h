@@ -10,6 +10,7 @@
 #import "CCTextContainer.h"
 #import "CCTextLayout.h"
 #import "CCAsyncLayer.h"
+#import "CCTextDefine.h"
 
 @interface CCLabel : UIView
 
@@ -26,6 +27,8 @@
 @property (nonatomic) UIEdgeInsets contentInsets;
 
 @property (nonatomic) NSInteger numberOfLines;
+
+@property (nonatomic) CCTextVerticalAlignment verticleAlignment;
 
 @property (nonatomic) CCTextLayout *textLayout;
 

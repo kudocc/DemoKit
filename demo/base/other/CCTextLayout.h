@@ -27,6 +27,6 @@
 @property (nonatomic, readonly) NSArray<NSValue *> *attachmentFrames;
 
 - (void)drawInContext:(CGContextRef)context
-                 view:(UIView *)view layer:(CALayer *)layer size:(CGSize)size isCancel:(BOOL(^)(void))isCancel;
+                 view:(UIView *)view layer:(CALayer *)layer position:(CGPoint)position size:(CGSize)size isCanceled:(BOOL(^)(void))isCanceled;
 
 @end
