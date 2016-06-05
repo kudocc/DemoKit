@@ -8,11 +8,11 @@
 
 #import "AppDelegate.h"
 #import "HomeTableViewController.h"
+#import "CoreTextViewController.h"
 #import "AnimationViewController.h"
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
-#import "CoreTextViewController.h"
 #import "UrlSessionViewController.h"
 #import "AudioViewController.h"
 #import "WebViewController.h"
@@ -28,26 +28,26 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
-    vc.arrayTitle = @[@"Animation",
+    vc.arrayTitle = @[@"Core Text",
+                      @"Animation",
                       @"Quartz 2D",
                       @"Image I/O",
                       @"Core Image",
-                      @"Core Text",
+                      @"Network - Dependency HTTP Task",
+                      @"Model",
                       @"URLSession",
                       @"WebView & WebCache",
-                      @"Audio",
-                      @"Network - Dependency HTTP Task",
-                      @"Model"];
-    vc.arrayClass = @[[AnimationViewController class],
+                      @"Audio"];
+    vc.arrayClass = @[[CoreTextViewController class],
+                      [AnimationViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
                       [CoreImageViewController class],
-                      [CoreTextViewController class],
+                      [NetworkViewController class],
+                      [ModelViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
-                      [AudioViewController class],
-                      [NetworkViewController class],
-                      [ModelViewController class]];
+                      [AudioViewController class]];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
