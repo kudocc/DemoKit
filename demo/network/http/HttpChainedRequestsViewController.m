@@ -58,10 +58,14 @@
 
 - (void)groupTaskWillStart:(CCHttpTaskGroup *)groupTask {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    [self showLoadingMessage:@"requesting"];
 }
 
 - (void)groupTaskDidEnd:(CCHttpTaskGroup *)groupTask {
     NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    [self hideLoadingMessage];
 }
 
 - (void)taskWillStart:(CCHttpTask *)task inGroup:(CCHttpTaskGroup *)groupTask {

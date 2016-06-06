@@ -14,18 +14,14 @@
     NSString *_identifier;
 }
 
-// 是否正在执行
 @property (nonatomic, assign) BOOL executing;
-// 是否执行完成
 @property (nonatomic, assign) BOOL finished;
-// 是否所有依赖都已经满足
+// A Boolean value indicating whether all the dependencies are finished so that the task can start
 @property (nonatomic, readonly) BOOL ready;
-// 是否已经被取消
+// A Boolean value indicating whether the task is cancelled
 @property (nonatomic, assign) BOOL cancelled;
 
 @property (nonatomic, strong) NSMutableArray<CCHttpTask *> *dependencies;
-
-@property (nonatomic, strong) NSMutableArray *mutableArrayNextTasks;
 
 @property (nonatomic, strong) NSURLSessionDataTask *dataTask;
 
@@ -104,9 +100,6 @@
     self.finished = YES;
     
     [self.delegate task:self didFailWithError:error];
-    
-    // 移除边，防止retain cycle
-    [self.mutableArrayNextTasks removeAllObjects];
 }
 
 - (NSString *)description {
@@ -124,8 +117,6 @@
     if (_executing && _dataTask) {
         [_dataTask cancel];
     } else if (!_finished) {
-        _finished = YES;
-        
         NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
         [self taskDidFailedWithError:error];
     }
@@ -139,12 +130,10 @@
 
 @property (nonatomic, strong) NSMutableArray *mutableArrayTasks;
 
-// 保存task依赖图的邻接表
+// task identifier to task
 @property (nonatomic, strong) NSMutableDictionary<NSString *, CCHttpTask *> *identifierTask;
+// task identifier to a list contains all taskes which dependent on the task
 @property (nonatomic, strong) NSMutableDictionary<NSString *, NSMutableArray<CCHttpTask *> *> *adjacencyTable;
-
-// 保存互相不依赖的task图，每一个item为一个NSArray<CCHttpTask *>，保存有依赖关系的图
-@property (nonatomic, strong) NSArray<NSArray<CCHttpTask *> *> *arrayTaskCategory;
 
 @end
 
@@ -174,30 +163,34 @@
 }
 
 - (void)startTaskGroup {
-    // 检查有没有环
+    // check if there is a cycle in dependency-graph
     BOOL hasCycle = [self dfs];
     if (hasCycle) {
-        NSLog(@"依赖设置错误，有环存在");
+        NSException *exception = [NSException exceptionWithName:@"CCHttpTaskGroupException"
+                                                         reason:@"there is a cycle in dependency-graph"
+                                                       userInfo:nil];
+        [exception raise];
         return;
     }
     
-    // 创建邻接表
+    // construct the adjacency table to represent graph
     [self constructAdjacencyTable];
     
-    // 取没有依赖的task作为起点
+    // start with the task which is ready to start
     NSMutableArray *mutableArrayStartTasks = [NSMutableArray array];
     for (CCHttpTask *task in _mutableArrayTasks) {
-        if ([task.dependencies count] == 0) {
+        if (task.ready) {
             [mutableArrayStartTasks addObject:task];
         }
     }
     
-    // 开启任务
+    // notify we will start group task
     if ([_delegate respondsToSelector:@selector(groupTaskWillStart:)]) {
         [_delegate groupTaskWillStart:self];
     }
     
     for (CCHttpTask *task in mutableArrayStartTasks) {
+        // notify a task will start
         if ([_delegate respondsToSelector:@selector(taskWillStart:inGroup:)]) {
             [_delegate taskWillStart:task inGroup:self];
         }
@@ -269,7 +262,7 @@
         }
     }
     
-    // 将task从图中删除
+    // remove the task from graph
     [_adjacencyTable removeObjectForKey:[task taskIdentifier]];
     
     [self debugAdjacencyTable];
@@ -278,27 +271,41 @@
 - (void)task:(CCHttpTask *)task didFailWithError:(NSError *)error {
     [_delegate groupTask:self taskDidFail:task error:error];
     
-    // 以这个task为起始位置深度优先搜索，拿到的搜索结果数组全部cancel
-    NSMutableArray *mutableArray = [NSMutableArray array];
-    [self cleanAndInitDFS];
-    [self dfs_visit:[task taskIdentifier] insertIntoArray:mutableArray];
-    
-    NSMutableArray *removeTaskIdentifiers = [NSMutableArray array];
-    for (CCHttpTask *task in mutableArray) {
-        [removeTaskIdentifiers addObject:[task taskIdentifier]];
-        if (!task.cancelled && !task.finished) {
-            [task cancel];
+    // 检查是否全部的task都已经完成
+    BOOL allTaskFinished = YES;
+    for (CCHttpTask *task in _mutableArrayTasks) {
+        if (!task.finished) {
+            allTaskFinished = NO;
+            break;
         }
     }
-    [_adjacencyTable removeObjectsForKeys:removeTaskIdentifiers];
+    if (allTaskFinished) {
+        if ([_delegate respondsToSelector:@selector(groupTaskDidEnd:)]) {
+            [_delegate groupTaskDidEnd:self];
+        }
+    }
     
-    // 如果task还没有开始运行就被cancel了，那么其dependency的task也在图中
-    // 此时要将task从其dependency的邻接表中删掉
-    // 如果task已经运行了，那么其dependency已经不在图中了
+    // 以这个task为起始位置深度优先搜索，拿到的搜索结果数组全部cancel
+    NSMutableArray *tasksDependentOnTask = [NSMutableArray array];
+    [self cleanAndInitDFS];
+    [self dfs_visit:[task taskIdentifier] insertIntoArray:tasksDependentOnTask];
+    
+    // remove the task from graph
+    [_adjacencyTable removeObjectForKey:task.taskIdentifier];
+    // if the task is canceled before starting, then the task it depends on may still in the graph, we should remove the task from its depended task's agencency list
+    // if the task is already started, then the task it depends on mustn't be in the graph.
     for (CCHttpTask *taskDependency in task.dependencies) {
         NSMutableArray *tasks = _adjacencyTable[[taskDependency taskIdentifier]];
         if (tasks) {
             [tasks removeObject:task];
+        }
+    }
+    
+    NSMutableArray *removeTaskIdentifiers = [NSMutableArray array];
+    for (CCHttpTask *task in tasksDependentOnTask) {
+        [removeTaskIdentifiers addObject:[task taskIdentifier]];
+        if (!task.cancelled && !task.finished) {
+            [task cancel];
         }
     }
 }
@@ -339,7 +346,7 @@
     if (mutableArray) {
         [mutableArray addObject:task];
     }
-    for (CCHttpTask *nextTask in task.mutableArrayNextTasks) {
+    for (CCHttpTask *nextTask in _adjacencyTable[task.taskIdentifier]) {
         NSString *nextIdentifier = [nextTask taskIdentifier];
         // if it is white
         if ([_color[nextIdentifier] isEqualToNumber:@0]) {

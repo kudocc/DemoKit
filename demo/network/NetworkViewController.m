@@ -16,6 +16,8 @@
 @implementation NetworkViewController
 
 - (void)initView {
+    [super initView];
+    
     self.arrayTitle = @[@"HTTP"];
     self.arrayClass = @[[HttpViewController class]];
 }

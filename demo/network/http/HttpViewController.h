@@ -10,6 +10,4 @@
 
 @interface HttpViewController : HomeTableViewController
 
-
-
 @end

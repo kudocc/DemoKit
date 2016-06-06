@@ -18,6 +18,8 @@
 @implementation HttpViewController
 
 - (void)initView {
+    [super initView];
+    
     self.arrayTitle = @[@"3 Async request", @"3 chained request", @"complex dependency request"];
     self.arrayClass = @[[HttpAsyncRequestsViewController class],
                         [HttpChainedRequestsViewController class],

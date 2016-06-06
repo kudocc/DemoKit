@@ -25,13 +25,6 @@
     self = [super init];
     if (self) {
         _mutableDictionaryHttpSessionManager = [NSMutableDictionary dictionary];
-        
-        NSURL *url = [NSURL URLWithString:@"http://www.baidu.com"];
-        NSURL *url2 = [NSURL URLWithString:@"http://www.baidu.com"];
-        _mutableDictionaryHttpSessionManager[url] = url2;
-        _mutableDictionaryHttpSessionManager[url2] = url;
-        NSLog(@"%@", @([_mutableDictionaryHttpSessionManager count]));
-        [_mutableDictionaryHttpSessionManager removeAllObjects];
     }
     return self;
 }

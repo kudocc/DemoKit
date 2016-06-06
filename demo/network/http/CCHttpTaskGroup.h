@@ -50,7 +50,7 @@
 - (void)addDependencyTask:(CCHttpTask *)task;
 
 /**
- if you use this method to start the task, the dependency would be ignored.
+ if you use this method to start the task, the dependencies would be ignored.
  */
 - (void)startTask;
 
