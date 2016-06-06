@@ -7,7 +7,7 @@
 //
 
 #import "ImageMaskViewController.h"
-#import "UIImage+ImageMask.h"
+#import "UIImage+CCKit.h"
 
 @implementation ImageMaskViewController
 
@@ -206,7 +206,7 @@
         y = labelTips.bottom + 10;
         
         // generate a mask
-        UIImage *imageMask = [imageOri imageMask];
+        UIImage *imageMask = [imageOri cc_imageMask];
         _imageViewMaskWithImageMask = [[UIImageView alloc] initWithImage:imageMask];
         [_scrollView addSubview:_imageViewMaskWithImageMask];
         _imageViewMaskWithImageMask.frame = (CGRect){(CGPoint){x, y}, imageToMask.size};
@@ -270,7 +270,7 @@
         imageViewMask.origin = CGPointMake(x, y);
         y = imageViewMask.bottom + 10;
         
-        imageMask = [imageMask imageMask];
+        imageMask = [imageMask cc_imageMask];
         UIGraphicsBeginImageContextWithOptions(_imageViewOri.bounds.size, NO, 0.0);
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextClipToMask(context, _imageViewOri.bounds, imageMask.CGImage);

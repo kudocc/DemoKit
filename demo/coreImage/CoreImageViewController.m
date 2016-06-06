@@ -14,6 +14,8 @@
 @implementation CoreImageViewController
 
 - (void)initView {
+    [super initView];
+    
     self.arrayTitle = @[@"builtin filter",
                         @"builtin chained filter",
                         @"face detector"];

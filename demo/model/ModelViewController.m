@@ -8,7 +8,6 @@
 
 #import "ModelViewController.h"
 #import "JsonObjectAndModelViewController.h"
-#import "NSCopyingViewController.h"
 
 @interface ModelObject : NSObject <NSCoding>
 
@@ -73,36 +72,42 @@
 @implementation ModelViewController
 
 - (void)initView {
+    [super initView];
     
-    ModelObject *mo = [[ModelObject alloc] init];
-    mo.mainKey = 1;
-    NSMutableSet *mutableSet = [NSMutableSet set];
-    [mutableSet addObject:mo];
-    NSLog(@"%@", mutableSet);
+    {
+        ModelObject *mo = [[ModelObject alloc] init];
+        mo.mainKey = 1;
+        NSMutableSet *mutableSet = [NSMutableSet set];
+        [mutableSet addObject:mo];
+        NSLog(@"%@", mutableSet);
+        
+        mo.mainKey = 2;
+        [mutableSet addObject:mo];
+        
+        NSLog(@"%@", mutableSet);
+        
+        mo.mainKey = 3;
+        [mutableSet addObject:mo];
+        NSLog(@"%@", mutableSet);
+    }
+
+    {
+        ModelObject *base = [[ModelObject alloc] init];
+        base.name = @"modelName";
+        NSArray *arr = @[base];
+        
+        Model1Object *obj1 = [[Model1Object alloc] init];
+        obj1.array = arr;
+        
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:obj1];
+        if (data) {
+            id o = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            NSLog(@"%@", o);
+        }
+    }
     
-//    mo.mainKey = 2;
-    [mutableSet addObject:mo];
-    
-    NSLog(@"%@", mutableSet);
-    
-    [mutableSet addObject:mo];
-    NSLog(@"%@", mutableSet);
-    
-//    ModelObject *base = [[ModelObject alloc] init];
-//    base.name = @"caonima";
-//    NSArray *arr = @[base];
-//    
-//    Model1Object *obj1 = [[Model1Object alloc] init];
-//    obj1.array = arr;
-//    
-//    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:obj1];
-//    if (data) {
-//        id o = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-//        NSLog(@"%@", o);
-//    }
-    
-    self.arrayTitle = @[@"Json Object and Model", @"NSCopying"];
-    self.arrayClass = @[[JsonObjectAndModelViewController class], [NSCopyingViewController class]];
+    self.arrayTitle = @[@"Testing"];
+    self.arrayClass = @[[JsonObjectAndModelViewController class]];
 
     NSString *jsonString = @"{\"key\":null, \"num\":10, \"string\":\"abc\"}";
     NSData *data = [jsonString dataUsingEncoding:NSUTF8StringEncoding];
@@ -110,6 +115,11 @@
     NSAssert(obj[@"key"] == [NSNull null], @"error");
     NSAssert([obj[@"key"] class] == [NSNull class], @"error");
     NSLog(@"%@", obj);
+    
+    NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+    f.numberStyle = NSNumberFormatterDecimalStyle;
+    NSNumber *number = [f numberFromString:@"YES"];
+    NSLog(@"numberFromString:@YES: %@", number);
 }
 
 @end

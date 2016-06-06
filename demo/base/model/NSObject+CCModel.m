@@ -545,9 +545,23 @@
     if (jsonObj == [NSNull null]) {
         jsonObj = @0;
     } else if ([jsonObj isKindOfClass:[NSString class]]) {
-        NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
-        f.numberStyle = NSNumberFormatterDecimalStyle;
-        jsonObj = [f numberFromString:jsonObj];
+        if ((property.encodingType & CCEncodingTypeMask) == CCEncodingTypeBool) {
+            static NSDictionary *boolStringToNumberMap = nil;
+            if (!boolStringToNumberMap) {
+                boolStringToNumberMap = @{@"YES":@1, @"NO":@0,
+                                          @"TRUE":@1, @"FALSE":@0};
+            }
+            NSNumber *number = boolStringToNumberMap[[jsonObj uppercaseString]];
+            if (number) {
+                jsonObj = number;
+            } else {
+                jsonObj = @([jsonObj boolValue]);
+            }
+        } else {
+            NSNumberFormatter *f = [[NSNumberFormatter alloc] init];
+            f.numberStyle = NSNumberFormatterDecimalStyle;
+            jsonObj = [f numberFromString:jsonObj];
+        }
     }
     
     if (![jsonObj isKindOfClass:[NSNumber class]]) return;

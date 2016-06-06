@@ -22,6 +22,8 @@
 + (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation;
 + (UIImageOrientation)cc_exifOrientationToiOSOrientation:(int)exifOrientation;
 
+- (NSString *)cc_description;
+
 @end
 
 
@@ -44,5 +46,11 @@
 
 - (BOOL)writePNGDataWithMetadata:(NSDictionary *)metadata toURL:(NSURL *)url;
 - (BOOL)writeJPEGDataWithMetadata:(NSDictionary *)metadata compressQuality:(CGFloat)compressionQuality toURL:(NSURL *)url;
+
+@end
+
+@interface UIImage (ImageMask)
+
+- (UIImage *)cc_imageMask;
 
 @end

@@ -121,7 +121,7 @@ CCObjectType CCObjectTypeFromClass(Class classObj) {
 
 BOOL isNumberTypeOfEncodingType(CCEncodingType type) {
     type = CCEncodingTypeMask & type;
-    if (type >= CCEncodingTypeChar && type <= CCEncodingTypeDouble) {
+    if (type >= CCEncodingTypeChar && type <= CCEncodingTypeBool) {
         return YES;
     }
     return NO;

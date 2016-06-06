@@ -13,7 +13,6 @@
 		A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EA81CF6FD450090FCCB /* ModelClass.m */; };
 		A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAC1CF7F0130090FCCB /* ModelViewController.m */; };
 		A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EAF1CF9C0E10090FCCB /* NSObject+CCKit.m */; };
-		A7147EB31CF9D2040090FCCB /* NSCopyingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EB21CF9D2040090FCCB /* NSCopyingViewController.m */; };
 		A7147EB61CF9D25E0090FCCB /* JsonObjectAndModelViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */; };
 		A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC01CFD24B70090FCCB /* CoreTextViewController.m */; };
 		A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7147EC31CFD24F30090FCCB /* CoreTextChatViewController.m */; };
@@ -35,6 +34,7 @@
 		A73B4EF31D051838002E1A1A /* CCTextLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EEB1D051838002E1A1A /* CCTextLayout.m */; };
 		A73B4EF41D051838002E1A1A /* CCTextLine.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EED1D051838002E1A1A /* CCTextLine.m */; };
 		A73B4EF51D051838002E1A1A /* CCTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EEF1D051838002E1A1A /* CCTextRunDelegate.m */; };
+		A73B4EF81D0551C0002E1A1A /* NSDictionary+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EF71D0551BF002E1A1A /* NSDictionary+CCKit.m */; };
 		A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */; };
 		A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A757237C1CED54560065AA2E /* FaceDetectorViewController.m */; };
 		A7583C3F1CE31BFB007558CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C3E1CE31BFB007558CB /* main.m */; };
@@ -58,7 +58,6 @@
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
 		A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0341CE3258C00A7686D /* Quartz2DViewController.m */; };
-		A785B03E1CE326F700A7686D /* UIImage+ImageMask.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B03D1CE326F700A7686D /* UIImage+ImageMask.m */; };
 		A785B0531CE3295D00A7686D /* TableViewPerformanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0411CE3295D00A7686D /* TableViewPerformanceViewController.m */; };
 		A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0431CE3295D00A7686D /* TestBlendViewController.m */; };
 		A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0451CE3295D00A7686D /* TestDrawScaleViewController.m */; };
@@ -136,8 +135,6 @@
 		A7147EAC1CF7F0130090FCCB /* ModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModelViewController.m; sourceTree = "<group>"; };
 		A7147EAE1CF9C0E10090FCCB /* NSObject+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+CCKit.h"; sourceTree = "<group>"; };
 		A7147EAF1CF9C0E10090FCCB /* NSObject+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+CCKit.m"; sourceTree = "<group>"; };
-		A7147EB11CF9D2040090FCCB /* NSCopyingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSCopyingViewController.h; sourceTree = "<group>"; };
-		A7147EB21CF9D2040090FCCB /* NSCopyingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSCopyingViewController.m; sourceTree = "<group>"; };
 		A7147EB41CF9D25E0090FCCB /* JsonObjectAndModelViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonObjectAndModelViewController.h; sourceTree = "<group>"; };
 		A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonObjectAndModelViewController.m; sourceTree = "<group>"; };
 		A7147EBD1CFC15E20090FCCB /* CCModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCModel.h; path = model/CCModel.h; sourceTree = "<group>"; };
@@ -178,6 +175,8 @@
 		A73B4EED1D051838002E1A1A /* CCTextLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextLine.m; sourceTree = "<group>"; };
 		A73B4EEE1D051838002E1A1A /* CCTextRunDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCTextRunDelegate.h; sourceTree = "<group>"; };
 		A73B4EEF1D051838002E1A1A /* CCTextRunDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextRunDelegate.m; sourceTree = "<group>"; };
+		A73B4EF61D0551BF002E1A1A /* NSDictionary+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CCKit.h"; sourceTree = "<group>"; };
+		A73B4EF71D0551BF002E1A1A /* NSDictionary+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CCKit.m"; sourceTree = "<group>"; };
 		A75723751CED51AC0065AA2E /* BuiltinFilterChainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuiltinFilterChainViewController.h; sourceTree = "<group>"; };
 		A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterChainViewController.m; sourceTree = "<group>"; };
 		A757237B1CED54560065AA2E /* FaceDetectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceDetectorViewController.h; sourceTree = "<group>"; };
@@ -224,8 +223,6 @@
 		A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageMaskViewController.m; sourceTree = "<group>"; };
 		A785B0331CE3258C00A7686D /* Quartz2DViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Quartz2DViewController.h; sourceTree = "<group>"; };
 		A785B0341CE3258C00A7686D /* Quartz2DViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Quartz2DViewController.m; sourceTree = "<group>"; };
-		A785B03C1CE326F700A7686D /* UIImage+ImageMask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageMask.h"; sourceTree = "<group>"; };
-		A785B03D1CE326F700A7686D /* UIImage+ImageMask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageMask.m"; sourceTree = "<group>"; };
 		A785B0401CE3295D00A7686D /* TableViewPerformanceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewPerformanceViewController.h; sourceTree = "<group>"; };
 		A785B0411CE3295D00A7686D /* TableViewPerformanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewPerformanceViewController.m; sourceTree = "<group>"; };
 		A785B0421CE3295D00A7686D /* TestBlendViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestBlendViewController.h; sourceTree = "<group>"; };
@@ -395,8 +392,6 @@
 				A7147EAC1CF7F0130090FCCB /* ModelViewController.m */,
 				A7147EB41CF9D25E0090FCCB /* JsonObjectAndModelViewController.h */,
 				A7147EB51CF9D25E0090FCCB /* JsonObjectAndModelViewController.m */,
-				A7147EB11CF9D2040090FCCB /* NSCopyingViewController.h */,
-				A7147EB21CF9D2040090FCCB /* NSCopyingViewController.m */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -699,10 +694,10 @@
 				A785B0941CE41A2500A7686D /* UIColor+CCKit.m */,
 				A785B0201CE3218700A7686D /* NSString+File.h */,
 				A785B0211CE3218700A7686D /* NSString+File.m */,
-				A785B03C1CE326F700A7686D /* UIImage+ImageMask.h */,
-				A785B03D1CE326F700A7686D /* UIImage+ImageMask.m */,
 				A7147EE21CFEE1470090FCCB /* NSAttributedString+CCKit.h */,
 				A7147EE31CFEE1470090FCCB /* NSAttributedString+CCKit.m */,
+				A73B4EF61D0551BF002E1A1A /* NSDictionary+CCKit.h */,
+				A73B4EF71D0551BF002E1A1A /* NSDictionary+CCKit.m */,
 			);
 			path = category;
 			sourceTree = "<group>";
@@ -924,7 +919,6 @@
 				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
-				A785B03E1CE326F700A7686D /* UIImage+ImageMask.m in Sources */,
 				A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */,
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,
 				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
@@ -940,7 +934,6 @@
 				A7F5F0711CE31E420064AAB7 /* CAActionTestViewController.m in Sources */,
 				A785B0731CE32D9F00A7686D /* UIDownloadTaskViewController.m in Sources */,
 				A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */,
-				A7147EB31CF9D2040090FCCB /* NSCopyingViewController.m in Sources */,
 				A785B0701CE32D9F00A7686D /* DataTaskHttpsServerAuthViewController.m in Sources */,
 				A773F68C1CE9D6B60098F1C8 /* ImageDestinationViewController.m in Sources */,
 				A7F5F0721CE31E420064AAB7 /* CABasicAnimationTestViewController.m in Sources */,
@@ -949,6 +942,7 @@
 				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A73B4EF11D051838002E1A1A /* CCTextContainer.m in Sources */,
+				A73B4EF81D0551C0002E1A1A /* NSDictionary+CCKit.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
 				A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */,

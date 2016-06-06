@@ -18,7 +18,7 @@
 /// property black list, any property name in black list won't be serialization and deserialization
 + (NSSet<NSString *> *)propertyNameBlackList;
 
-/// You must provide property list used to calculate the hash, the property can't be changed when the Model is in a collection that uses hash values to determine the object’s position in the collection, for example NSSet.
+/// You must provide property set, so that we know how to calculate the hash, the property can't be changed when the Model is in a collection that uses hash values to determine the object’s position in the collection, for example NSSet.
 /// if you don't implement this method, we use the address of Model as hash and `ccmodel_isEqual:` will always returns NO if two objects are not the same object.
 + (NSSet<NSString *> *)propertyNameCalculateHash;
 

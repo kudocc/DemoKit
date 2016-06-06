@@ -73,7 +73,7 @@ typedef NS_ENUM(NSUInteger, CCObjectType) {
  1.If all the values are the same class, the `valueClassObj` indicates the class of value.
  2.If there values aren't the same type, `keyToClass` indicates the class for each value of corresponding key.
  
- If neither NSArray nor NSDictionary, it's not a container, just use classObj.
+ If neither NSArray nor NSDictionary, it's not a container, just set `classObj`.
  */
 @interface ContainerTypeObject : NSObject
 /// type

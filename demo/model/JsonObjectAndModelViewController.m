@@ -22,6 +22,8 @@
 @property unsigned long long ullongTest;
 @property float floatTest;
 @property double doubleTest;
+@property bool cboolTest;
+@property BOOL ocboolTest;
 @end
 @implementation ScalarNumberModel
 - (id)copyWithZone:(NSZone *)zone {
@@ -30,34 +32,105 @@
 @end
 
 
-@interface People : NSObject
+@interface People : NSObject <CCModel>
 @property NSString *name;
 @property int age;
 @end
 @implementation People
++ (NSSet<NSString *> *)propertyNameCalculateHash {
+    return [NSSet setWithObject:@"name"];
+}
 @end
 
-@interface Student : People <CCModel>
+@interface Student : People <CCModel, NSCopying, NSCoding>
 @property int grade;
 @end
 @implementation Student
 + (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap {
     return @{@"grade":@"g"};
 }
+- (void)modelFinishConstructFromJSONObject:(NSDictionary *)jsonObject {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+- (void)JSONObjectFinishConstructFromModel:(NSMutableDictionary *)jsonObject {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+}
+
+#pragma mark - NSObject
+
+- (BOOL)isEqual:(id)object {
+    return [self ccmodel_isEqual:object];
+}
+
+- (NSUInteger)hash {
+    return [self ccmodel_hash];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [self ccmodel_copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [self ccmodel_encodeWithCoder:aCoder];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    return [self ccmodel_initWithCoder:coder];
+}
+
 @end
 
-@interface Teacher : People
+@interface Teacher : People <NSCopying, NSCoding>
 @property int subject;
 @end
 @implementation Teacher
+
+#pragma mark - NSObject
+
+- (BOOL)isEqual:(id)object {
+    return [self ccmodel_isEqual:object];
+}
+
+- (NSUInteger)hash {
+    return [self ccmodel_hash];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [self ccmodel_copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [self ccmodel_encodeWithCoder:aCoder];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    return [self ccmodel_initWithCoder:coder];
+}
+
 @end
 
-@interface School : NSObject <CCModel>
-/// two keys, the first is @"student", value is array of Student
-/// the second is @"teacher", value is array of Teacher
+@interface School : NSObject <CCModel, NSCoding, NSCopying>
+
+@property NSString *schoolId;
+
+/// the first key @"student", value is a NSDictionary-> {@"count":@1, @"value":@[]} "value" is array of Student
+/// the second key @"teacher", value is a NSDictionary-> {@"count":@1, @"value":@[]} the value of the key "value" is array of Teacher
 @property NSDictionary *people;
+
+@property NSURL *homePageURL;
 @end
 @implementation School
+
+#pragma mark - CCModel
+
 + (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap {
     ContainerTypeObject *countObj = [[ContainerTypeObject alloc] initWithClass:[NSNumber class]];
     
@@ -71,6 +144,37 @@
     
     return @{@"people": dictPeople};
 }
+
++ (NSSet<NSString *> *)propertyNameCalculateHash {
+    return [NSSet setWithObjects:@"schoolId", nil];
+}
+
+#pragma mark - NSObject
+
+- (BOOL)isEqual:(id)object {
+    return [self ccmodel_isEqual:object];
+}
+
+- (NSUInteger)hash {
+    return [self ccmodel_hash];
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [self ccmodel_copyWithZone:zone];
+}
+
+#pragma mark - NSCoding
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+    [self ccmodel_encodeWithCoder:aCoder];
+}
+
+- (instancetype)initWithCoder:(NSCoder *)coder {
+    return [self ccmodel_initWithCoder:coder];
+}
+
 @end
 
 @implementation JsonObjectAndModelViewController
@@ -88,8 +192,10 @@
         \"ulongTest\":8,\
         \"llongTest\":9,\
         \"ullongTest\":10,\
-        \"floatTest\":122.222,\
-        \"doubleTest\":1333.333\
+        \"floatTest\":\"122.222\",\
+        \"doubleTest\":1333.333,\
+        \"cboolTest\":\"true\",\
+        \"ocboolTest\":\"YES\"\
     }";
     
     id model = [ScalarNumberModel ccmodel_modelWithJSON:jsonString];
@@ -135,7 +241,7 @@
         ],\
         [\
             {\"name\":\"conan\", \"age\":7, \"g\":1},\
-            {\"name\":\"bumei\", \"age\":7, \"g\":1}\
+            {\"name\":0, \"age\":7, \"g\":1}\
         ]\
     ]";
     ContainerTypeObject *container = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[Student class]];
@@ -179,6 +285,7 @@
 - (void)testPeople {
     NSString *jsonString =
     @"{\
+    \"schoolId\":1024,\
     \"people\":\
         {\
             \"student\":\
@@ -199,12 +306,70 @@
                             {\"name\":\"maoli\", \"age\":28, \"subject\":5}\
                         ]\
                 }\
-        }\
+        },\
+    \"homePageURL\":\"http://www.jojojojojo.com\"\
     }";
     id model = [School ccmodel_modelWithJSON:jsonString];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), [model ccmodel_debugDescription]);
     NSDictionary *dictModel = [model ccmodel_jsonObjectDictionary];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
+}
+
+- (void)testNSCopying_NSCoding {
+    NSString *jsonString =
+    @"{\
+    \"schoolId\":1024,\
+    \"people\":\
+        {\
+            \"student\":\
+                {\
+                    \"count\":2,\
+                    \"value\":\
+                        [\
+                            {\"name\":\"kudo\", \"age\":17, \"g\":3},\
+                            {\"name\":\"lan\", \"age\":17, \"g\":3}\
+                        ]\
+                },\
+            \"teacher\":\
+                {\
+                    \"count\":2, \
+                    \"value\":\
+                        [{\"name\":\"zhidi\", \"age\":27, \"subject\":4}]\
+                }\
+        },\
+    \"homePageURL\":\"http://www.jojojojojo.com\"\
+    }";
+    id model = [School ccmodel_modelWithJSON:jsonString];
+    
+    // NSCopying
+    {
+        id modelCopy = [model copy];
+        NSAssert([model isEqual:modelCopy], @"not equal");
+        
+        NSString *strModel = [model ccmodel_jsonObjectString];
+        NSString *strModelCopy = [modelCopy ccmodel_jsonObjectString];
+        NSAssert([strModel isEqualToString:strModelCopy], @"not equal");
+        
+        NSDictionary *dictModel = [modelCopy ccmodel_jsonObjectDictionary];
+        NSLog(@"%@(NSCopying), %@", NSStringFromSelector(_cmd), dictModel);
+    }
+    
+    // NSCoding
+    {
+        NSData *data = [NSKeyedArchiver archivedDataWithRootObject:model];
+        if (data) {
+            id modelUnArchive = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            NSAssert([model isEqual:modelUnArchive], @"not equal");
+            
+            NSString *strModel = [model ccmodel_jsonObjectString];
+            NSString *strModelUnArchive = [modelUnArchive ccmodel_jsonObjectString];
+            NSAssert([strModel isEqualToString:strModelUnArchive], @"not equal");
+            
+            NSDictionary *dict = [modelUnArchive ccmodel_jsonObjectDictionary];
+            NSLog(@"%@(NSCoding), %@", NSStringFromSelector(_cmd), dict);
+        }
+    }
+    
 }
 
 - (void)initView {
@@ -223,6 +388,8 @@
     [self testNestedDictionary];
     
     [self testPeople];
+    
+    [self testNSCopying_NSCoding];
 }
 
 @end
