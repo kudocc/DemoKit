@@ -43,7 +43,7 @@
             CGPoint runPosition;
             CTRunGetPositions(run, CFRangeMake(0, 1), &runPosition);
             // TODO:1.run的position是以line的descent为0还是leading为0点的？2.run的高度是ascent+descent+or not leading?
-            CGRect frame = CGRectMake(runPosition.x+_position.x, _position.y-lineDescent-leading+runPosition.y, width, ascent+descent+leading);
+            CGRect frame = CGRectMake(runPosition.x+_position.x, _position.y-lineDescent+runPosition.y, width, ascent+descent);
             [frames addObject:[NSValue valueWithCGRect:frame]];
         }
         _attachments = [attachments copy];

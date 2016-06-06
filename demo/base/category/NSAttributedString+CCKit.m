@@ -69,8 +69,9 @@
             ascent = size.height-descent;
             break;
         default:
-            ascent = font.ascender + (size.height - font.ascender - font.descender)/2;
-            descent = -font.descender + (size.height - font.ascender - font.descender)/2;
+            ascent = font.ascender + floor((size.height - font.ascender + font.descender)/2);
+            ascent = ascent > 0 ? ascent : 0;
+            descent = size.height - ascent;
             break;
     }
     return [self attachmentStringWithContent:content contentMode:contentMode width:width ascent:ascent descent:descent];

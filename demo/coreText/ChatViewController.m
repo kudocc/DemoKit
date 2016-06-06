@@ -9,6 +9,8 @@
 #import "ChatViewController.h"
 #import "CCTextLayout.h"
 #import "CCLabel.h"
+#import "NSAttributedString+CCKit.h"
+#import "UIImage+CCKit.h"
 
 @interface ChatMessage : NSObject
 
@@ -46,9 +48,40 @@
 - (id)initWithContent:(NSString *)strContent left:(BOOL)left {
     self = [super init];
     if (self) {
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.lineSpacing = 0.0;
-        _content = [[NSAttributedString alloc] initWithString:strContent attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14], NSParagraphStyleAttributeName:paragraphStyle}];
+        NSRegularExpression *regularExpression = [NSRegularExpression regularExpressionWithPattern:@"\\[\\w+.(jpeg|jpg|png)\\]" options:0 error:nil];
+        NSArray<NSTextCheckingResult *> *results = [regularExpression matchesInString:strContent options:0 range:NSMakeRange(0, strContent.length)];
+        NSMutableAttributedString *mAttrString = [[NSMutableAttributedString alloc] initWithString:@""];
+        NSUInteger location = 0;
+        for (NSTextCheckingResult *result in results) {
+            NSRange rangeBefore = NSMakeRange(location, result.range.location-location);
+            if (rangeBefore.length > 0) {
+                NSString *subString = [strContent substringWithRange:rangeBefore];
+                NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+                [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+                [subAttrString cc_setColor:[UIColor blackColor]];
+                [mAttrString appendAttributedString:subAttrString];
+            }
+            location = result.range.location + result.range.length;
+            
+            // image found
+            NSRange rangeImageName = NSMakeRange(result.range.location+1, result.range.length-2);
+            NSString *imageName = [strContent substringWithRange:rangeImageName];
+            UIImage *image = [UIImage imageNamed:imageName];
+            image = [UIImage cc_resizeImage:image contentMode:UIViewContentModeScaleToFill size:CGSizeMake(50, 50)];
+            if (image) {
+                NSAttributedString *attachment = [NSAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeScaleAspectFill contentSize:CGSizeMake(50, 50) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionCenter];
+                [mAttrString appendAttributedString:attachment];
+            }
+        }
+        if (location < strContent.length) {
+            NSString *subString = [strContent substringFromIndex:location];
+            NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
+            [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
+            [subAttrString cc_setColor:[UIColor blackColor]];
+            [mAttrString appendAttributedString:subAttrString];
+        }
+        
+        _content = [mAttrString copy];
         _left = left;
         
         CGSize constraint = CGSizeMake([self.class constraintWidth], CGFLOAT_MAX);
@@ -87,7 +120,7 @@
     
     _chatMessage = chatMessage;
     if (_chatMessage.left) {
-        _label.backgroundColor = [UIColor whiteColor];
+        _label.backgroundColor = [UIColor blueColor];
     } else {
         _label.backgroundColor = [UIColor greenColor];
     }

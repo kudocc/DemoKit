@@ -122,7 +122,14 @@
 }
 
 - (void)drawInContext:(CGContextRef)context
-                 view:(UIView *)view layer:(CALayer *)layer position:(CGPoint)position size:(CGSize)size isCanceled:(BOOL(^)(void))isCanceled {
+                 view:(UIView *)view layer:(CALayer *)layer
+             position:(CGPoint)position size:(CGSize)size
+           isCanceled:(BOOL(^)(void))isCanceled {
+    
+    // textContainer.contentInsets
+    position.x += _textContainer.contentInsets.left;
+    position.y += _textContainer.contentInsets.top;
+    
     if (context) {
         [self drawTextInContext:context position:position size:size isCanceled:isCanceled];
     }
