@@ -127,7 +127,7 @@
         if (index == lastLineIndex) {
             CGPoint lastLineOrigin;
             CTFrameGetLineOrigins(frame, CFRangeMake(lastLineIndex, 1), &lastLineOrigin);
-            textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent;
+            textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent + leading;
         }
     }
     return CGSizeMake(ceil(maxWidth), ceil(textHeight));
@@ -173,13 +173,13 @@
             [mAttrString appendAttributedString:subAttrString];
         }
         
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.lineSpacing = 10.0;
-        paragraphStyle.firstLineHeadIndent = 10;
+//        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//        paragraphStyle.lineSpacing = 10.0;
+//        paragraphStyle.firstLineHeadIndent = 10;
 //        paragraphStyle.alignment = NSTextAlignmentCenter;
-        [mAttrString addAttribute:NSParagraphStyleAttributeName
-                            value:paragraphStyle
-                            range:NSMakeRange(0, [mAttrString length])];
+//        [mAttrString addAttribute:NSParagraphStyleAttributeName
+//                            value:paragraphStyle
+//                            range:NSMakeRange(0, [mAttrString length])];
         _content = [mAttrString copy];
         _left = left;
         
@@ -200,36 +200,25 @@
         
         _lines = CTFrameGetLines(_frame);
         
-        /*
-        {
-            // debug first line
-            CTLineRef line = CFArrayGetValueAtIndex(_lines, 0);
-            CGFloat ascent, descent, leading;
-            CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-            NSLog(@"first line ascent:%@, descent:%@, leading:%@", @(ascent), @(descent), @(leading));
-            
-            // debug second line
-            if (CFArrayGetCount(_lines) > 1) {
-                CTLineRef line = CFArrayGetValueAtIndex(_lines, 1);
-                CGFloat ascent, descent, leading;
-                CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
-                NSLog(@"second line ascent:%@, descent:%@, leading:%@", @(ascent), @(descent), @(leading));
-            }
-        }*/
-        
         CFIndex count = CFArrayGetCount(_lines);
+        if (count == 0) {
+            return self;
+        }
         CGPoint positions[count];
         CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), positions);
+        CTLineRef bottomLine = CFArrayGetValueAtIndex(_lines, count-1);
         CGPoint bottomPosition = positions[count-1];
+        CGFloat bottomLineDescent, bottomLineLeading;
+        CTLineGetTypographicBounds(bottomLine, NULL, &bottomLineDescent, &bottomLineLeading);
         NSMutableArray *mArray = [NSMutableArray array];
         for (CFIndex i = count-1; i >= 0; --i) {
             CTLineRef line = CFArrayGetValueAtIndex(_lines, i);
             CGFloat ascent, descent, leading;
             CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             CGPoint po = positions[i];
-            NSLog(@"index:%@, pos.x:%@, pos.y:%@", @(i), @(po.x), @(po.y));
+            NSLog(@"line index:%@, pos.x:%@, pos.y:%@, ascent:%@, descent:%@, leading:%@", @(i), @(po.x), @(po.y), @(ascent), @(descent), @(leading));
             CCLine *ccLine = [[CCLine alloc] initWithLine:line];
-            ccLine.position = CGPointMake(po.x, ceil(po.y-bottomPosition.y + descent + leading));
+            ccLine.position = CGPointMake(po.x, (po.y-bottomPosition.y + bottomLineDescent + bottomLineLeading));
             [mArray addObject:ccLine];
         }
         _ccLines = [mArray copy];
@@ -300,6 +289,7 @@
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.backgroundColor = self.view.backgroundColor;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -341,6 +331,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     CoreTextChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.chatCell = [_chatMsgs objectAtIndex:indexPath.row];
+    cell.contentView.backgroundColor = tableView.backgroundColor;
     return cell;
 }
 

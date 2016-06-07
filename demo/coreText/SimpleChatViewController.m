@@ -105,22 +105,22 @@
             [mAttrString appendAttributedString:subAttrString];
         }
         
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.lineSpacing = 0.0;
-        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        paragraphStyle.headIndent = 10.0;
+//        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//        paragraphStyle.lineSpacing = 0.0;
+//        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+//        paragraphStyle.headIndent = 10.0;
 //        paragraphStyle.firstLineHeadIndent = 20.0;
-        paragraphStyle.paragraphSpacing = 100;
+//        paragraphStyle.paragraphSpacing = 100;
 //        paragraphStyle.tailIndent = 2.0;
 //        paragraphStyle.baseWritingDirection = NSWritingDirectionRightToLeft;
 //        paragraphStyle.alignment = NSTextAlignmentCenter;
-        [mAttrString addAttribute:NSParagraphStyleAttributeName
-                            value:paragraphStyle
-                            range:NSMakeRange(0, [mAttrString length])];
+//        [mAttrString addAttribute:NSParagraphStyleAttributeName
+//                            value:paragraphStyle
+//                            range:NSMakeRange(0, [mAttrString length])];
         _content = [mAttrString copy];
         _left = left;
         
-        CGSize constraintSize = CGSizeMake([self.class constraintWidth], 1040);
+        CGSize constraintSize = CGSizeMake([self.class constraintWidth], 1024);
         CGRect boundingRect = [_content boundingRectWithSize:constraintSize options:NSStringDrawingUsesLineFragmentOrigin context:nil];
         _contentWidth = ceil(boundingRect.size.width);
         _contentHeight = (ceil(boundingRect.size.height) > constraintSize.height) ? constraintSize.height : ceil(boundingRect.size.height);
@@ -145,6 +145,9 @@
     if (self) {
         _viewChatMsg = [[ChatMsgView alloc] init];
         [self.contentView addSubview:_viewChatMsg];
+//        NSLog(@"is opaque:%@", @(_viewChatMsg.opaque));
+//        _viewChatMsg.alpha = 0.5;
+//        NSLog(@"after is opaque:%@", @(_viewChatMsg.opaque));
         _viewChatMsg.backgroundColor = [UIColor whiteColor];
     }
     return self;
@@ -183,6 +186,7 @@
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.backgroundColor = self.view.backgroundColor;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -223,6 +227,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     SimpleChatCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.chatCell = [_chatMsgs objectAtIndex:indexPath.row];
+    cell.contentView.backgroundColor = tableView.backgroundColor;
     return cell;
 }
 

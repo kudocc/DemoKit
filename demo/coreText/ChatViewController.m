@@ -120,7 +120,7 @@
     
     _chatMessage = chatMessage;
     if (_chatMessage.left) {
-        _label.backgroundColor = [UIColor blueColor];
+        _label.backgroundColor = [UIColor whiteColor];
     } else {
         _label.backgroundColor = [UIColor greenColor];
     }
@@ -150,6 +150,7 @@
 - (void)initView {
     _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64) style:UITableViewStylePlain];
     [self.view addSubview:_tableView];
+    _tableView.backgroundColor = self.view.backgroundColor;
     _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     _tableView.delegate = self;
     _tableView.dataSource = self;
@@ -191,6 +192,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     ChatTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.chatMessage = [_chatMsgs objectAtIndex:indexPath.row];
+    cell.contentView.backgroundColor = tableView.backgroundColor;
     return cell;
 }
 

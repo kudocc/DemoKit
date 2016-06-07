@@ -4,7 +4,7 @@
 <array>
 	<dict>
 		<key>content</key>
-		<string>Hi, I&apos;m hungry!!! Let&apos;s go and have a good lunch!!! Do you have some adivce?[image1.jpg]</string>
+		<string>Hi, I&apos;m hungry!!! Let&apos;s go and have a good lunch!!! Do you have some adivce?</string>
 		<key>left</key>
 		<true/>
 	</dict>
@@ -16,7 +16,7 @@
 	</dict>
 	<dict>
 		<key>content</key>
-		<string>不行，必须吃点好的，饿[image0.jpg]了就得好好吃</string>
+		<string>不行，必须吃点好的，饿了就得好好吃</string>
 		<key>left</key>
 		<true/>
 	</dict>
@@ -28,7 +28,7 @@
 	</dict>
 	<dict>
 		<key>content</key>
-		<string>You&apos;re so stingy, haha. Well, it&apos;s OK. I&apos;m hungry [image2.jpg]</string>
+		<string>You&apos;re so stingy, haha. Well, it&apos;s OK. I&apos;m hungry </string>
 		<key>left</key>
 		<true/>
 	</dict>

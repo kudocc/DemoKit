@@ -52,7 +52,7 @@
         if (index == lastLineIndex) {
             CGPoint lastLineOrigin;
             CTFrameGetLineOrigins(frame, CFRangeMake(lastLineIndex, 1), &lastLineOrigin);
-            textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent;
+            textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent + leading;
         }
     }
     return CGSizeMake(ceil(maxWidth), ceil(textHeight));
@@ -99,7 +99,7 @@
         for (CFIndex i = count-1; i >= 0; --i) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
             CGPoint po = positions[i];
-            po = CGPointMake(po.x, ceil(po.y-bottom));
+            po = CGPointMake(po.x, po.y-bottom);
             CCTextLine *ccLine = [CCTextLine textLineWithPosition:po line:line];
             [mutableArray addObject:ccLine];
         }
