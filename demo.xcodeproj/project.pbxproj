@@ -35,6 +35,11 @@
 		A73B4EF41D051838002E1A1A /* CCTextLine.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EED1D051838002E1A1A /* CCTextLine.m */; };
 		A73B4EF51D051838002E1A1A /* CCTextRunDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EEF1D051838002E1A1A /* CCTextRunDelegate.m */; };
 		A73B4EF81D0551C0002E1A1A /* NSDictionary+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EF71D0551BF002E1A1A /* NSDictionary+CCKit.m */; };
+		A73B4EFD1D0792F5002E1A1A /* KVOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EFC1D0792F5002E1A1A /* KVOViewController.m */; };
+		A73B4F001D079344002E1A1A /* KVOBaseViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4EFF1D079344002E1A1A /* KVOBaseViewController.m */; };
+		A73B4F031D079383002E1A1A /* KVOPeople.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F021D079383002E1A1A /* KVOPeople.m */; };
+		A73B4F061D079524002E1A1A /* KVOSubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F051D079524002E1A1A /* KVOSubViewController.m */; };
+		A73B4F091D07973A002E1A1A /* OtherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F081D07973A002E1A1A /* OtherViewController.m */; };
 		A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */; };
 		A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A757237C1CED54560065AA2E /* FaceDetectorViewController.m */; };
 		A7583C3F1CE31BFB007558CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C3E1CE31BFB007558CB /* main.m */; };
@@ -177,6 +182,16 @@
 		A73B4EEF1D051838002E1A1A /* CCTextRunDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCTextRunDelegate.m; sourceTree = "<group>"; };
 		A73B4EF61D0551BF002E1A1A /* NSDictionary+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+CCKit.h"; sourceTree = "<group>"; };
 		A73B4EF71D0551BF002E1A1A /* NSDictionary+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CCKit.m"; sourceTree = "<group>"; };
+		A73B4EFB1D0792F5002E1A1A /* KVOViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVOViewController.h; sourceTree = "<group>"; };
+		A73B4EFC1D0792F5002E1A1A /* KVOViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVOViewController.m; sourceTree = "<group>"; };
+		A73B4EFE1D079344002E1A1A /* KVOBaseViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVOBaseViewController.h; sourceTree = "<group>"; };
+		A73B4EFF1D079344002E1A1A /* KVOBaseViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVOBaseViewController.m; sourceTree = "<group>"; };
+		A73B4F011D079383002E1A1A /* KVOPeople.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVOPeople.h; sourceTree = "<group>"; };
+		A73B4F021D079383002E1A1A /* KVOPeople.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVOPeople.m; sourceTree = "<group>"; };
+		A73B4F041D079524002E1A1A /* KVOSubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KVOSubViewController.h; sourceTree = "<group>"; };
+		A73B4F051D079524002E1A1A /* KVOSubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KVOSubViewController.m; sourceTree = "<group>"; };
+		A73B4F071D07973A002E1A1A /* OtherViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OtherViewController.h; sourceTree = "<group>"; };
+		A73B4F081D07973A002E1A1A /* OtherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherViewController.m; sourceTree = "<group>"; };
 		A75723751CED51AC0065AA2E /* BuiltinFilterChainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuiltinFilterChainViewController.h; sourceTree = "<group>"; };
 		A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterChainViewController.m; sourceTree = "<group>"; };
 		A757237B1CED54560065AA2E /* FaceDetectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceDetectorViewController.h; sourceTree = "<group>"; };
@@ -432,6 +447,31 @@
 			path = text;
 			sourceTree = "<group>";
 		};
+		A73B4EF91D0792BE002E1A1A /* other */ = {
+			isa = PBXGroup;
+			children = (
+				A73B4F071D07973A002E1A1A /* OtherViewController.h */,
+				A73B4F081D07973A002E1A1A /* OtherViewController.m */,
+				A73B4EFA1D0792DA002E1A1A /* kvo */,
+			);
+			path = other;
+			sourceTree = "<group>";
+		};
+		A73B4EFA1D0792DA002E1A1A /* kvo */ = {
+			isa = PBXGroup;
+			children = (
+				A73B4F011D079383002E1A1A /* KVOPeople.h */,
+				A73B4F021D079383002E1A1A /* KVOPeople.m */,
+				A73B4EFB1D0792F5002E1A1A /* KVOViewController.h */,
+				A73B4EFC1D0792F5002E1A1A /* KVOViewController.m */,
+				A73B4EFE1D079344002E1A1A /* KVOBaseViewController.h */,
+				A73B4EFF1D079344002E1A1A /* KVOBaseViewController.m */,
+				A73B4F041D079524002E1A1A /* KVOSubViewController.h */,
+				A73B4F051D079524002E1A1A /* KVOSubViewController.m */,
+			);
+			path = kvo;
+			sourceTree = "<group>";
+		};
 		A7583C311CE31BFB007558CB = {
 			isa = PBXGroup;
 			children = (
@@ -457,6 +497,7 @@
 		A7583C3C1CE31BFB007558CB /* demo */ = {
 			isa = PBXGroup;
 			children = (
+				A73B4EF91D0792BE002E1A1A /* other */,
 				A7F5F0781CE31F7F0064AAB7 /* base */,
 				A7127FA21CEE8C440023E4FB /* block */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
@@ -926,6 +967,7 @@
 				A7147EED1D0172B40090FCCB /* CCLabelDemoViewController.m in Sources */,
 				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A73B4EF41D051838002E1A1A /* CCTextLine.m in Sources */,
+				A73B4F061D079524002E1A1A /* KVOSubViewController.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
 				A7147EE41CFEE1470090FCCB /* NSAttributedString+CCKit.m in Sources */,
 				A773F6891CE9D6710098F1C8 /* ImageIO.m in Sources */,
@@ -968,8 +1010,10 @@
 				A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,
 				A7147ECF1CFE788E0090FCCB /* CCAsyncLayer.m in Sources */,
+				A73B4F001D079344002E1A1A /* KVOBaseViewController.m in Sources */,
 				A7583C421CE31BFB007558CB /* AppDelegate.m in Sources */,
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,
+				A73B4F091D07973A002E1A1A /* OtherViewController.m in Sources */,
 				A73B4EF21D051838002E1A1A /* CCTextDefine.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
 				A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */,
@@ -980,8 +1024,10 @@
 				A734D1261CF42C0D008276C9 /* HttpChainedRequestsViewController.m in Sources */,
 				A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */,
 				A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */,
+				A73B4EFD1D0792F5002E1A1A /* KVOViewController.m in Sources */,
 				A73B4EF01D051838002E1A1A /* CCLabel.m in Sources */,
 				A734D1231CF42BFC008276C9 /* HttpAsyncRequestsViewController.m in Sources */,
+				A73B4F031D079383002E1A1A /* KVOPeople.m in Sources */,
 				A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */,
 				A785B0871CE32EF800A7686D /* WKWebViewViewController.m in Sources */,
 				A785B06F1CE32D9F00A7686D /* DataTaskBasicAuthViewController.m in Sources */,

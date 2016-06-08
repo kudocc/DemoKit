@@ -18,6 +18,7 @@
 #import "WebViewController.h"
 #import "NetworkViewController.h"
 #import "ModelViewController.h"
+#import "OtherViewController.h"
 
 @interface AppDelegate ()
 
@@ -37,7 +38,8 @@
                       @"Model",
                       @"URLSession",
                       @"WebView & WebCache",
-                      @"Audio"];
+                      @"Audio",
+                      @"Other"];
     vc.arrayClass = @[[CoreTextViewController class],
                       [AnimationViewController class],
                       [Quartz2DViewController class],
@@ -47,7 +49,8 @@
                       [ModelViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
-                      [AudioViewController class]];
+                      [AudioViewController class],
+                      [OtherViewController class]];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

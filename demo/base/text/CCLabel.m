@@ -182,9 +182,14 @@
 #pragma mark - CCAsyncLayerDelegate
 
 - (CCAsyncLayerDisplayTask *)newAsyncDisplayTask {
+    BOOL needUpdateLayout = _needUpdateLayout;
+    CCTextVerticalAlignment verticalAlignment = _verticleAlignment;
+    NSAttributedString *attributedString = [_innerAttributedString copy];
+    __block CCTextLayout *layout = _textLayout;
+    
     CCAsyncLayerDisplayTask *task = [CCAsyncLayerDisplayTask new];
     task.willDisplay = ^(CALayer *layer) {
-        if (_needUpdateLayout) {
+        if (needUpdateLayout) {
             for (CCTextAttachment *attachment in _attachmentViews) {
                 UIView *v = attachment.content;
                 [v removeFromSuperview];
@@ -195,11 +200,6 @@
             }
         }
     };
-    
-    BOOL needUpdateLayout = _needUpdateLayout;
-    CCTextVerticalAlignment verticalAlignment = _verticleAlignment;
-    NSAttributedString *attributedString = [_innerAttributedString copy];
-    __block CCTextLayout *layout = _textLayout;
     
     task.display = ^(CGContextRef context, CGSize size, BOOL(^isCancelled)(void)) {
         if (needUpdateLayout) {
