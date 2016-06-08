@@ -10,6 +10,7 @@
 #import <CoreText/CoreText.h>
 #import "NSAttributedString+CCKit.h"
 #import "UIImage+CCKit.h"
+#import "CCFPSLabel.h"
 
 @interface CCLine : NSObject
 
@@ -283,6 +284,7 @@
 
 @implementation CoreTextChatViewController {
     UITableView *_tableView;
+    CCFPSLabel *_labelFps;
     NSArray<CoreTextMsg *> *_chatMsgs;
 }
 
@@ -295,6 +297,9 @@
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];
     [_tableView registerClass:[CoreTextChatCell class] forCellReuseIdentifier:@"cell"];
+    
+    _labelFps = [[CCFPSLabel alloc] initWithFrame:CGRectMake(44, ScreenHeight-100, 0, 0)];
+    [self.view addSubview:_labelFps];
     
     [self showLoadingMessage:@"Loading"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

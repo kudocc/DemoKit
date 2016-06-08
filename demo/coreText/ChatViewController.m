@@ -11,6 +11,7 @@
 #import "CCLabel.h"
 #import "NSAttributedString+CCKit.h"
 #import "UIImage+CCKit.h"
+#import "CCFPSLabel.h"
 
 @interface ChatMessage : NSObject
 
@@ -144,6 +145,7 @@
 
 @implementation ChatViewController {
     UITableView *_tableView;
+    CCFPSLabel *_labelFps;
     NSArray<ChatMessage *> *_chatMsgs;
 }
 
@@ -156,6 +158,9 @@
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];
     [_tableView registerClass:[ChatTableViewCell class] forCellReuseIdentifier:@"cell"];
+    
+    _labelFps = [[CCFPSLabel alloc] initWithFrame:CGRectMake(44, ScreenHeight-100, 0, 0)];
+    [self.view addSubview:_labelFps];
     
     [self showLoadingMessage:@"Loading"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

@@ -9,6 +9,7 @@
 #import "SimpleChatViewController.h"
 #import "NSAttributedString+CCKit.h"
 #import "UIImage+CCKit.h"
+#import "CCFPSLabel.h"
 
 @interface ChatMsgView : UIView
 
@@ -180,6 +181,7 @@
 
 @implementation SimpleChatViewController {
     UITableView *_tableView;
+    CCFPSLabel *_labelFps;
     NSArray<ChatCell *> *_chatMsgs;
 }
 
@@ -192,6 +194,9 @@
     _tableView.dataSource = self;
     _tableView.tableFooterView = [UIView new];
     [_tableView registerClass:[SimpleChatCell class] forCellReuseIdentifier:@"cell"];
+    
+    _labelFps = [[CCFPSLabel alloc] initWithFrame:CGRectMake(44, ScreenHeight-100, 0, 0)];
+    [self.view addSubview:_labelFps];
     
     [self showLoadingMessage:@"Loading"];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
