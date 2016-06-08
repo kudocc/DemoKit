@@ -8,7 +8,7 @@
 
 #import "AudioRecordViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "NSString+File.h"
+#import "NSString+CCKit.h"
 
 @interface AudioRecordViewController ()
 
@@ -24,7 +24,7 @@
     
     NSDate *current = [NSDate date];
     NSString *fileName = [NSString stringWithFormat:@"%ld", (long)[current timeIntervalSince1970]];
-    NSString *filePath = [[NSString documentPath] stringByAppendingPathComponent:fileName];
+    NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
     NSDictionary *setting = @{AVFormatIDKey:@(kAudioFormatAppleIMA4), AVSampleRateKey:@(44100.0), AVNumberOfChannelsKey:@2};
     NSError *error = nil;
     _recorder = [[AVAudioRecorder alloc] initWithURL:[NSURL fileURLWithPath:filePath] settings:setting error:nil];

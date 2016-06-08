@@ -10,7 +10,6 @@
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "NSString+File.h"
 #import "UIImage+CCKit.h"
 #import "ImagePickerViewControllerHelper.h"
 

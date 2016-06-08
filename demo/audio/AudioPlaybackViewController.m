@@ -8,7 +8,7 @@
 
 #import "AudioPlaybackViewController.h"
 #import <AVFoundation/AVFoundation.h>
-#import "NSString+File.h"
+#import "NSString+CCKit.h"
 
 @interface AudioPlaybackViewController () <UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate> {
     NSInteger pageSize;
@@ -34,7 +34,7 @@
     _tableView.delegate = self;
     _tableView.tableFooterView = [UIView new];
     
-    NSString *path = [NSString documentPath];
+    NSString *path = [NSString cc_documentPath];
     _arrayFile = [self listFileAtPath:path];
     
     _indexPlay = NSNotFound;
@@ -72,7 +72,7 @@
         } else {
             [_player stop];
             NSString *fileName = _arrayFile[indexPath.row];
-            NSString *filePath = [[NSString documentPath] stringByAppendingPathComponent:fileName];
+            NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
             _player = [self playFile:filePath];
             _indexPlay = indexPath.row;
             self.title = [NSString stringWithFormat:@"play:%@", fileName];
@@ -82,7 +82,7 @@
             [_player play];
         } else {
             NSString *fileName = _arrayFile[indexPath.row];
-            NSString *filePath = [[NSString documentPath] stringByAppendingPathComponent:fileName];
+            NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
             _player = [self playFile:filePath];
             _indexPlay = indexPath.row;
             self.title = [NSString stringWithFormat:@"play:%@", fileName];

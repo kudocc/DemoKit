@@ -41,6 +41,11 @@
 		A73B4F061D079524002E1A1A /* KVOSubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F051D079524002E1A1A /* KVOSubViewController.m */; };
 		A73B4F091D07973A002E1A1A /* OtherViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F081D07973A002E1A1A /* OtherViewController.m */; };
 		A73B4F0C1D07B19B002E1A1A /* CCFPSLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F0B1D07B19B002E1A1A /* CCFPSLabel.m */; };
+		A73B4F151D07C647002E1A1A /* CCHTMLParser.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F141D07C647002E1A1A /* CCHTMLParser.m */; };
+		A73B4F181D07DFEE002E1A1A /* CCStack.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F171D07DFEE002E1A1A /* CCStack.m */; };
+		A73B4F1B1D07FCDC002E1A1A /* NSString+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F1A1D07FCDC002E1A1A /* NSString+CCKit.m */; };
+		A73B4F1D1D0807EB002E1A1A /* test.html in Resources */ = {isa = PBXBuildFile; fileRef = A73B4F1C1D0807EB002E1A1A /* test.html */; };
+		A73B4F201D080BC8002E1A1A /* HTMLParserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A73B4F1F1D080BC8002E1A1A /* HTMLParserViewController.m */; };
 		A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */; };
 		A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A757237C1CED54560065AA2E /* FaceDetectorViewController.m */; };
 		A7583C3F1CE31BFB007558CB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C3E1CE31BFB007558CB /* main.m */; };
@@ -60,7 +65,6 @@
 		A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6961CEC50DF0098F1C8 /* CoreImageViewController.m */; };
 		A773F69A1CEC51D60098F1C8 /* BuiltinFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6991CEC51D60098F1C8 /* BuiltinFilterViewController.m */; };
 		A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */; };
-		A785B0221CE3218700A7686D /* NSString+File.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0211CE3218700A7686D /* NSString+File.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
 		A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0341CE3258C00A7686D /* Quartz2DViewController.m */; };
@@ -195,6 +199,15 @@
 		A73B4F081D07973A002E1A1A /* OtherViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OtherViewController.m; sourceTree = "<group>"; };
 		A73B4F0A1D07B19B002E1A1A /* CCFPSLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCFPSLabel.h; sourceTree = "<group>"; };
 		A73B4F0B1D07B19B002E1A1A /* CCFPSLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCFPSLabel.m; sourceTree = "<group>"; };
+		A73B4F131D07C647002E1A1A /* CCHTMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCHTMLParser.h; sourceTree = "<group>"; };
+		A73B4F141D07C647002E1A1A /* CCHTMLParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCHTMLParser.m; sourceTree = "<group>"; };
+		A73B4F161D07DFEE002E1A1A /* CCStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCStack.h; sourceTree = "<group>"; };
+		A73B4F171D07DFEE002E1A1A /* CCStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCStack.m; sourceTree = "<group>"; };
+		A73B4F191D07FCDC002E1A1A /* NSString+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+CCKit.h"; sourceTree = "<group>"; };
+		A73B4F1A1D07FCDC002E1A1A /* NSString+CCKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+CCKit.m"; sourceTree = "<group>"; };
+		A73B4F1C1D0807EB002E1A1A /* test.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = test.html; sourceTree = "<group>"; };
+		A73B4F1E1D080BC8002E1A1A /* HTMLParserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLParserViewController.h; sourceTree = "<group>"; };
+		A73B4F1F1D080BC8002E1A1A /* HTMLParserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLParserViewController.m; sourceTree = "<group>"; };
 		A75723751CED51AC0065AA2E /* BuiltinFilterChainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BuiltinFilterChainViewController.h; sourceTree = "<group>"; };
 		A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterChainViewController.m; sourceTree = "<group>"; };
 		A757237B1CED54560065AA2E /* FaceDetectorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FaceDetectorViewController.h; sourceTree = "<group>"; };
@@ -233,8 +246,6 @@
 		A773F6991CEC51D60098F1C8 /* BuiltinFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterViewController.m; sourceTree = "<group>"; };
 		A773F69C1CEC54920098F1C8 /* ImagePickerViewControllerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewControllerHelper.h; sourceTree = "<group>"; };
 		A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewControllerHelper.m; sourceTree = "<group>"; };
-		A785B0201CE3218700A7686D /* NSString+File.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+File.h"; sourceTree = "<group>"; };
-		A785B0211CE3218700A7686D /* NSString+File.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+File.m"; sourceTree = "<group>"; };
 		A785B0231CE321B000A7686D /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewController.h; sourceTree = "<group>"; };
 		A785B0241CE321B000A7686D /* HomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewController.m; sourceTree = "<group>"; };
 		A785B0291CE3258C00A7686D /* ImageMaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageMaskViewController.h; sourceTree = "<group>"; };
@@ -427,6 +438,8 @@
 				A7147EDD1CFEAF650090FCCB /* ChatViewController.m */,
 				A7147EEB1D0172B40090FCCB /* CCLabelDemoViewController.h */,
 				A7147EEC1D0172B40090FCCB /* CCLabelDemoViewController.m */,
+				A73B4F1E1D080BC8002E1A1A /* HTMLParserViewController.h */,
+				A73B4F1F1D080BC8002E1A1A /* HTMLParserViewController.m */,
 			);
 			path = coreText;
 			sourceTree = "<group>";
@@ -446,6 +459,8 @@
 				A73B4EED1D051838002E1A1A /* CCTextLine.m */,
 				A73B4EEE1D051838002E1A1A /* CCTextRunDelegate.h */,
 				A73B4EEF1D051838002E1A1A /* CCTextRunDelegate.m */,
+				A73B4F131D07C647002E1A1A /* CCHTMLParser.h */,
+				A73B4F141D07C647002E1A1A /* CCHTMLParser.m */,
 			);
 			path = text;
 			sourceTree = "<group>";
@@ -516,6 +531,7 @@
 				A7147EAA1CF7EFE00090FCCB /* model */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
+				A73B4F1C1D0807EB002E1A1A /* test.html */,
 				A7147ECB1CFD82FC0090FCCB /* chat.plist */,
 				A7583C461CE31BFB007558CB /* Main.storyboard */,
 				A7583C491CE31BFB007558CB /* Assets.xcassets */,
@@ -736,8 +752,8 @@
 				A785B05D1CE3298A00A7686D /* UIImage+CCKit.m */,
 				A785B0931CE41A2500A7686D /* UIColor+CCKit.h */,
 				A785B0941CE41A2500A7686D /* UIColor+CCKit.m */,
-				A785B0201CE3218700A7686D /* NSString+File.h */,
-				A785B0211CE3218700A7686D /* NSString+File.m */,
+				A73B4F191D07FCDC002E1A1A /* NSString+CCKit.h */,
+				A73B4F1A1D07FCDC002E1A1A /* NSString+CCKit.m */,
 				A7147EE21CFEE1470090FCCB /* NSAttributedString+CCKit.h */,
 				A7147EE31CFEE1470090FCCB /* NSAttributedString+CCKit.m */,
 				A73B4EF61D0551BF002E1A1A /* NSDictionary+CCKit.h */,
@@ -757,6 +773,8 @@
 				A7F5F07C1CE31F7F0064AAB7 /* BaseViewController.m */,
 				A785B0231CE321B000A7686D /* HomeTableViewController.h */,
 				A785B0241CE321B000A7686D /* HomeTableViewController.m */,
+				A73B4F161D07DFEE002E1A1A /* CCStack.h */,
+				A73B4F171D07DFEE002E1A1A /* CCStack.m */,
 			);
 			path = subclass;
 			sourceTree = "<group>";
@@ -876,6 +894,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A73B4F1D1D0807EB002E1A1A /* test.html in Resources */,
 				A7147ECC1CFD82FC0090FCCB /* chat.plist in Resources */,
 				A7583C4D1CE31BFB007558CB /* LaunchScreen.storyboard in Resources */,
 				A785B0711CE32D9F00A7686D /* server.cer in Resources */,
@@ -964,7 +983,9 @@
 				A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */,
 				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
+				A73B4F181D07DFEE002E1A1A /* CCStack.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
+				A73B4F201D080BC8002E1A1A /* HTMLParserViewController.m in Sources */,
 				A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */,
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,
 				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
@@ -987,11 +1008,11 @@
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
 				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
+				A73B4F151D07C647002E1A1A /* CCHTMLParser.m in Sources */,
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A73B4EF11D051838002E1A1A /* CCTextContainer.m in Sources */,
 				A73B4EF81D0551C0002E1A1A /* NSDictionary+CCKit.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
-				A785B0221CE3218700A7686D /* NSString+File.m in Sources */,
 				A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */,
 				A73B4EF31D051838002E1A1A /* CCTextLayout.m in Sources */,
 				A7147EAD1CF7F0130090FCCB /* ModelViewController.m in Sources */,
@@ -1030,6 +1051,7 @@
 				A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */,
 				A73B4F0C1D07B19B002E1A1A /* CCFPSLabel.m in Sources */,
 				A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */,
+				A73B4F1B1D07FCDC002E1A1A /* NSString+CCKit.m in Sources */,
 				A73B4EFD1D0792F5002E1A1A /* KVOViewController.m in Sources */,
 				A73B4EF01D051838002E1A1A /* CCLabel.m in Sources */,
 				A734D1231CF42BFC008276C9 /* HttpAsyncRequestsViewController.m in Sources */,

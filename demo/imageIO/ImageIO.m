@@ -7,7 +7,7 @@
 //
 
 #import "ImageIO.h"
-#import "NSString+File.h"
+#import "NSString+CCKit.h"
 #import <ImageIO/ImageIO.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -26,7 +26,7 @@
 }
 
 - (NSString *)fileDirectory {
-    return [[NSString documentPath] stringByAppendingPathComponent:@"imageIO"];
+    return [[NSString cc_documentPath] stringByAppendingPathComponent:@"imageIO"];
 }
 
 @end

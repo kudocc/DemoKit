@@ -78,7 +78,7 @@ didReceiveResponse:(NSURLResponse *)response
     NSLog(@"%@", NSStringFromSelector(_cmd));
     
     [mutableData appendData:data];
-    NSLog(@"expectedLen:%lu, %lu", expectedLength, [mutableData length]);
+    NSLog(@"expectedLen:%lu, %lu", (unsigned long)expectedLength, (unsigned long)[mutableData length]);
     
     NSData *dataImage = [mutableData copy];
     CGImageSourceUpdateData(imageSource, (__bridge CFDataRef)dataImage, expectedLength <= [dataImage length]);

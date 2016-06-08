@@ -11,7 +11,6 @@
 #import <MobileCoreServices/UTCoreTypes.h>
 #import <AVFoundation/AVFoundation.h>
 #import <AssetsLibrary/AssetsLibrary.h>
-#import "NSString+File.h"
 #import <CoreLocation/CoreLocation.h>
 #import "UIImage+CCKit.h"
 #import "ImagePickerViewControllerHelper.h"
