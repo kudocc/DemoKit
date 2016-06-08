@@ -11,6 +11,7 @@
 #import "CoreTextChatViewController.h"
 #import "ChatViewController.h"
 #import "CCLabelDemoViewController.h"
+#import "HTMLParserViewController.h"
 #import <CoreText/CoreText.h>
 
 // 1.run descent是负值么
@@ -106,12 +107,14 @@
     self.arrayTitle = @[@"Simple Chat",
                         @"Core Text Chat",
                         @"Asynchonized Text",
-                        @"CCLabel demo"];
+                        @"CCLabel demo",
+                        @"HTML parser"];
     
     self.arrayClass = @[[SimpleChatViewController class],
                         [CoreTextChatViewController class],
                         [ChatViewController class],
-                        [CCLabelDemoViewController class]];
+                        [CCLabelDemoViewController class],
+                        [HTMLParserViewController class]];
     
 //    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
 //    v.backgroundColor = [UIColor greenColor];
