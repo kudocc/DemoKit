@@ -13,10 +13,7 @@
 #import "CCLabelDemoViewController.h"
 #import "HTMLParserViewController.h"
 #import <CoreText/CoreText.h>
-
-// 1.run descent是负值么
-// 2.run position是相对于line的么：对的
-// 3.line 的position.x可能是>0的么：对的，当pragraphStyle设置缩进的时候
+#import "NSAttributedString+CCKit.h"
 
 @interface TestLayer : CALayer
 
@@ -60,6 +57,7 @@
         
         NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
         [attriString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 10)];
+        [attriString cc_setColor:[UIColor blueColor] range:NSMakeRange(0, 3)];
         _attributedString = [attriString copy];
         
         _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
@@ -89,11 +87,25 @@
     CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
     CGContextStrokePath(context);
     
-    CGContextSetTextPosition(context, 0, 0);
+    CGContextSetTextPosition(context, 10, 10);
     CFArrayRef lines = CTFrameGetLines(_frame);
     CTLineRef line = CFArrayGetValueAtIndex(lines, 0);
-//    CTFrameDraw(_frame, context);
-    CTLineDraw(line, context);
+    CFArrayRef runs = CTLineGetGlyphRuns(line);
+    CTRunRef run = CFArrayGetValueAtIndex(runs, 0);
+    {
+        CGContextSetTextPosition(context, 100, 100);
+        CGRect bounds = CTRunGetImageBounds(run, context, CFRangeMake(0, 0));
+        NSLog(@"run bounds:%@", NSStringFromCGRect(bounds));
+        CTRunDraw(run, context, CFRangeMake(0, 0));
+    }
+    
+    {
+//        CTLineDraw(line, context);
+    }
+    
+    {
+        CTFrameDraw(_frame, context);
+    }
 }
 @end
 
@@ -116,9 +128,9 @@
                         [CCLabelDemoViewController class],
                         [HTMLParserViewController class]];
     
-//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-//    v.backgroundColor = [UIColor greenColor];
-//    [self.view addSubview:v];
+    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+    v.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:v];
 }
 
 - (void)repeate:(id)timer {

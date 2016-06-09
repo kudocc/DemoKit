@@ -27,7 +27,7 @@
     self = [super init];
     if (self) {
         _line = line;
-        
+        /*
         CFArrayRef runs = CTLineGetGlyphRuns(_line);
         CFIndex count = CFArrayGetCount(runs);
         for (CFIndex i = 0; i < count; ++i) {
@@ -39,7 +39,7 @@
             CGFloat ascent = 0, descent = 0, leading = 0;
             CGFloat width = CTRunGetTypographicBounds(run, CFRangeMake(0, 0), &ascent, &descent, &leading);
             NSLog(@"width:%@, ascent:%@, descent:%@, leading:%@", @(width), @(ascent), @(descent), @(leading));
-        }
+        }*/
     }
     return self;
 }
@@ -73,6 +73,26 @@
     
 //    CTFrameDraw(_ctFrame, context);
 }
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    CGPoint position = [[touches anyObject] locationInView:self];
+    
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+}
+
 @end
 
 @interface CoreTextMsg : NSObject
@@ -169,8 +189,9 @@
         if (location < strContent.length) {
             NSString *subString = [strContent substringFromIndex:location];
             NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
-            [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
-            [subAttrString cc_setColor:[UIColor blackColor]];
+            [subAttrString cc_setFont:[UIFont systemFontOfSize:11]];
+            [subAttrString cc_setColor:[UIColor redColor]];
+            [subAttrString cc_setBgColor:[UIColor cc_colorWithRed:200 green:200 blue:200]];
             [mAttrString appendAttributedString:subAttrString];
         }
         

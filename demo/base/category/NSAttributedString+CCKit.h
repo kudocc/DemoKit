@@ -24,6 +24,10 @@
 - (UIColor *)cc_color;
 - (UIColor *)cc_colorAtIndex:(NSUInteger)index;
 
+/// get the background color of the first character
+- (UIColor *)cc_bgColor;
+- (UIColor *)cc_bgColorAtIndex:(NSUInteger)index;
+
 
 + (NSAttributedString *)attachmentStringWithContent:(id)content
                                         contentMode:(UIViewContentMode)contentMode
@@ -46,5 +50,8 @@
 
 - (void)cc_setColor:(UIColor *)color;
 - (void)cc_setColor:(UIColor *)color range:(NSRange)range;
+
+- (void)cc_setBgColor:(UIColor *)bgColor;
+- (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range;
 
 @end

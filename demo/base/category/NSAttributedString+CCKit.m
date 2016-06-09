@@ -13,7 +13,7 @@
 
 - (NSDictionary *)cc_attributesAtIndex:(NSUInteger)index {
     if ([self length] > 0) {
-        return [self attributesAtIndex:0 effectiveRange:NULL];
+        return [self attributesAtIndex:index effectiveRange:NULL];
     } else {
         return NULL;
     }
@@ -25,7 +25,7 @@
 
 
 - (UIFont *)cc_fontAtIndex:(NSUInteger)index {
-    NSDictionary *attributes = [self cc_attributes];
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
         return attributes[NSFontAttributeName];
     }
@@ -38,7 +38,7 @@
 
 
 - (UIColor *)cc_colorAtIndex:(NSUInteger)index {
-    NSDictionary *attributes = [self cc_attributes];
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
         return attributes[NSForegroundColorAttributeName];
     }
@@ -47,6 +47,19 @@
 
 - (UIColor *)cc_color {
     return [self cc_colorAtIndex:0];
+}
+
+
+- (UIColor *)cc_bgColorAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return attributes[NSBackgroundColorAttributeName];
+    }
+    return NULL;
+}
+
+- (UIColor *)cc_bgColor {
+    return [self cc_bgColorAtIndex:0];
 }
 
 #pragma mark - attachment
@@ -106,7 +119,7 @@
 #pragma mark - NSFontAttributeName
 
 - (void)cc_setFont:(UIFont *)font range:(NSRange)range {
-    [self setAttributes:@{NSFontAttributeName:font} range:range];
+    [self addAttribute:NSFontAttributeName value:font range:range];
 }
 
 - (void)cc_setFont:(UIFont *)font {
@@ -116,11 +129,21 @@
 #pragma mark - NSForegroundColorAttributeName
 
 - (void)cc_setColor:(UIColor *)color range:(NSRange)range {
-    [self setAttributes:@{NSForegroundColorAttributeName:color} range:range];
+    [self addAttribute:NSForegroundColorAttributeName value:color range:range];
 }
 
 - (void)cc_setColor:(UIColor *)color {
     [self cc_setColor:color range:NSMakeRange(0, [self length])];
+}
+
+#pragma mark - NSBackgroundColorAttributeName
+
+- (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range {
+    [self addAttribute:NSBackgroundColorAttributeName value:bgColor range:range];
+}
+
+- (void)cc_setBgColor:(UIColor *)bgColor {
+    [self cc_setBgColor:bgColor range:NSMakeRange(0, [self length])];
 }
 
 @end

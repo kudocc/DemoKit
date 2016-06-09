@@ -10,9 +10,43 @@
 #import "CCStack.h"
 #import "NSString+CCKit.h"
 
+//https://en.wikipedia.org/wiki/HTML_attribute
+
 #define RangeLength(startPos, endPos) (endPos-startPos+1)
 
 NSString *const CCHTMLParseErrorDomain = @"CCHTMLParseErrorDomain";
+
+/// tag <a></a> 超链接
+NSString *const CCHTMLTagNameA = @"a";
+/// tag <font></font> 字体
+NSString *const CCHTMLTagNameFont = @"font";
+/// tag <p></p> 段落
+NSString *const CCHTMLTagNameP = @"p";
+/// tag <img></img> 图片
+NSString *const CCHTMLTagNameImg = @"img";
+/// tag <br /> 强制换行
+NSString *const CCHTMLTagBr = @"br";
+/// tag <b></b> 粗体
+NSString *const CCHTMLTagB = @"b";
+/// tag <i></b> 斜体
+NSString *const CCHTMLTagI = @"i";
+
+// TOOD:
+/// tag <u></u> 下划线
+NSString *const CCHTMLTagU = @"u";
+/// tag <s></s> 删除线
+NSString *const CCHTMLTagS = @"s";
+/// tag <sup></sup> 上标
+NSString *const CCHTMLTagSup = @"sup";
+/// tag <sub></sub> 下标
+NSString *const CCHTMLTagSub = @"sub";
+
+NSString *const CCHTMLTagAttributeNameHref = @"href";
+NSString *const CCHTMLTagAttributeNameColor = @"color";
+NSString *const CCHTMLTagAttributeNameBgColor = @"bgcolor";
+NSString *const CCHTMLTagAttributeNameSize = @"size";
+NSString *const CCHTMLTagAttributeNameWidth = @"width";
+NSString *const CCHTMLTagAttributeNameHeight = @"height";
 
 @implementation CCTagItem
 

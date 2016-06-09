@@ -103,6 +103,7 @@
             NSMutableAttributedString *subAttrString = [[NSMutableAttributedString alloc] initWithString:subString];
             [subAttrString cc_setFont:[UIFont systemFontOfSize:14]];
             [subAttrString cc_setColor:[UIColor blackColor]];
+            [subAttrString cc_setBgColor:[UIColor cc_colorWithRed:200 green:200 blue:200]];
             [mAttrString appendAttributedString:subAttrString];
         }
         
