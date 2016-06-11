@@ -45,6 +45,9 @@
 
 @interface NSMutableAttributedString (CCKit)
 
+- (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes;
+- (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes range:(NSRange)range;
+
 - (void)cc_setFont:(UIFont *)font;
 - (void)cc_setFont:(UIFont *)font range:(NSRange)range;
 
@@ -53,5 +56,9 @@
 
 - (void)cc_setBgColor:(UIColor *)bgColor;
 - (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range;
+
+
+- (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor tapAction:(CCTapActionBlock)tapAction;
+- (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor range:(NSRange)range tapAction:(CCTapActionBlock)tapAction;
 
 @end

@@ -15,6 +15,9 @@
     NSMutableAttributedString *_innerAttributedString;
     CCTextContainer *_textContainer;
     BOOL _needUpdateLayout;
+    NSDictionary *_textHighlightedAttributeSaved;
+    CCTextHighlighted *_textHighlighted;
+    NSRange _effectiveRangeTextHighlighted;
     
     NSArray<CCTextAttachment *> *_attachmentViews;
     NSArray<CCTextAttachment *> *_attachmentLayers;
@@ -179,11 +182,90 @@
     return [CCAsyncLayer class];
 }
 
+#pragma mark - Touch
+
+- (CGPoint)convertPoint:(CGPoint)point toTextLayout:(CCTextLayout *)layout {
+    CGSize size = self.layer.bounds.size;
+    CGFloat offsetY = 0;
+    if (_verticleAlignment == CCTextVerticalAlignmentCenter) {
+        offsetY = (size.height - layout.textBounds.height)/2;
+    } else if (_verticleAlignment == CCTextVerticalAlignmentBottom) {
+        offsetY = size.height - layout.textBounds.height;
+    }
+    if (offsetY < 0) {
+        offsetY = 0;
+    }
+    point = CGPointMake(point.x, point.y - offsetY);
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(0, layout.textBounds.height);
+    transform = CGAffineTransformScale(transform, 1, -1);
+    point = CGPointApplyAffineTransform(point, transform);
+    return point;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    CGPoint position = [[touches anyObject] locationInView:self];
+    position = [self convertPoint:position toTextLayout:_textLayout];
+    NSInteger index = [_textLayout stringIndexAtPosition:position];
+    if (index == NSNotFound) {
+        return;
+    }
+    CCTextHighlighted *textHighlighted = [_innerAttributedString attribute:CCHighlightedAttributeName
+                                                                   atIndex:index longestEffectiveRange:&_effectiveRangeTextHighlighted
+                                                                   inRange:NSMakeRange(0, [_innerAttributedString length])];
+    _textHighlighted = textHighlighted;
+    if (textHighlighted) {
+        NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
+        [_innerAttributedString enumerateAttributesInRange:_effectiveRangeTextHighlighted options:0 usingBlock:^(NSDictionary<NSString *,id> *attrs, NSRange range, BOOL *stop) {
+            NSValue *valueRange = [NSValue valueWithRange:range];
+            mutableDict[valueRange] = attrs;
+        }];
+        _textHighlightedAttributeSaved = [mutableDict copy];
+        [textHighlighted.attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+            [_innerAttributedString addAttribute:key value:obj range:_effectiveRangeTextHighlighted];
+        }];
+        [self _setNeedsUpdateDisplay];
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    
+    if (_textHighlighted) {
+        // restore
+        [_textHighlightedAttributeSaved enumerateKeysAndObjectsUsingBlock:^(NSValue *key, id obj, BOOL * _Nonnull stop) {
+            NSRange range = [key rangeValue];
+            [_innerAttributedString setAttributes:obj range:range];
+        }];
+        [self _setNeedsUpdateDisplay];
+        
+        _textHighlighted.tapAction(_effectiveRangeTextHighlighted);
+    }
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    
+    if (_textHighlighted) {
+        // restore
+        [_textHighlightedAttributeSaved enumerateKeysAndObjectsUsingBlock:^(NSValue *key, id obj, BOOL * _Nonnull stop) {
+            NSRange range = [key rangeValue];
+            [_innerAttributedString setAttributes:obj range:range];
+        }];
+        [self _setNeedsUpdateDisplay];
+    }
+}
+
 #pragma mark - CCAsyncLayerDelegate
 
 - (CCAsyncLayerDisplayTask *)newAsyncDisplayTask {
     BOOL needUpdateLayout = _needUpdateLayout;
-    CCTextVerticalAlignment verticalAlignment = _verticleAlignment;
+    CCTextVerticalAlignment verticleAlignment = _verticleAlignment;
     NSAttributedString *attributedString = [_innerAttributedString copy];
     __block CCTextLayout *layout = _textLayout;
     
@@ -207,9 +289,9 @@
         }
         
         CGPoint position = CGPointZero;
-        if (verticalAlignment == CCTextVerticalAlignmentCenter) {
+        if (verticleAlignment == CCTextVerticalAlignmentCenter) {
             position.y = (size.height - layout.textBounds.height)/2;
-        } else if (verticalAlignment == CCTextVerticalAlignmentBottom) {
+        } else if (verticleAlignment == CCTextVerticalAlignmentBottom) {
             position.y = size.height - layout.textBounds.height;
         }
         if (position.y < 0) {
@@ -223,9 +305,9 @@
         CCMainThreadBlock(^() {
             CGSize size = layer.bounds.size;
             CGPoint position = CGPointZero;
-            if (verticalAlignment == CCTextVerticalAlignmentCenter) {
+            if (verticleAlignment == CCTextVerticalAlignmentCenter) {
                 position.y = (size.height - layout.textBounds.height)/2;
-            } else if (verticalAlignment == CCTextVerticalAlignmentBottom) {
+            } else if (verticleAlignment == CCTextVerticalAlignmentBottom) {
                 position.y = size.height - layout.textBounds.height;
             }
             if (position.y < 0) {

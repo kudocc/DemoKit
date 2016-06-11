@@ -19,6 +19,8 @@ extern NSString *const CCAttachmentCharacter;
         });\
     }
 
+typedef void (^CCTapActionBlock)(NSRange range);
+
 typedef NS_ENUM(NSUInteger, CCTextAttachmentPosition) {
     CCTextAttachmentPositionTop,
     CCTextAttachmentPositionCenter,
@@ -32,7 +34,8 @@ typedef NS_ENUM(NSUInteger, CCTextVerticalAlignment) {
 };
 
 extern NSString *const CCAttachmentAttributeName;
-
+extern NSString *const CCHighlightedAttributeName;
+extern NSString *const CCBackgroundColorAttributeName;
 
 @interface CCTextAttachment : NSObject
 
@@ -43,5 +46,15 @@ extern NSString *const CCAttachmentAttributeName;
 
 @property (nonatomic) UIViewContentMode contentMode;
 @property (nonatomic) UIEdgeInsets contentInsets;
+
+@end
+
+@interface CCTextHighlighted : NSObject
+
+@property (nonatomic) BOOL enable;
+@property (nonatomic) NSDictionary *attributes;
+@property (nonatomic) UIColor *bgColor;
+@property (nonatomic) UIColor *highlightedColor;
+@property (nonatomic, copy) CCTapActionBlock tapAction;
 
 @end

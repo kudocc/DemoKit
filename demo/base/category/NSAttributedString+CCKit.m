@@ -116,6 +116,14 @@
 
 @implementation NSMutableAttributedString (CCKit)
 
+- (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes {
+    [self cc_setAttributes:attributes range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes range:(NSRange)range {
+    [self setAttributes:attributes range:range];
+}
+
 #pragma mark - NSFontAttributeName
 
 - (void)cc_setFont:(UIFont *)font range:(NSRange)range {
@@ -123,7 +131,7 @@
 }
 
 - (void)cc_setFont:(UIFont *)font {
-    [self cc_setFont:font range:NSMakeRange(0, [self length])];
+    [self cc_setFont:font range:NSMakeRange(0, self.length)];
 }
 
 #pragma mark - NSForegroundColorAttributeName
@@ -133,17 +141,35 @@
 }
 
 - (void)cc_setColor:(UIColor *)color {
-    [self cc_setColor:color range:NSMakeRange(0, [self length])];
+    [self cc_setColor:color range:NSMakeRange(0, self.length)];
 }
 
-#pragma mark - NSBackgroundColorAttributeName
+#pragma mark - CCBackgroundColorAttributeName
 
 - (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range {
-    [self addAttribute:NSBackgroundColorAttributeName value:bgColor range:range];
+    [self addAttribute:CCBackgroundColorAttributeName value:bgColor range:range];
 }
 
 - (void)cc_setBgColor:(UIColor *)bgColor {
-    [self cc_setBgColor:bgColor range:NSMakeRange(0, [self length])];
+    [self cc_setBgColor:bgColor range:NSMakeRange(0, self.length)];
+}
+
+#pragma mark - CCHighlightedAttributeName
+
+- (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor tapAction:(CCTapActionBlock)tapAction {
+    CCTextHighlighted *hi = [[CCTextHighlighted alloc] init];
+    hi.highlightedColor = color;
+    hi.bgColor = bgColor;
+    hi.tapAction = tapAction;
+    [self addAttribute:CCHighlightedAttributeName value:hi range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor range:(NSRange)range tapAction:(CCTapActionBlock)tapAction {
+    CCTextHighlighted *hi = [[CCTextHighlighted alloc] init];
+    hi.highlightedColor = color;
+    hi.bgColor = bgColor;
+    hi.tapAction = tapAction;
+    [self addAttribute:CCHighlightedAttributeName value:hi range:range];
 }
 
 @end

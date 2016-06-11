@@ -11,6 +11,8 @@
 const NSString *const CCAttachmentCharacter = @"\ufffc";
 
 NSString *const CCAttachmentAttributeName = @"CCKit_AttachmentAttributeName";
+NSString *const CCHighlightedAttributeName = @"CCKit_HighlightedAttributeName";
+NSString *const CCBackgroundColorAttributeName = @"CCKit_BackgroundColorAttributeName";
 
 @implementation CCTextAttachment
 
@@ -44,6 +46,22 @@ NSString *const CCAttachmentAttributeName = @"CCKit_AttachmentAttributeName";
         size = CGSizeZero;
     }
     _contentSize = size;
+}
+
+@end
+
+
+@implementation CCTextHighlighted
+
+- (NSDictionary *)attributes {
+    NSMutableDictionary *mutableDictionary = [NSMutableDictionary dictionary];
+    if (_bgColor) {
+        mutableDictionary[CCBackgroundColorAttributeName] = _bgColor;
+    }
+    if (_highlightedColor) {
+        mutableDictionary[NSForegroundColorAttributeName] = _highlightedColor;
+    }
+    return [mutableDictionary copy];
 }
 
 @end

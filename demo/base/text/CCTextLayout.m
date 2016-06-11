@@ -152,9 +152,8 @@
         if (isCanceled && isCanceled()) {
             return;
         }
-        CGContextSetTextPosition(context, position.x + line.position.x, position.y + line.position.y);
-        CTLineDraw(line.line, context);
         
+        // draw attachments
         for (NSInteger i = 0; i < [line.attachments count]; ++i) {
             CCTextAttachment *attachment = line.attachments[i];
             CGRect frame = [line.attachmentFrames[i] CGRectValue];
@@ -165,6 +164,40 @@
             if ([attachment.content isKindOfClass:[UIImage class]]) {
                 UIImage *image = (UIImage *)attachment.content;
                 CGContextDrawImage(context, frame, image.CGImage);
+            }
+        }
+        
+        // draw text run
+        for (CCTextRun *textRun in line.textRuns) {
+            CGRect frame = textRun.frame;
+            frame = CGRectOffset(frame, position.x, position.y);
+            CTRunRef run = (__bridge CTRunRef)textRun.run;
+            NSDictionary *attr = (__bridge id)CTRunGetAttributes(run);
+            // background color
+            UIColor *bgColor = attr[CCBackgroundColorAttributeName];
+            if (bgColor) {
+                CGContextSetFillColorWithColor(context, bgColor.CGColor);
+                CGContextFillRect(context, frame);
+            }
+            
+            CGPoint runPosition = textRun.position;
+            runPosition = CGPointMake(0, runPosition.y);
+            runPosition = CGPointMake(position.x + runPosition.x, position.y + runPosition.y);
+            {
+                CGContextSetTextPosition(context, runPosition.x, runPosition.y);
+                CGAffineTransform textMatrix = CTRunGetTextMatrix(run);
+                if (CGAffineTransformIsIdentity(textMatrix)) {
+                    CTRunDraw(run, context, CFRangeMake(0, 0));
+                } else {
+                    CGPoint pos = CGContextGetTextPosition(context);
+                    // set tx and ty to current text pos according to docs
+                    textMatrix.tx = pos.x;
+                    textMatrix.ty = pos.y;
+                    CGContextSetTextMatrix(context, textMatrix);
+                    CTRunDraw(run, context, CFRangeMake(0, 0));
+                    // restore identity
+                    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+                }
             }
         }
     }
@@ -198,6 +231,20 @@
             }
         }
     }
+}
+
+- (NSInteger)stringIndexAtPosition:(CGPoint)position {
+    for (CCTextLine *line in _textLines) {
+        if (CGRectContainsPoint(line.frame, position)) {
+            CGPoint positionInLine = CGPointMake(position.x-line.position.x, position.y-line.position.y);
+            CFIndex position = CTLineGetStringIndexForPosition(line.line, positionInLine);
+            if (position == kCFNotFound) {
+                return NSNotFound;
+            }
+            return (NSInteger)position;
+        }
+    }
+    return NSNotFound;
 }
 
 @end

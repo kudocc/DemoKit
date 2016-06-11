@@ -23,7 +23,17 @@
     NSMutableAttributedString *mutableAttrString = [[NSMutableAttributedString alloc] init];
     
     {
-        NSMutableAttributedString *simpleText = [[NSMutableAttributedString alloc] initWithString:@"Good to see you again, but I'd like to know how you come here. Well 你奶奶的顿的，怎么搞的跟你有什么关系，马上就要周末了，我就想玩一会还要你管么，哼哼，呵呵o(￣ヘ￣o#)"];
+        NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc] initWithString:@"http://www.baidu.com"];
+        [highlightedText cc_setHighlightedColor:[UIColor redColor] bgColor:[UIColor blueColor] range:NSMakeRange(0, highlightedText.length) tapAction:^(NSRange range) {
+            NSLog(@"tap action:%@", NSStringFromRange(range));
+        }];
+        [highlightedText cc_setFont:[UIFont systemFontOfSize:16.0]];
+        [highlightedText cc_setColor:[UIColor blackColor]];
+        [mutableAttrString appendAttributedString:highlightedText];
+    }
+    
+    {
+        NSMutableAttributedString *simpleText = [[NSMutableAttributedString alloc] initWithString:@"Good to see you again. Well 你奶奶的顿的。哼哼，呵呵o(￣ヘ￣o#)"];
         [simpleText cc_setFont:[UIFont systemFontOfSize:16.0]];
         [mutableAttrString appendAttributedString:simpleText];
     }
@@ -37,6 +47,7 @@
     {
         NSMutableAttributedString *simpleText = [[NSMutableAttributedString alloc] initWithString:@"现在下午最困的时候，手机和电脑都要没电了，算了，继续搞吧"];
         [simpleText cc_setFont:[UIFont systemFontOfSize:16.0]];
+        [simpleText cc_setBgColor:[UIColor greenColor]];
         [mutableAttrString appendAttributedString:simpleText];
     }
     

@@ -89,14 +89,20 @@
     
     CGContextSetTextPosition(context, 10, 10);
     CFArrayRef lines = CTFrameGetLines(_frame);
-    CTLineRef line = CFArrayGetValueAtIndex(lines, 0);
+    // last line
+    CTLineRef line = CFArrayGetValueAtIndex(lines, CFArrayGetCount(lines)-1);
     CFArrayRef runs = CTLineGetGlyphRuns(line);
     CTRunRef run = CFArrayGetValueAtIndex(runs, 0);
     {
-        CGContextSetTextPosition(context, 100, 100);
+        CGContextSaveGState(context);
+        CGContextSetStrokeColorWithColor(context, [UIColor yellowColor].CGColor);
+        CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
+        CFRange range = CTRunGetStringRange(run);
+        NSLog(@"location:%@, length:%@", @(range.location), @(range.length));
         CGRect bounds = CTRunGetImageBounds(run, context, CFRangeMake(0, 0));
         NSLog(@"run bounds:%@", NSStringFromCGRect(bounds));
         CTRunDraw(run, context, CFRangeMake(0, 0));
+        CGContextRestoreGState(context);
     }
     
     {

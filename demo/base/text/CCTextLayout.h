@@ -31,4 +31,7 @@
              position:(CGPoint)position size:(CGSize)size
            isCanceled:(BOOL(^)(void))isCanceled;
 
+/// position is in Core Text coordinate
+- (NSInteger)stringIndexAtPosition:(CGPoint)position;
+
 @end

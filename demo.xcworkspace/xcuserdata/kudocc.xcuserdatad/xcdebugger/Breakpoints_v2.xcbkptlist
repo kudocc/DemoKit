@@ -16,16 +16,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "demo/coreText/CoreTextChatViewController.m"
-            timestampString = "487131915.866812"
+            filePath = "demo/base/text/CCLabel.m"
+            timestampString = "487302931.297271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "189"
-            endingLineNumber = "189"
-            landmarkName = "-initWithContent:left:"
+            startingLineNumber = "254"
+            endingLineNumber = "254"
+            landmarkName = "-touchesCancelled:withEvent:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
