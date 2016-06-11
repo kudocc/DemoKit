@@ -24,11 +24,11 @@
     
     {
         NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc] initWithString:@"http://www.baidu.com"];
-        [highlightedText cc_setHighlightedColor:[UIColor redColor] bgColor:[UIColor blueColor] range:NSMakeRange(0, highlightedText.length) tapAction:^(NSRange range) {
+        [highlightedText cc_setHighlightedColor:[UIColor redColor] bgColor:[UIColor grayColor] range:NSMakeRange(0, highlightedText.length) tapAction:^(NSRange range) {
             NSLog(@"tap action:%@", NSStringFromRange(range));
         }];
         [highlightedText cc_setFont:[UIFont systemFontOfSize:16.0]];
-        [highlightedText cc_setColor:[UIColor blackColor]];
+        [highlightedText cc_setColor:[UIColor blueColor]];
         [mutableAttrString appendAttributedString:highlightedText];
     }
     
@@ -38,10 +38,22 @@
         [mutableAttrString appendAttributedString:simpleText];
     }
     
-    {
+    {// <a href=''><image src=''></image></a>
+        NSMutableAttributedString *mutable = [[NSMutableAttributedString alloc] init];
         UIImage *imageName = [UIImage imageNamed:@"avatar_ori"];
         NSAttributedString *attachment = [NSAttributedString attachmentStringWithContent:imageName contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake(100, 80) alignToFont:[UIFont systemFontOfSize:16] attachmentPosition:CCTextAttachmentPositionTop];
-        [mutableAttrString appendAttributedString:attachment];
+        [mutable appendAttributedString:attachment];
+        
+        NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc] initWithString:@"g.cn"];
+        [highlightedText cc_setFont:[UIFont systemFontOfSize:16.0]];
+        [highlightedText cc_setColor:[UIColor blueColor]];
+        
+        [mutable appendAttributedString:highlightedText];
+        [mutable cc_setHighlightedColor:[UIColor redColor] bgColor:[UIColor grayColor] range:NSMakeRange(0, mutable.length) tapAction:^(NSRange range) {
+            NSLog(@"tap action:%@", NSStringFromRange(range));
+        }];
+        
+        [mutableAttrString appendAttributedString:mutable];
     }
     
     {
@@ -64,6 +76,8 @@
     }
     
     label = [[CCLabel alloc] initWithFrame:CGRectMake(10, 100, 300, 200)];
+    label.layer.borderColor = [UIColor greenColor].CGColor;
+    label.layer.borderWidth = Pixel(1);
     label.attributedText = mutableAttrString;
     label.asyncDisplay = NO;
     [self.view addSubview:label];

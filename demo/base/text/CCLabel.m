@@ -206,8 +206,11 @@
     [super touchesBegan:touches withEvent:event];
     
     CGPoint position = [[touches anyObject] locationInView:self];
+    NSLog(@"ori pos:%@", NSStringFromCGPoint(position));
     position = [self convertPoint:position toTextLayout:_textLayout];
+    NSLog(@"text layout pos:%@", NSStringFromCGPoint(position));
     NSInteger index = [_textLayout stringIndexAtPosition:position];
+    NSLog(@"index:%@", @(index));
     if (index == NSNotFound) {
         return;
     }
@@ -244,7 +247,19 @@
         }];
         [self _setNeedsUpdateDisplay];
         
-        _textHighlighted.tapAction(_effectiveRangeTextHighlighted);
+        BOOL touchUpInside = NO;
+        CGPoint position = [[touches anyObject] locationInView:self];
+        position = [self convertPoint:position toTextLayout:_textLayout];
+        NSInteger index = [_textLayout stringIndexAtPosition:position];
+        if (index != NSNotFound) {
+            if (index >= _effectiveRangeTextHighlighted.location &&
+                index < _effectiveRangeTextHighlighted.location + _effectiveRangeTextHighlighted.length) {
+                touchUpInside = YES;
+            }
+        }
+        if (touchUpInside) {
+            _textHighlighted.tapAction(_effectiveRangeTextHighlighted);
+        }
     }
 }
 

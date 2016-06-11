@@ -167,6 +167,9 @@
             }
         }
         
+        CGPoint linePosition = line.position;
+        linePosition = CGPointMake(linePosition.x + position.x, line.position.y + position.y);
+        CGContextSetTextPosition(context, linePosition.x, linePosition.y);
         // draw text run
         for (CCTextRun *textRun in line.textRuns) {
             CGRect frame = textRun.frame;
@@ -179,26 +182,7 @@
                 CGContextSetFillColorWithColor(context, bgColor.CGColor);
                 CGContextFillRect(context, frame);
             }
-            
-            CGPoint runPosition = textRun.position;
-            runPosition = CGPointMake(0, runPosition.y);
-            runPosition = CGPointMake(position.x + runPosition.x, position.y + runPosition.y);
-            {
-                CGContextSetTextPosition(context, runPosition.x, runPosition.y);
-                CGAffineTransform textMatrix = CTRunGetTextMatrix(run);
-                if (CGAffineTransformIsIdentity(textMatrix)) {
-                    CTRunDraw(run, context, CFRangeMake(0, 0));
-                } else {
-                    CGPoint pos = CGContextGetTextPosition(context);
-                    // set tx and ty to current text pos according to docs
-                    textMatrix.tx = pos.x;
-                    textMatrix.ty = pos.y;
-                    CGContextSetTextMatrix(context, textMatrix);
-                    CTRunDraw(run, context, CFRangeMake(0, 0));
-                    // restore identity
-                    CGContextSetTextMatrix(context, CGAffineTransformIdentity);
-                }
-            }
+            CTRunDraw(run, context, CFRangeMake(0, 0));
         }
     }
     CGContextRestoreGState(context);

@@ -34,7 +34,7 @@
 
 @interface CCTextRun : NSObject
 
-/// position.x is x offset from its line's origin.x, position.y is its line's origin.y
+/// position.x is x offset from its line's origin.x, position.y is its line's position.y
 @property (nonatomic) CGPoint position;
 /// text frame in Core Text Coordinate, zero position is the last line's leading position
 @property (nonatomic) CGRect frame;

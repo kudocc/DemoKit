@@ -89,28 +89,21 @@
     
     CGContextSetTextPosition(context, 10, 10);
     CFArrayRef lines = CTFrameGetLines(_frame);
-    // last line
-    CTLineRef line = CFArrayGetValueAtIndex(lines, CFArrayGetCount(lines)-1);
-    CFArrayRef runs = CTLineGetGlyphRuns(line);
-    CTRunRef run = CFArrayGetValueAtIndex(runs, 0);
-    {
-        CGContextSaveGState(context);
-        CGContextSetStrokeColorWithColor(context, [UIColor yellowColor].CGColor);
-        CGContextSetFillColorWithColor(context, [UIColor yellowColor].CGColor);
-        CFRange range = CTRunGetStringRange(run);
-        NSLog(@"location:%@, length:%@", @(range.location), @(range.length));
-        CGRect bounds = CTRunGetImageBounds(run, context, CFRangeMake(0, 0));
-        NSLog(@"run bounds:%@", NSStringFromCGRect(bounds));
-        CTRunDraw(run, context, CFRangeMake(0, 0));
-        CGContextRestoreGState(context);
-    }
     
+    // CTRun保存着自己应绘制的位置，当时都是相对于包含其的Line中的，所以只需要调整Y轴坐标就好了
     {
-//        CTLineDraw(line, context);
-    }
-    
-    {
-        CTFrameDraw(_frame, context);
+        for (CFIndex lineIndex = 0; lineIndex < CFArrayGetCount(lines); ++lineIndex) {
+            CTLineRef line = CFArrayGetValueAtIndex(lines, lineIndex);
+            CFArrayRef runs = CTLineGetGlyphRuns(line);
+            if (CFArrayGetCount(runs) > 1) {
+                for (CFIndex i = 0; i < CFArrayGetCount(runs); ++i) {
+                    CGContextSetTextPosition(context, 0, self.height-10.0);
+                    CTRunRef run = CFArrayGetValueAtIndex(runs, i);
+                    CTRunDraw(run, context, CFRangeMake(0, 0));
+                }
+            }
+        }
+        
     }
 }
 @end

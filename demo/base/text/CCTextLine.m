@@ -30,7 +30,6 @@
         NSMutableArray *attachmentFrames = [NSMutableArray array];
         CFArrayRef runs = CTLineGetGlyphRuns(_line);
         CFIndex count = CFArrayGetCount(runs);
-        NSLog(@"run counts at line:%@", @(count));
         for (CFIndex i = 0; i < count; ++i) {
             CTRunRef run = CFArrayGetValueAtIndex(runs, i);
             CFDictionaryRef cfAttributes = CTRunGetAttributes(run);
