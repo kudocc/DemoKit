@@ -306,7 +306,7 @@
         CGPoint position = CGPointZero;
         if (verticleAlignment == CCTextVerticalAlignmentCenter) {
             position.y = (size.height - layout.textBounds.height)/2;
-        } else if (verticleAlignment == CCTextVerticalAlignmentBottom) {
+        } else if (verticleAlignment == CCTextVerticalAlignmentTop) {
             position.y = size.height - layout.textBounds.height;
         }
         if (position.y < 0) {

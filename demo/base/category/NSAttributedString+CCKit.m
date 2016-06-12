@@ -102,8 +102,7 @@
     attachment.contentMode = contentMode;
     
     CCTextRunDelegate *runDelegate = [[CCTextRunDelegate alloc] init];
-    CGSize size = attachment.contentSize;
-    runDelegate.width = size.width;
+    runDelegate.width = width;
     runDelegate.ascent = ascent;
     runDelegate.descent = descent;
     CTRunDelegateRef ctRunDelegate = [runDelegate createCTRunDelegateRef];

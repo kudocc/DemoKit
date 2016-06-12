@@ -27,29 +27,13 @@
     CCHTMLParser *parser = [CCHTMLParser parserWithHTMLString:htmlString];
     NSAttributedString *attr = [parser attributedStringWithDefaultFont:[UIFont systemFontOfSize:16.0] defaultTextColor:[UIColor blackColor]];
     
-    label = [[CCLabel alloc] initWithFrame:CGRectMake(10, 100, 300, 200)];
+    label = [[CCLabel alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
     label.layer.borderColor = [UIColor greenColor].CGColor;
     label.layer.borderWidth = Pixel(1);
     label.attributedText = attr;
     label.asyncDisplay = NO;
+    label.verticleAlignment = CCTextVerticalAlignmentTop;
     [self.view addSubview:label];
-    
-    viewDrag = [[UIView alloc] initWithFrame:CGRectMake(label.right-10, label.bottom-10, 20, 20)];
-    viewDrag.backgroundColor = [UIColor greenColor];
-    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(dragGesture:)];
-    pan.maximumNumberOfTouches = 1;
-    [viewDrag addGestureRecognizer:pan];
-    [self.view addSubview:viewDrag];
-}
-
-- (void)dragGesture:(UIPanGestureRecognizer *)pan {
-    if (pan.state == UIGestureRecognizerStateChanged) {
-        CGPoint pos = [pan locationInView:self.view];
-        if (pos.x-label.left > 100 && pos.y-label.top > 100) {
-            label.frame = CGRectMake(label.left, label.top, pos.x-label.left, pos.y-label.top);
-            viewDrag.center = pos;
-        }
-    }
 }
 
 @end

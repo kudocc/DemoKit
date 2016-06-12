@@ -63,7 +63,8 @@ static NSDictionary *htmlSpecialCharacterMap;
 @property (nonatomic) NSMutableDictionary *attributes;
 @property (nonatomic) NSMutableArray<CCTagItem *> *subTagItems;
 @property (nonatomic) NSRange effectRange;
-@property (nonatomic) NSString *tagPlaceholder;
+@property (nonatomic) NSString *placeholderBegin;
+@property (nonatomic) NSString *placeholderEnd;
 @property (nonatomic) BOOL emptyTag;
 
 - (void)addAttribute:(NSString *)attribute value:(NSString *)value;
@@ -77,7 +78,9 @@ static NSDictionary *htmlSpecialCharacterMap;
     static NSArray *availableTagNames = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        tagNameToPlaceholder = @{CCHTMLTagNameP:@"\n", CCHTMLTagNameImg:CCAttachmentCharacter, CCHTMLTagNameBr:@"\n"};
+        tagNameToPlaceholder = @{CCHTMLTagNameP:@[@"\n", @"\n"],
+                                 CCHTMLTagNameImg:@[CCAttachmentCharacter, @""],
+                                 CCHTMLTagNameBr:@[@"\n", @""]};
         availableTagNames = @[CCHTMLTagNameHTML,
                               CCHTMLTagNameBody,
                               CCHTMLTagNameA,
@@ -87,13 +90,21 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameBr];
         
         // TODO:
-        htmlSpecialCharacterMap = @{@"&lt;":@"<", @"&amp;":@" "};
+        htmlSpecialCharacterMap = @{@"&quot;":@"\"",
+                                    @"&nbsp;":@" ",
+                                    @"&lt;":@"<",
+                                    @"&gt;":@">",
+                                    @"&amp;":@"&"};
     });
     
     if ([availableTagNames containsObject:tagName]) {
         CCTagItem *item = [[CCTagItem alloc] init];
         item.tagName = tagName;
-        item.tagPlaceholder = tagNameToPlaceholder[tagName];
+        NSArray *placeholders = tagNameToPlaceholder[tagName];
+        if (placeholders) {
+            item.placeholderBegin = placeholders[0];
+            item.placeholderEnd = placeholders[1];
+        }
         return item;
     }
     return nil;
@@ -102,7 +113,6 @@ static NSDictionary *htmlSpecialCharacterMap;
 - (id)init {
     self = [super init];
     if (self) {
-        _tagPlaceholder = @"";
         _attributes = [NSMutableDictionary dictionary];
         _subTagItems = [NSMutableArray array];
     }
@@ -129,6 +139,10 @@ static NSDictionary *htmlSpecialCharacterMap;
         NSString *href = _attributes[CCHTMLTagAttributeNameHref];
         [wholeString cc_setHighlightedColor:[UIColor grayColor] bgColor:[UIColor blueColor] range:self.effectRange tapAction:^(NSRange range) {
             NSLog(@"%@, href=%@", NSStringFromRange(range), href);
+            NSURL *url = [NSURL URLWithString:href];
+            if (url && [[UIApplication sharedApplication] canOpenURL:url]) {
+                [[UIApplication sharedApplication] openURL:url];
+            }
         }];
     } else if ([_tagName isEqualToString:CCHTMLTagNameFont]) {
         // attribute:color #XXXXXX
@@ -139,9 +153,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                 [wholeString cc_setColor:color range:self.effectRange];
             }
         }
-        // TODO:attribute:font name
-        
-        // TODO:attribute:height
+        // TODO:attribute:font name, height
     } else if ([_tagName isEqualToString:@"img"]) {
         // src
         NSString *src = _attributes[CCHTMLTagAttributeNameSource];
@@ -217,18 +229,21 @@ static NSDictionary *htmlSpecialCharacterMap;
         }
         NSString *tag = [htmlString substringWithRange:tagRange];
         if (isStartTag) {
+            // 将开始标签之前的文本全部加入
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
+            text = [self replaceHtmlSpecialCharacter:text];
             [_mutableString appendString:text];
             searchPosition = tagRange.location + tagRange.length;
             
             CCTagItem *tagItem = [self constructTagWithTagStartString:tag];
             if (!tagItem) {
-                // error
-                return;
+                break;
             }
             tagItem.effectRange = NSMakeRange([_mutableString length], 0);
-            [_mutableString appendString:tagItem.tagPlaceholder];
+            if (tagItem.placeholderBegin) {
+                [_mutableString appendString:tagItem.placeholderBegin];
+            }
             CCTagItem *parentItem = [_stack top];
             if (parentItem) {
                 [parentItem.subTagItems addObject:tagItem];
@@ -242,14 +257,12 @@ static NSDictionary *htmlSpecialCharacterMap;
         } else {
             NSString *tagName = [self extractEndTagName:tag];
             if ([tagName length] == 0) {
-                // error
-                return;
+                break;
             }
             
             CCTagItem *top = [_stack top];
             if (!top || ![top.tagName isEqualToString:tagName]) {
-                // error
-                return;
+                break;
             }
             [_stack pop];
             
@@ -257,24 +270,28 @@ static NSDictionary *htmlSpecialCharacterMap;
             NSString *text = [htmlString substringWithRange:rangeText];
             text = [self replaceHtmlSpecialCharacter:text];
             [_mutableString appendString:text];
-            if (top.tagPlaceholder) {
-                [_mutableString appendString:top.tagPlaceholder];
+            if (top.placeholderEnd) {
+                [_mutableString appendString:top.placeholderEnd];
             }
             top.effectRange = NSMakeRange(top.effectRange.location, RangeLength(top.effectRange.location, [_mutableString length]-1));
             searchPosition = tagRange.location + tagRange.length;
         }
     }
     
-    if (mutableRootArray.count > 1) {
-        _rootTag = [[CCTagItem alloc] init];
-        _rootTag.subTagItems = [mutableRootArray copy];
-        _rootTag.tagName = @"root";
-        _rootTag.effectRange = NSMakeRange(0, _mutableString.length);
-    } else {
-        _rootTag = mutableRootArray.firstObject;
-    }
-    
     NSAssert([_stack isEmpty], @"html string not valid");
+    if (![_stack isEmpty]) {
+        _mutableString = nil;
+        [_stack popAll];
+    } else {
+        if (mutableRootArray.count > 1) {
+            _rootTag = [[CCTagItem alloc] init];
+            _rootTag.subTagItems = [mutableRootArray copy];
+            _rootTag.tagName = @"root";
+            _rootTag.effectRange = NSMakeRange(0, _mutableString.length);
+        } else {
+            _rootTag = mutableRootArray.firstObject;
+        }
+    }
 }
 
 - (NSString *)replaceHtmlSpecialCharacter:(NSString *)string {
@@ -310,11 +327,10 @@ static NSDictionary *htmlSpecialCharacterMap;
     for (i = 0; i < [tagString length]; ++i) {
         unichar c = [tagString characterAtIndex:i];
         if (c == ' ' || i == [tagString length]-1) {
-            NSString *tagName = nil;
-            if (i == [tagString length]-1) {
-                tagName = [tagString copy];
-            } else {
+            if (c == ' ') {
                 tagName = [tagString substringToIndex:i];
+            } else {
+                tagName = [tagString copy];
             }
             // 再向后找到第一个不为' '的字符停止
             NSInteger pos = i+1;
