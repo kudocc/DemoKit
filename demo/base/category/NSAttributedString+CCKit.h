@@ -29,23 +29,28 @@
 - (UIColor *)cc_bgColorAtIndex:(NSUInteger)index;
 
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content
-                                        contentMode:(UIViewContentMode)contentMode
-                                        contentSize:(CGSize)contentSize
-                                        alignToFont:(UIFont *)font
-                                 attachmentPosition:(CCTextAttachmentPosition)position;
++ (NSAttributedString *)cc_attachmentStringWithContent:(id)content
+                                           contentMode:(UIViewContentMode)contentMode
+                                           contentSize:(CGSize)contentSize alignToFont:(UIFont *)font
+                                    attachmentPosition:(CCTextAttachmentPosition)position;
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content
-                                        contentMode:(UIViewContentMode)contentMode
-                                              width:(CGFloat)width
-                                             ascent:(CGFloat)ascent
-                                            descent:(CGFloat)descent;
++ (NSAttributedString *)cc_attachmentStringWithContent:(id)content
+                                           contentMode:(UIViewContentMode)contentMode
+                                                 width:(CGFloat)width ascent:(CGFloat)ascent descent:(CGFloat)descent;
 
 @end
 
 @interface NSMutableAttributedString (CCKit)
 
+/// call `cc_addAttributes:overrideOldAttribute:` with overrideOld=YES.
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes;
+/// call `cc_addAttributes:range:overrideOldAttribute:` with range=NSMakeRange(0, self.length)
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes overrideOldAttribute:(BOOL)overrideOld;
+/// for each attribute and value in attributes, call `addAttribute:value:range`, if overideOld is NO and there is a value at range.location, do nothing on that attribute.
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes range:(NSRange)range overrideOldAttribute:(BOOL)overrideOld;
+
 - (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes;
+/// call `setAttributes:range:`
 - (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes range:(NSRange)range;
 
 - (void)cc_setFont:(UIFont *)font;
@@ -56,7 +61,6 @@
 
 - (void)cc_setBgColor:(UIColor *)bgColor;
 - (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range;
-
 
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor tapAction:(CCTapActionBlock)tapAction;
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor range:(NSRange)range tapAction:(CCTapActionBlock)tapAction;

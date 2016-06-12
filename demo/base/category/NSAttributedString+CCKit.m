@@ -64,11 +64,7 @@
 
 #pragma mark - attachment
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content
-                                        contentMode:(UIViewContentMode)contentMode
-                                        contentSize:(CGSize)contentSize
-                                        alignToFont:(UIFont *)font
-                                 attachmentPosition:(CCTextAttachmentPosition)position {
++ (NSAttributedString *)cc_attachmentStringWithContent:(id)content contentMode:(UIViewContentMode)contentMode contentSize:(CGSize)contentSize alignToFont:(UIFont *)font attachmentPosition:(CCTextAttachmentPosition)position {
     CGFloat ascent, descent, width;
     width = contentSize.width;
     CGSize size = contentSize;
@@ -87,14 +83,10 @@
             descent = size.height - ascent;
             break;
     }
-    return [self attachmentStringWithContent:content contentMode:contentMode width:width ascent:ascent descent:descent];
+    return [self cc_attachmentStringWithContent:content contentMode:contentMode width:width ascent:ascent descent:descent];
 }
 
-+ (NSAttributedString *)attachmentStringWithContent:(id)content
-                                        contentMode:(UIViewContentMode)contentMode
-                                              width:(CGFloat)width
-                                             ascent:(CGFloat)ascent
-                                            descent:(CGFloat)descent {
++ (NSAttributedString *)cc_attachmentStringWithContent:(id)content contentMode:(UIViewContentMode)contentMode width:(CGFloat)width ascent:(CGFloat)ascent descent:(CGFloat)descent {
     NSMutableAttributedString *attrString = [[NSMutableAttributedString alloc] initWithString:CCAttachmentCharacter];
     
     CCTextAttachment *attachment = [CCTextAttachment textAttachmentWithContent:content];
@@ -114,6 +106,28 @@
 @end
 
 @implementation NSMutableAttributedString (CCKit)
+
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes {
+    [self cc_addAttributes:attributes overrideOldAttribute:YES];
+}
+
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes overrideOldAttribute:(BOOL)overrideOld {
+    [self cc_addAttributes:attributes range:NSMakeRange(0, self.length) overrideOldAttribute:overrideOld];
+}
+
+- (void)cc_addAttributes:(NSDictionary<NSString *, id> *)attributes range:(NSRange)range overrideOldAttribute:(BOOL)overrideOld {
+    [attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        if (overrideOld) {
+            [self addAttribute:key value:obj range:range];
+        } else {
+            NSDictionary *attributes = [self cc_attributesAtIndex:range.location];
+            if (!attributes[key]) {
+                [self addAttribute:key value:obj range:range];
+            }
+        }
+    }];
+}
+
 
 - (void)cc_setAttributes:(NSDictionary<NSString *, id> *)attributes {
     [self cc_setAttributes:attributes range:NSMakeRange(0, self.length)];

@@ -70,7 +70,7 @@
             UIImage *image = [UIImage imageNamed:imageName];
             image = [UIImage cc_resizeImage:image contentMode:UIViewContentModeScaleToFill size:CGSizeMake(50, 50)];
             if (image) {
-                NSAttributedString *attachment = [NSAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeScaleAspectFill contentSize:CGSizeMake(50, 50) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionCenter];
+                NSAttributedString *attachment = [NSAttributedString cc_attachmentStringWithContent:image contentMode:UIViewContentModeScaleAspectFill contentSize:CGSizeMake(50, 50) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionCenter];
                 [mAttrString appendAttributedString:attachment];
             }
         }

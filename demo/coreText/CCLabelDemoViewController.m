@@ -41,7 +41,7 @@
     {// <a href=''><image src=''></image></a>
         NSMutableAttributedString *mutable = [[NSMutableAttributedString alloc] init];
         UIImage *imageName = [UIImage imageNamed:@"avatar_ori"];
-        NSAttributedString *attachment = [NSAttributedString attachmentStringWithContent:imageName contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake(100, 80) alignToFont:[UIFont systemFontOfSize:16] attachmentPosition:CCTextAttachmentPositionTop];
+        NSAttributedString *attachment = [NSAttributedString cc_attachmentStringWithContent:imageName contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake(100, 80) alignToFont:[UIFont systemFontOfSize:16] attachmentPosition:CCTextAttachmentPositionTop];
         [mutable appendAttributedString:attachment];
         
         NSMutableAttributedString *highlightedText = [[NSMutableAttributedString alloc] initWithString:@"g.cn"];
@@ -65,7 +65,7 @@
     
     {
         UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:@[@"seg1", @"seg2"]];
-        NSAttributedString *attachment = [NSAttributedString attachmentStringWithContent:segmentedControl contentMode:UIViewContentModeTop contentSize:segmentedControl.size alignToFont:[UIFont systemFontOfSize:16] attachmentPosition:CCTextAttachmentPositionCenter];
+        NSAttributedString *attachment = [NSAttributedString cc_attachmentStringWithContent:segmentedControl contentMode:UIViewContentModeTop contentSize:segmentedControl.size alignToFont:[UIFont systemFontOfSize:16] attachmentPosition:CCTextAttachmentPositionCenter];
         [mutableAttrString appendAttributedString:attachment];
     }
     

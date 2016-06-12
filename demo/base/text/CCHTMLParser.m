@@ -22,15 +22,15 @@ NSString *const CCHTMLParseErrorDomain = @"CCHTMLParseErrorDomain";
 NSString *const CCHTMLTagNameHTML = @"html";
 /// tag <body></body>
 NSString *const CCHTMLTagNameBody = @"body";
-/// tag <a></a> 超链接
+/// tag <a href="xxx"></a>
 NSString *const CCHTMLTagNameA = @"a";
-/// tag <font></font> 字体
+/// tag <font color="#ff000000"></font> 字体
 NSString *const CCHTMLTagNameFont = @"font";
-/// tag <p></p> 段落
+/// tag <p></p>
 NSString *const CCHTMLTagNameP = @"p";
 /// tag <img href='xxx' width='100' height='100'>abc</img> 图片(标签中可以有文字)
 NSString *const CCHTMLTagNameImg = @"img";
-/// tag <br /> 强制换行
+/// tag <br />
 NSString *const CCHTMLTagNameBr = @"br";
 
 // TOOD:
@@ -163,7 +163,7 @@ static NSDictionary *htmlSpecialCharacterMap;
         // height
         NSString *strHeight = _attributes[CCHTMLTagAttributeNameHeight];
         if (image && strWidth && strHeight) {
-            NSAttributedString *attach = [NSAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue]) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionTop];
+            NSAttributedString *attach = [NSAttributedString cc_attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue]) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionTop];
             NSRange range = self.effectRange;
             if (self.effectRange.length > CCAttachmentCharacter.length) {
                 range = NSMakeRange(self.effectRange.location + self.effectRange.length - CCAttachmentCharacter.length, CCAttachmentCharacter.length);

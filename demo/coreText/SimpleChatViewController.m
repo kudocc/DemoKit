@@ -119,6 +119,13 @@
 //        [mAttrString addAttribute:NSParagraphStyleAttributeName
 //                            value:paragraphStyle
 //                            range:NSMakeRange(0, [mAttrString length])];
+        if (mAttrString.length < 5) {
+            [mAttrString cc_addAttributes:@{NSLinkAttributeName:[NSURL URLWithString:@"http://www.baidu.com"]} range:NSMakeRange(0, mAttrString.length) overrideOldAttribute:YES];
+        } else {
+            [mAttrString cc_addAttributes:@{NSLinkAttributeName:[NSURL URLWithString:@"http://www.baidu.com"]} range:NSMakeRange(0, 5) overrideOldAttribute:YES];
+        }
+        
+        
         _content = [mAttrString copy];
         _left = left;
         
