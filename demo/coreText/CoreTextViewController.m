@@ -115,6 +115,18 @@
 - (void)initView {
     [super initView];
     
+    NSArray *familyNames = [UIFont familyNames];
+    for (NSString *familyName in familyNames) {
+        NSArray *fontNames = [UIFont fontNamesForFamilyName:familyName];
+        for (NSString *fontName in fontNames) {
+            NSLog(@"family name:%@, font name:%@", familyName, fontName);
+        }
+    }
+    
+    NSLog(@"%@, %@", NSFontAttributeName, (id)kCTFontAttributeName);
+    NSLog(@"%@, %@", NSForegroundColorAttributeName, (id)kCTForegroundColorAttributeName);
+    NSLog(@"%@, %@", NSParagraphStyleAttributeName, (id)kCTParagraphStyleAttributeName);
+    
     self.arrayTitle = @[@"Simple Chat",
                         @"Core Text Chat",
                         @"Asynchonized Text",
@@ -127,21 +139,21 @@
                         [CCLabelDemoViewController class],
                         [HTMLParserViewController class]];
     
-    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-    v.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:v];
+//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+//    v.backgroundColor = [UIColor greenColor];
+//    [self.view addSubview:v];
 }
 
-- (void)repeate:(id)timer {
-    static int i = 0;
-    ++i;
-    if (i > 6) {
-        i = 0;
-    }
-    NSString *str = [NSString stringWithFormat:@"image%d.jpg", i];
-    UIImage *image = [UIImage imageNamed:str];
-    ((TestLayer *)lv.layer).image = image;
-    lv.frame = CGRectInset(lv.frame, 1, 1);
-}
+//- (void)repeate:(id)timer {
+//    static int i = 0;
+//    ++i;
+//    if (i > 6) {
+//        i = 0;
+//    }
+//    NSString *str = [NSString stringWithFormat:@"image%d.jpg", i];
+//    UIImage *image = [UIImage imageNamed:str];
+//    ((TestLayer *)lv.layer).image = image;
+//    lv.frame = CGRectInset(lv.frame, 1, 1);
+//}
 
 @end

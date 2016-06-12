@@ -18,19 +18,15 @@
 
 NSString *const CCHTMLParseErrorDomain = @"CCHTMLParseErrorDomain";
 
-/// tag <html></html>
 NSString *const CCHTMLTagNameHTML = @"html";
-/// tag <body></body>
 NSString *const CCHTMLTagNameBody = @"body";
-/// tag <a href="xxx"></a>
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a
 NSString *const CCHTMLTagNameA = @"a";
-/// tag <font color="#ff000000"></font> 字体
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/font
 NSString *const CCHTMLTagNameFont = @"font";
-/// tag <p></p>
+// https://developer.mozilla.org/en-US/docs/Web/HTML/Element/p
 NSString *const CCHTMLTagNameP = @"p";
-/// tag <img href='xxx' width='100' height='100'>abc</img> 图片(标签中可以有文字)
 NSString *const CCHTMLTagNameImg = @"img";
-/// tag <br />
 NSString *const CCHTMLTagNameBr = @"br";
 
 // TOOD:
@@ -54,33 +50,46 @@ NSString *const CCHTMLTagAttributeNameBgColor = @"bgcolor";
 NSString *const CCHTMLTagAttributeNameSize = @"size";
 NSString *const CCHTMLTagAttributeNameWidth = @"width";
 NSString *const CCHTMLTagAttributeNameHeight = @"height";
+NSString *const CCHTMLTagAttributeNameBorder = @"border";
 
 static NSDictionary *htmlSpecialCharacterMap;
 
-@interface CCTagItem ()
+@interface CCHTMLTag ()
 
 @property (nonatomic) NSString *tagName;
-@property (nonatomic) NSMutableDictionary *attributes;
-@property (nonatomic) NSMutableArray<CCTagItem *> *subTagItems;
+@property (nonatomic) NSMutableDictionary<NSString *, id> *attributes;
+@property (nonatomic) NSMutableArray<CCHTMLTag *> *subTagItems;
 @property (nonatomic) NSRange effectRange;
 @property (nonatomic) NSString *placeholderBegin;
 @property (nonatomic) NSString *placeholderEnd;
 @property (nonatomic) BOOL emptyTag;
+@property (nonatomic) NSArray<NSString *> *supportedAttributes;
 
 - (void)addAttribute:(NSString *)attribute value:(NSString *)value;
 
 @end
 
-@implementation CCTagItem
+@implementation CCHTMLTag
 
-+ (CCTagItem *)tagItemWithTagName:(NSString *)tagName {
++ (CCHTMLTag *)tagItemWithTagName:(NSString *)tagName {
     static NSDictionary *tagNameToPlaceholder = nil;
+    static NSDictionary *tagNameToAttributes = nil;
     static NSArray *availableTagNames = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         tagNameToPlaceholder = @{CCHTMLTagNameP:@[@"\n", @"\n"],
                                  CCHTMLTagNameImg:@[CCAttachmentCharacter, @""],
                                  CCHTMLTagNameBr:@[@"\n", @""]};
+        
+        tagNameToAttributes = @{CCHTMLTagNameHTML:@[],
+                                CCHTMLTagNameBody:@[CCHTMLTagAttributeNameBgColor],
+                                CCHTMLTagNameA:@[CCHTMLTagAttributeNameHref],
+                                CCHTMLTagNameFont:@[CCHTMLTagAttributeNameColor, CCHTMLTagAttributeNameSize],
+                                CCHTMLTagNameP:@[],
+                                CCHTMLTagNameImg:@[CCHTMLTagAttributeNameSource, CCHTMLTagAttributeNameWidth, CCHTMLTagAttributeNameHeight, CCHTMLTagAttributeNameBorder],
+                                CCHTMLTagNameBr:@[]
+                                };
+        
         availableTagNames = @[CCHTMLTagNameHTML,
                               CCHTMLTagNameBody,
                               CCHTMLTagNameA,
@@ -88,18 +97,12 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameP,
                               CCHTMLTagNameImg,
                               CCHTMLTagNameBr];
-        
-        // TODO:
-        htmlSpecialCharacterMap = @{@"&quot;":@"\"",
-                                    @"&nbsp;":@" ",
-                                    @"&lt;":@"<",
-                                    @"&gt;":@">",
-                                    @"&amp;":@"&"};
     });
     
     if ([availableTagNames containsObject:tagName]) {
-        CCTagItem *item = [[CCTagItem alloc] init];
+        CCHTMLTag *item = [[CCHTMLTag alloc] init];
         item.tagName = tagName;
+        item.supportedAttributes = tagNameToAttributes[tagName];
         NSArray *placeholders = tagNameToPlaceholder[tagName];
         if (placeholders) {
             item.placeholderBegin = placeholders[0];
@@ -127,12 +130,27 @@ static NSDictionary *htmlSpecialCharacterMap;
     NSLog(@"tag name:%@", _tagName);
     NSLog(@"attribute:%@", _attributes);
     NSLog(@"effect range:%@", NSStringFromRange(_effectRange));
-    for (CCTagItem *item in _subTagItems) {
+    for (CCHTMLTag *item in _subTagItems) {
         [item debugTagItem];
     }
 }
 
 - (void)applyAttributeOnMutableAttributedString:(NSMutableAttributedString *)wholeString {
+    [_attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
+        if (![_supportedAttributes containsObject:key]) return;
+        if ([key isEqualToString:CCHTMLTagAttributeNameColor]) {
+            UIColor *color = [UIColor cc_opaqueColorWithHexString:obj];
+            if (color) {
+                [wholeString cc_setColor:color range:self.effectRange];
+            }
+        } else if ([key isEqualToString:CCHTMLTagAttributeNameBgColor]) {
+            UIColor *color = [UIColor cc_opaqueColorWithHexString:obj];
+            if (color) {
+                [wholeString cc_setBgColor:color range:self.effectRange];
+            }
+        }
+    }];
+    
     // apply item attribute
     if ([_tagName isEqualToString:CCHTMLTagNameA]) {
         // href
@@ -145,15 +163,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             }
         }];
     } else if ([_tagName isEqualToString:CCHTMLTagNameFont]) {
-        // attribute:color #XXXXXX
-        NSString *strColor = _attributes[CCHTMLTagAttributeNameColor];
-        if (strColor) {
-            UIColor *color = [UIColor cc_opaqueColorWithHexString:strColor];
-            if (color) {
-                [wholeString cc_setColor:color range:self.effectRange];
-            }
-        }
-        // TODO:attribute:font name, height
+        
     } else if ([_tagName isEqualToString:@"img"]) {
         // src
         NSString *src = _attributes[CCHTMLTagAttributeNameSource];
@@ -172,7 +182,7 @@ static NSDictionary *htmlSpecialCharacterMap;
         }
     }
     
-    for (CCTagItem *item in _subTagItems) {
+    for (CCHTMLTag *item in _subTagItems) {
         [item applyAttributeOnMutableAttributedString:wholeString];
     }
 }
@@ -184,6 +194,16 @@ static NSDictionary *htmlSpecialCharacterMap;
 }
 
 + (CCHTMLParser *)parserWithHTMLString:(NSString *)htmlString {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        // TODO:
+        htmlSpecialCharacterMap = @{@"&quot;":@"\"",
+                                    @"&nbsp;":@" ",
+                                    @"&lt;":@"<",
+                                    @"&gt;":@">",
+                                    @"&amp;":@"&"};
+    });
+    
     CCHTMLParser *parser = [[CCHTMLParser alloc] initWithHTMLString:htmlString];
     return parser;
 }
@@ -236,7 +256,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             [_mutableString appendString:text];
             searchPosition = tagRange.location + tagRange.length;
             
-            CCTagItem *tagItem = [self constructTagWithTagStartString:tag];
+            CCHTMLTag *tagItem = [self constructTagWithTagStartString:tag];
             if (!tagItem) {
                 break;
             }
@@ -244,7 +264,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             if (tagItem.placeholderBegin) {
                 [_mutableString appendString:tagItem.placeholderBegin];
             }
-            CCTagItem *parentItem = [_stack top];
+            CCHTMLTag *parentItem = [_stack top];
             if (parentItem) {
                 [parentItem.subTagItems addObject:tagItem];
             } else {
@@ -260,7 +280,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                 break;
             }
             
-            CCTagItem *top = [_stack top];
+            CCHTMLTag *top = [_stack top];
             if (!top || ![top.tagName isEqualToString:tagName]) {
                 break;
             }
@@ -284,7 +304,7 @@ static NSDictionary *htmlSpecialCharacterMap;
         [_stack popAll];
     } else {
         if (mutableRootArray.count > 1) {
-            _rootTag = [[CCTagItem alloc] init];
+            _rootTag = [[CCHTMLTag alloc] init];
             _rootTag.subTagItems = [mutableRootArray copy];
             _rootTag.tagName = @"root";
             _rootTag.effectRange = NSMakeRange(0, _mutableString.length);
@@ -307,7 +327,7 @@ static NSDictionary *htmlSpecialCharacterMap;
 // 1.judge if it is a empty tag
 // 2.find tag name
 // 3.find attibutes
-- (CCTagItem *)constructTagWithTagStartString:(NSString *)tagString {
+- (CCHTMLTag *)constructTagWithTagStartString:(NSString *)tagString {
     BOOL emptyTag = NO;
     NSString *tagName = nil;
     
@@ -349,7 +369,7 @@ static NSDictionary *htmlSpecialCharacterMap;
         return nil;
     }
     
-    CCTagItem *tagItem = [CCTagItem tagItemWithTagName:tagName];
+    CCHTMLTag *tagItem = [CCHTMLTag tagItemWithTagName:tagName];
     if (!tagItem) {
         return nil;
     }
@@ -444,7 +464,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             }
             findLeft = YES;
             
-            // assume: 标签的结束符号'/'就在'<'之后
+            // 标签的结束符号'/'就在'<'之后
             if (i+1 < range.location + range.length) {
                 unichar after = [htmlString characterAtIndex:i+1];
                 if (after == '/') {
