@@ -14,4 +14,7 @@
 + (UIColor *)cc_colorWithRed:(int)red green:(int)green blue:(int)blue;
 + (UIColor *)cc_colorWithRed:(int)red green:(int)green blue:(int)blue alpha:(int)alpha;
 
++ (UIColor *)cc_opaqueColorWithHexString:(NSString *)stringToConvert;
++ (UIColor *)cc_colorWithHexString:(NSString *)stringToConvert alpha:(CGFloat)alpha;
+
 @end

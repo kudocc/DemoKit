@@ -7,16 +7,21 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 @interface CCTagItem : NSObject
 
-@property (nonatomic) NSString *tagName;
-@property (nonatomic) NSMutableDictionary *attributes;
-@property (nonatomic) NSMutableArray<CCTagItem *> *subTagItems;
-@property (nonatomic) NSRange effectRange;
-@property (nonatomic) NSString *tagPlaceholder;
+@property (nonatomic, readonly) NSString *tagName;
+@property (nonatomic, readonly) NSMutableDictionary *attributes;
+@property (nonatomic, readonly) NSMutableArray<CCTagItem *> *subTagItems;
+@property (nonatomic, readonly) NSRange effectRange;
+@property (nonatomic, readonly) NSString *tagPlaceholder;
 /// 是否是空标签(在开始标签结束的标签 eg:<br />)
-@property (nonatomic) BOOL emptyTag;
+@property (nonatomic, readonly) BOOL emptyTag;
+
++ (CCTagItem *)tagItemWithTagName:(NSString *)tagName;
+
+- (void)applyAttributeOnMutableAttributedString:(NSMutableAttributedString *)wholeString;
 
 - (void)debugTagItem;
 
@@ -30,8 +35,12 @@
 @interface CCHTMLParser : NSObject
 
 @property (nonatomic) NSMutableString *mutableString;
-@property (nonatomic) NSArray<CCTagItem *> *rootTags;
+@property (nonatomic) CCTagItem *rootTag;
 
 + (CCHTMLParser *)parserWithHTMLString:(NSString *)htmlString;
+
+
+- (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font
+                                       defaultTextColor:(UIColor *)defaultTextColor;
 
 @end

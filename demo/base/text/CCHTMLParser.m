@@ -9,6 +9,8 @@
 #import "CCHTMLParser.h"
 #import "CCStack.h"
 #import "NSString+CCKit.h"
+#import "NSAttributedString+CCKit.h"
+#import "UIColor+CCKit.h"
 
 //https://en.wikipedia.org/wiki/HTML_attribute
 
@@ -16,22 +18,26 @@
 
 NSString *const CCHTMLParseErrorDomain = @"CCHTMLParseErrorDomain";
 
+/// tag <html></html>
+NSString *const CCHTMLTagNameHTML = @"html";
+/// tag <body></body>
+NSString *const CCHTMLTagNameBody = @"body";
 /// tag <a></a> 超链接
 NSString *const CCHTMLTagNameA = @"a";
 /// tag <font></font> 字体
 NSString *const CCHTMLTagNameFont = @"font";
 /// tag <p></p> 段落
 NSString *const CCHTMLTagNameP = @"p";
-/// tag <img></img> 图片
+/// tag <img href='xxx' width='100' height='100'>abc</img> 图片(标签中可以有文字)
 NSString *const CCHTMLTagNameImg = @"img";
 /// tag <br /> 强制换行
-NSString *const CCHTMLTagBr = @"br";
-/// tag <b></b> 粗体
-NSString *const CCHTMLTagB = @"b";
-/// tag <i></b> 斜体
-NSString *const CCHTMLTagI = @"i";
+NSString *const CCHTMLTagNameBr = @"br";
 
 // TOOD:
+/// tag <b></b> 粗体
+NSString *const CCHTMLTagNameB = @"b";
+/// tag <i></b> 斜体
+NSString *const CCHTMLTagNameI = @"i";
 /// tag <u></u> 下划线
 NSString *const CCHTMLTagU = @"u";
 /// tag <s></s> 删除线
@@ -42,13 +48,56 @@ NSString *const CCHTMLTagSup = @"sup";
 NSString *const CCHTMLTagSub = @"sub";
 
 NSString *const CCHTMLTagAttributeNameHref = @"href";
+NSString *const CCHTMLTagAttributeNameSource = @"src";
 NSString *const CCHTMLTagAttributeNameColor = @"color";
 NSString *const CCHTMLTagAttributeNameBgColor = @"bgcolor";
 NSString *const CCHTMLTagAttributeNameSize = @"size";
 NSString *const CCHTMLTagAttributeNameWidth = @"width";
 NSString *const CCHTMLTagAttributeNameHeight = @"height";
 
+static NSDictionary *htmlSpecialCharacterMap;
+
+@interface CCTagItem ()
+
+@property (nonatomic) NSString *tagName;
+@property (nonatomic) NSMutableDictionary *attributes;
+@property (nonatomic) NSMutableArray<CCTagItem *> *subTagItems;
+@property (nonatomic) NSRange effectRange;
+@property (nonatomic) NSString *tagPlaceholder;
+@property (nonatomic) BOOL emptyTag;
+
+- (void)addAttribute:(NSString *)attribute value:(NSString *)value;
+
+@end
+
 @implementation CCTagItem
+
++ (CCTagItem *)tagItemWithTagName:(NSString *)tagName {
+    static NSDictionary *tagNameToPlaceholder = nil;
+    static NSArray *availableTagNames = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        tagNameToPlaceholder = @{CCHTMLTagNameP:@"\n", CCHTMLTagNameImg:CCAttachmentCharacter, CCHTMLTagNameBr:@"\n"};
+        availableTagNames = @[CCHTMLTagNameHTML,
+                              CCHTMLTagNameBody,
+                              CCHTMLTagNameA,
+                              CCHTMLTagNameFont,
+                              CCHTMLTagNameP,
+                              CCHTMLTagNameImg,
+                              CCHTMLTagNameBr];
+        
+        // TODO:
+        htmlSpecialCharacterMap = @{@"&lt;":@"<", @"&amp;":@" "};
+    });
+    
+    if ([availableTagNames containsObject:tagName]) {
+        CCTagItem *item = [[CCTagItem alloc] init];
+        item.tagName = tagName;
+        item.tagPlaceholder = tagNameToPlaceholder[tagName];
+        return item;
+    }
+    return nil;
+}
 
 - (id)init {
     self = [super init];
@@ -60,6 +109,10 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
     return self;
 }
 
+- (void)addAttribute:(NSString *)attribute value:(NSString *)value {
+    _attributes[attribute] = value;
+}
+
 - (void)debugTagItem {
     NSLog(@"tag name:%@", _tagName);
     NSLog(@"attribute:%@", _attributes);
@@ -69,11 +122,53 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
     }
 }
 
+- (void)applyAttributeOnMutableAttributedString:(NSMutableAttributedString *)wholeString {
+    // apply item attribute
+    if ([_tagName isEqualToString:CCHTMLTagNameA]) {
+        // href
+        NSString *href = _attributes[CCHTMLTagAttributeNameHref];
+        [wholeString cc_setHighlightedColor:[UIColor grayColor] bgColor:[UIColor blueColor] range:self.effectRange tapAction:^(NSRange range) {
+            NSLog(@"%@, href=%@", NSStringFromRange(range), href);
+        }];
+    } else if ([_tagName isEqualToString:CCHTMLTagNameFont]) {
+        // attribute:color #XXXXXX
+        NSString *strColor = _attributes[CCHTMLTagAttributeNameColor];
+        if (strColor) {
+            UIColor *color = [UIColor cc_opaqueColorWithHexString:strColor];
+            if (color) {
+                [wholeString cc_setColor:color range:self.effectRange];
+            }
+        }
+        // TODO:attribute:font name
+        
+        // TODO:attribute:height
+    } else if ([_tagName isEqualToString:@"img"]) {
+        // src
+        NSString *src = _attributes[CCHTMLTagAttributeNameSource];
+        UIImage *image = [UIImage imageNamed:src];
+        // width
+        NSString *strWidth = _attributes[CCHTMLTagAttributeNameWidth];
+        // height
+        NSString *strHeight = _attributes[CCHTMLTagAttributeNameHeight];
+        if (image && strWidth && strHeight) {
+            NSAttributedString *attach = [NSAttributedString attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue]) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionTop];
+            NSRange range = self.effectRange;
+            if (self.effectRange.length > CCAttachmentCharacter.length) {
+                range = NSMakeRange(self.effectRange.location + self.effectRange.length - CCAttachmentCharacter.length, CCAttachmentCharacter.length);
+            }
+            [wholeString replaceCharactersInRange:range withAttributedString:attach];
+        }
+    }
+    
+    for (CCTagItem *item in _subTagItems) {
+        [item applyAttributeOnMutableAttributedString:wholeString];
+    }
+}
+
 @end
 
 @implementation CCHTMLParser {
     CCStack *_stack;
-    NSMutableArray *_mutableRootArray;
 }
 
 + (CCHTMLParser *)parserWithHTMLString:(NSString *)htmlString {
@@ -81,21 +176,26 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
     return parser;
 }
 
+- (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font
+                                       defaultTextColor:(UIColor *)defaultTextColor {
+    NSMutableAttributedString *mutableAttrString = [[NSMutableAttributedString alloc] initWithString:self.mutableString];
+    [mutableAttrString cc_setFont:font];
+    [mutableAttrString cc_setColor:defaultTextColor];
+    [_rootTag applyAttributeOnMutableAttributedString:mutableAttrString];
+    return mutableAttrString;
+}
+
 - (id)initWithHTMLString:(NSString *)htmlString {
     self = [super init];
     if (self) {
-        [self startParseHTMLString:htmlString];
+        [self parseHTMLString:htmlString];
     }
     return self;
 }
 
-- (NSArray *)rootTags {
-    return [_mutableRootArray copy];
-}
-
-- (void)startParseHTMLString:(NSString *)htmlString {
+- (void)parseHTMLString:(NSString *)htmlString {
     _stack = [[CCStack alloc] init];
-    _mutableRootArray = [NSMutableArray array];
+    NSMutableArray *mutableRootArray = [NSMutableArray array];
     _mutableString = [[NSMutableString alloc] init];
     
     NSInteger searchPosition = 0;
@@ -133,7 +233,7 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
             if (parentItem) {
                 [parentItem.subTagItems addObject:tagItem];
             } else {
-                [_mutableRootArray addObject:tagItem];
+                [mutableRootArray addObject:tagItem];
             }
             
             if (!tagItem.emptyTag) {
@@ -155,27 +255,52 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
             
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
+            text = [self replaceHtmlSpecialCharacter:text];
             [_mutableString appendString:text];
+            if (top.tagPlaceholder) {
+                [_mutableString appendString:top.tagPlaceholder];
+            }
             top.effectRange = NSMakeRange(top.effectRange.location, RangeLength(top.effectRange.location, [_mutableString length]-1));
             searchPosition = tagRange.location + tagRange.length;
         }
     }
     
+    if (mutableRootArray.count > 1) {
+        _rootTag = [[CCTagItem alloc] init];
+        _rootTag.subTagItems = [mutableRootArray copy];
+        _rootTag.tagName = @"root";
+        _rootTag.effectRange = NSMakeRange(0, _mutableString.length);
+    } else {
+        _rootTag = mutableRootArray.firstObject;
+    }
+    
     NSAssert([_stack isEmpty], @"html string not valid");
+}
+
+- (NSString *)replaceHtmlSpecialCharacter:(NSString *)string {
+    __block NSString *str = string;
+    [htmlSpecialCharacterMap enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
+        if ([str containsString:key]) {
+            str = [str stringByReplacingOccurrencesOfString:key withString:value];
+        }
+    }];
+    return str;
 }
 
 // 1.judge if it is a empty tag
 // 2.find tag name
 // 3.find attibutes
 - (CCTagItem *)constructTagWithTagStartString:(NSString *)tagString {
-    CCTagItem *tagItem = [[CCTagItem alloc] init];
+    BOOL emptyTag = NO;
+    NSString *tagName = nil;
+    
     // trim '<' and '>'
     tagString = [tagString substringWithRange:NSMakeRange(1, [tagString length]-2)];
     
     // assume: 如果是empty tag，/ 符号紧挨着尖括号 <br />，这样是非法的<br / >
     unichar lastChar = [tagString characterAtIndex:[tagString length]-1];
     if (lastChar == '/') {
-        tagItem.emptyTag = YES;
+        emptyTag = YES;
         tagString = [tagString substringToIndex:[tagString length]-1];
     }
     
@@ -191,7 +316,6 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
             } else {
                 tagName = [tagString substringToIndex:i];
             }
-            tagItem.tagName = tagName;
             // 再向后找到第一个不为' '的字符停止
             NSInteger pos = i+1;
             BOOL end = NO;
@@ -204,12 +328,17 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
             break;
         }
     }
-    if ([tagItem.tagName length] == 0) {
+    if ([tagName length] == 0) {
         // we didn't find a tag name
         return nil;
     }
     
-    if (tagItem.emptyTag) {
+    CCTagItem *tagItem = [CCTagItem tagItemWithTagName:tagName];
+    if (!tagItem) {
+        return nil;
+    }
+    tagItem.emptyTag = emptyTag;
+    if (emptyTag) {
         return tagItem;
     }
     
@@ -255,7 +384,7 @@ NSString *const CCHTMLTagAttributeNameHeight = @"height";
                     return nil;
                 }
                 // add attribute
-                tagItem.attributes[attributeName] = attributeValue;
+                [tagItem addAttribute:attributeName value:attributeValue];
                 break;
             } else {
                 ++i;

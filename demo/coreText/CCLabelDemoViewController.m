@@ -97,7 +97,6 @@
             label.frame = CGRectMake(label.left, label.top, pos.x-label.left, pos.y-label.top);
             viewDrag.center = pos;
         }
-        
     }
 }
 
