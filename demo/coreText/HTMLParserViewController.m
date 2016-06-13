@@ -22,9 +22,7 @@
 - (void)initView {
     [super initView];
     
-    // font point size
     // test UIFont+CCKit
-    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"html"];
     NSString *htmlString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     CCHTMLConfig *config = [CCHTMLConfig defaultConfig];

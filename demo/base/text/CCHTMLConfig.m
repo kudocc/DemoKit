@@ -20,9 +20,9 @@
         _defaultFontSize = 14.0;
         _defaultTextColor = [UIColor blackColor];
         _fontName = @"Helvetica";
-        _boldFontName = @"Helvetica-Bold";
-        _italicFontName = @"Helvetica-Oblique";
-        _boldItalicFontName = @"Helvetica-BoldOblique";
+//        _boldFontName = @"Helvetica-Bold";
+//        _italicFontName = @"Helvetica-Oblique";
+//        _boldItalicFontName = @"Helvetica-BoldOblique";
     }
     return self;
 }
