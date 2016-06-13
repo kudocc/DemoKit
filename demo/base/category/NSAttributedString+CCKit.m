@@ -11,6 +11,9 @@
 
 @implementation NSAttributedString (CCKit)
 
+- (NSDictionary *)cc_attributes {
+    return [self cc_attributesAtIndex:0];
+}
 - (NSDictionary *)cc_attributesAtIndex:(NSUInteger)index {
     if ([self length] > 0) {
         return [self attributesAtIndex:index effectiveRange:NULL];
@@ -19,11 +22,10 @@
     }
 }
 
-- (NSDictionary *)cc_attributes {
-    return [self cc_attributesAtIndex:0];
+
+- (UIFont *)cc_font {
+    return [self cc_fontAtIndex:0];
 }
-
-
 - (UIFont *)cc_fontAtIndex:(NSUInteger)index {
     NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
@@ -32,11 +34,10 @@
     return NULL;
 }
 
-- (UIFont *)cc_font {
-    return [self cc_fontAtIndex:0];
+
+- (UIColor *)cc_color {
+    return [self cc_colorAtIndex:0];
 }
-
-
 - (UIColor *)cc_colorAtIndex:(NSUInteger)index {
     NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
@@ -45,11 +46,10 @@
     return NULL;
 }
 
-- (UIColor *)cc_color {
-    return [self cc_colorAtIndex:0];
+
+- (UIColor *)cc_bgColor {
+    return [self cc_bgColorAtIndex:0];
 }
-
-
 - (UIColor *)cc_bgColorAtIndex:(NSUInteger)index {
     NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
@@ -58,8 +58,16 @@
     return NULL;
 }
 
-- (UIColor *)cc_bgColor {
-    return [self cc_bgColorAtIndex:0];
+
+- (NSParagraphStyle *)cc_paragraphStyle {
+    return [self cc_paragraphStyleAtIndex:0];
+}
+- (NSParagraphStyle *)cc_paragraphStyleAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return attributes[NSParagraphStyleAttributeName];
+    }
+    return NULL;
 }
 
 #pragma mark - attachment
@@ -183,6 +191,70 @@
     hi.bgColor = bgColor;
     hi.tapAction = tapAction;
     [self addAttribute:CCHighlightedAttributeName value:hi range:range];
+}
+
+#pragma mark - ParagraphStyle
+
+- (void)cc_setAlignment:(NSTextAlignment)alignment {
+    [self cc_setAlignment:alignment range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range {
+    NSParagraphStyle *style = [self cc_paragraphStyleAtIndex:range.location];
+    if (!style) {
+        style = [NSParagraphStyle defaultParagraphStyle];
+    }
+    NSMutableParagraphStyle *mutableStyle = nil;
+    if (style && ![style isKindOfClass:[NSMutableParagraphStyle class]]) {
+        mutableStyle = [style mutableCopy];
+    }
+    if (mutableStyle) {
+        mutableStyle.alignment = alignment;
+        [self cc_addAttributes:@{NSParagraphStyleAttributeName: mutableStyle} range:range overrideOldAttribute:YES];
+    }
+}
+
+#pragma mark - Attachment
+
+- (void)cc_setAttachmentWithContent:(id)content
+                        contentMode:(UIViewContentMode)contentMode
+                        contentSize:(CGSize)contentSize alignToFont:(UIFont *)font
+                 attachmentPosition:(CCTextAttachmentPosition)position range:(NSRange)range {
+    CGFloat ascent, descent, width;
+    width = contentSize.width;
+    CGSize size = contentSize;
+    switch (position) {
+        case CCTextAttachmentPositionTop:
+            ascent = font.ascender;
+            descent = size.height - ascent;
+            break;
+        case CCTextAttachmentPositionBottom:
+            descent = -font.descender;
+            ascent = size.height-descent;
+            break;
+        default:
+            ascent = font.ascender + floor((size.height - font.ascender + font.descender)/2);
+            ascent = ascent > 0 ? ascent : 0;
+            descent = size.height - ascent;
+            break;
+    }
+    return [self cc_setAttachmentStringWithContent:content contentMode:contentMode width:width ascent:ascent descent:descent range:range];
+}
+
+- (void)cc_setAttachmentStringWithContent:(id)content
+                              contentMode:(UIViewContentMode)contentMode
+                                    width:(CGFloat)width ascent:(CGFloat)ascent descent:(CGFloat)descent range:(NSRange)range {
+    CCTextAttachment *attachment = [CCTextAttachment textAttachmentWithContent:content];
+    attachment.content = content;
+    attachment.contentMode = contentMode;
+    
+    CCTextRunDelegate *runDelegate = [[CCTextRunDelegate alloc] init];
+    runDelegate.width = width;
+    runDelegate.ascent = ascent;
+    runDelegate.descent = descent;
+    CTRunDelegateRef ctRunDelegate = [runDelegate createCTRunDelegateRef];
+    [self addAttributes:@{CCAttachmentAttributeName:attachment, (__bridge id)kCTRunDelegateAttributeName: (__bridge id)ctRunDelegate} range:range];
+    CFRelease(ctRunDelegate);
 }
 
 @end

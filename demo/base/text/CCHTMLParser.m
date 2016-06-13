@@ -32,7 +32,7 @@ NSString *const CCHTMLTagNameBr = @"br";
 NSString *const CCHTMLTagNameB = @"b";
 NSString *const CCHTMLTagNameI = @"i";
 
-// TOOD:
+// TODO:
 /// tag <u></u> 下划线
 NSString *const CCHTMLTagU = @"u";
 /// tag <s></s> 删除线
@@ -50,6 +50,7 @@ NSString *const CCHTMLTagAttributeNameSize = @"size";
 NSString *const CCHTMLTagAttributeNameWidth = @"width";
 NSString *const CCHTMLTagAttributeNameHeight = @"height";
 NSString *const CCHTMLTagAttributeNameBorder = @"border";
+NSString *const CCHTMLTagAttributeNameAlign = @"align";
 
 static NSDictionary *htmlSpecialCharacterMap;
 
@@ -87,7 +88,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                                 CCHTMLTagNameBody:@[CCHTMLTagAttributeNameBgColor],
                                 CCHTMLTagNameA:@[CCHTMLTagAttributeNameHref],
                                 CCHTMLTagNameFont:@[CCHTMLTagAttributeNameColor, CCHTMLTagAttributeNameSize],
-                                CCHTMLTagNameP:@[],
+                                CCHTMLTagNameP:@[CCHTMLTagAttributeNameAlign],
                                 CCHTMLTagNameImg:@[CCHTMLTagAttributeNameSource, CCHTMLTagAttributeNameWidth, CCHTMLTagAttributeNameHeight, CCHTMLTagAttributeNameBorder],
                                 CCHTMLTagNameBr:@[]
                                 };
@@ -139,6 +140,20 @@ static NSDictionary *htmlSpecialCharacterMap;
     }
 }
 
+- (NSTextAlignment)textAlignmentOfString:(NSString *)strAlignment {
+    NSTextAlignment alignment = NSTextAlignmentNatural;
+    if ([strAlignment isEqualToString:@"left"]) {
+        alignment = NSTextAlignmentLeft;
+    } else if ([strAlignment isEqualToString:@"right"]) {
+        alignment = NSTextAlignmentRight;
+    } else if ([strAlignment isEqualToString:@"center"]) {
+        alignment = NSTextAlignmentCenter;
+    } else if ([strAlignment isEqualToString:@"justify"]) {
+        alignment = NSTextAlignmentJustified;
+    }
+    return alignment;
+}
+
 - (void)applyAttributeOnMutableAttributedString:(NSMutableAttributedString *)wholeString {
     [_attributes enumerateKeysAndObjectsUsingBlock:^(NSString *key, id obj, BOOL *stop) {
         if (![_supportedAttributes containsObject:key]) return;
@@ -173,6 +188,22 @@ static NSDictionary *htmlSpecialCharacterMap;
                 wself.config.hyperlinkBlock(href);
             }
         }];
+    } else if ([_tagName isEqualToString:CCHTMLTagNameFont]) {
+        // size
+        NSString *fontSize = _attributes[CCHTMLTagAttributeNameSize];
+        if (fontSize) {
+            UIFont *font = [wholeString cc_fontAtIndex:self.effectRange.location];
+            UIFontDescriptor *descriptor = [font fontDescriptor];
+            font = [UIFont fontWithDescriptor:descriptor size:[fontSize doubleValue]];
+            if (font) {
+                [wholeString cc_setFont:font range:self.effectRange];
+            }
+        }
+    } else if ([_tagName isEqualToString:CCHTMLTagNameP]) {
+        NSString *strAlignment = _attributes[CCHTMLTagAttributeNameAlign];
+        if (strAlignment.length > 4) {
+            [wholeString cc_setAlignment:[self textAlignmentOfString:strAlignment] range:self.effectRange];
+        }
     } else if ([_tagName isEqualToString:CCHTMLTagNameImg]) {
         // src, width, height
         NSString *src = _attributes[CCHTMLTagAttributeNameSource];
@@ -180,12 +211,26 @@ static NSDictionary *htmlSpecialCharacterMap;
         NSString *strWidth = _attributes[CCHTMLTagAttributeNameWidth];
         NSString *strHeight = _attributes[CCHTMLTagAttributeNameHeight];
         if (image && strWidth && strHeight) {
-            NSAttributedString *attach = [NSAttributedString cc_attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue]) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionTop];
+            UIFont *font = nil;
+            if (self.effectRange.location > 0) {
+                font = [wholeString cc_fontAtIndex:self.effectRange.location-1];
+            }
+            if (!font && (self.effectRange.location + self.effectRange.length) < wholeString.length) {
+                font = [wholeString cc_fontAtIndex:self.effectRange.location + self.effectRange.length];
+            }
+            if (!font) {
+                font = [wholeString cc_fontAtIndex:self.effectRange.location];
+            }
             NSRange range = self.effectRange;
             if (self.effectRange.length > CCAttachmentCharacter.length) {
-                range = NSMakeRange(self.effectRange.location + self.effectRange.length - CCAttachmentCharacter.length, CCAttachmentCharacter.length);
+                range = NSMakeRange(self.effectRange.location, CCAttachmentCharacter.length);
             }
-            [wholeString replaceCharactersInRange:range withAttributedString:attach];
+            [wholeString cc_setAttachmentWithContent:image
+                                         contentMode:UIViewContentModeScaleAspectFill
+                                         contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue])
+                                         alignToFont:font
+                                  attachmentPosition:CCTextAttachmentPositionBottom
+                                               range:range];
         }
     } else if ([_tagName isEqualToString:CCHTMLTagNameB]) {
         // if its ancestors is a <i>, use Bold-Italic
@@ -387,7 +432,8 @@ static NSDictionary *htmlSpecialCharacterMap;
 - (NSString *)replaceHtmlSpecialCharacter:(NSString *)string {
     __block NSString *str = string;
     [htmlSpecialCharacterMap enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
-        if ([str containsString:key]) {
+        NSRange range = [str rangeOfString:key];
+        if (range.location != NSNotFound) {
             str = [str stringByReplacingOccurrencesOfString:key withString:value];
         }
     }];

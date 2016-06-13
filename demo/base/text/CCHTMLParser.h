@@ -59,7 +59,7 @@ extern NSString *const CCHTMLTagNameI;
  1.不支持CSS和style属性
  2.如果是empty tag，/ 符号紧挨着尖括号 <br />，这样是非法的<br / >
  3.关于font标签：不支持face属性，size属性是以point为单位的，并不是浏览器中的值.
- 4.你可以指定一个font，全文中我们都用此font，我们支持<b><i>，需要你提供粗体和斜体的font name
+ 4.你可以指定一个font，全文中我们都用此font，我们支持<b><i>
  5.img标签的width和height不支持百分比，都是以point为单位
  */
 @interface CCHTMLParser : NSObject

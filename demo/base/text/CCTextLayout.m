@@ -157,13 +157,16 @@
         for (NSInteger i = 0; i < [line.attachments count]; ++i) {
             CCTextAttachment *attachment = line.attachments[i];
             CGRect frame = [line.attachmentFrames[i] CGRectValue];
-            frame = CGRectOffset(frame, position.x, position.y);
-            frame = UIEdgeInsetsInsetRect(frame, attachment.contentInsets);
-            CGRect frameInside = [UIView cc_frameOfContentWithContentSize:attachment.contentSize containerSize:frame.size contentMode:attachment.contentMode];
-            frame = CGRectMake(frame.origin.x+frameInside.origin.x, frame.origin.y+frameInside.origin.y, frameInside.size.width, frameInside.size.height);
+            CGRect frameContainer = CGRectOffset(frame, position.x, position.y);
+            frameContainer = UIEdgeInsetsInsetRect(frameContainer, attachment.contentInsets);
+            CGRect frameInside = [UIView cc_frameOfContentWithContentSize:attachment.contentSize containerSize:frameContainer.size contentMode:attachment.contentMode];
+            frame = CGRectMake(frameContainer.origin.x+frameInside.origin.x, frameContainer.origin.y+frameInside.origin.y, frameInside.size.width, frameInside.size.height);
             if ([attachment.content isKindOfClass:[UIImage class]]) {
+                CGContextSaveGState(context);
+                CGContextClipToRect(context, frameContainer);
                 UIImage *image = (UIImage *)attachment.content;
                 CGContextDrawImage(context, frame, image.CGImage);
+                CGContextRestoreGState(context);
             }
         }
         

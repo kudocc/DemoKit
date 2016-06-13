@@ -74,25 +74,6 @@
 //    CTFrameDraw(_ctFrame, context);
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    
-    CGPoint position = [[touches anyObject] locationInView:self];
-    
-}
-
-- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-}
-
-- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-}
-
-- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
-}
-
 @end
 
 @interface CoreTextMsg : NSObject
@@ -195,13 +176,16 @@
             [mAttrString appendAttributedString:subAttrString];
         }
         
-//        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-//        paragraphStyle.lineSpacing = 10.0;
-//        paragraphStyle.firstLineHeadIndent = 10;
-//        paragraphStyle.alignment = NSTextAlignmentCenter;
-//        [mAttrString addAttribute:NSParagraphStyleAttributeName
-//                            value:paragraphStyle
-//                            range:NSMakeRange(0, [mAttrString length])];
+        NSRange range = NSMakeRange(mAttrString.length, 0);
+        NSString *str = @"\ntest paragraph";
+        range.length = str.length;
+        [mAttrString appendAttributedString:[[NSAttributedString alloc] initWithString:str]];
+        
+        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+        paragraphStyle.alignment = NSTextAlignmentCenter;
+        [mAttrString addAttribute:NSParagraphStyleAttributeName
+                            value:paragraphStyle
+                            range:range];
         _content = [mAttrString copy];
         _left = left;
         

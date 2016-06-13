@@ -115,13 +115,13 @@
 - (void)initView {
     [super initView];
     
-    NSArray *familyNames = [UIFont familyNames];
-    for (NSString *familyName in familyNames) {
-        NSArray *fontNames = [UIFont fontNamesForFamilyName:familyName];
-        for (NSString *fontName in fontNames) {
-            NSLog(@"family name:%@, font name:%@", familyName, fontName);
-        }
-    }
+//    NSArray *familyNames = [UIFont familyNames];
+//    for (NSString *familyName in familyNames) {
+//        NSArray *fontNames = [UIFont fontNamesForFamilyName:familyName];
+//        for (NSString *fontName in fontNames) {
+//            NSLog(@"family name:%@, font name:%@", familyName, fontName);
+//        }
+//    }
     
     NSLog(@"%@, %@", NSFontAttributeName, (id)kCTFontAttributeName);
     NSLog(@"%@, %@", NSForegroundColorAttributeName, (id)kCTForegroundColorAttributeName);

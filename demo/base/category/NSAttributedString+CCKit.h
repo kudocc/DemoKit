@@ -28,6 +28,10 @@
 - (UIColor *)cc_bgColor;
 - (UIColor *)cc_bgColorAtIndex:(NSUInteger)index;
 
+/// get the NSParagrahStyle
+- (NSParagraphStyle *)cc_paragraphStyle;
+- (NSParagraphStyle *)cc_paragraphStyleAtIndex:(NSUInteger)index;
+
 
 + (NSAttributedString *)cc_attachmentStringWithContent:(id)content
                                            contentMode:(UIViewContentMode)contentMode
@@ -64,5 +68,18 @@
 
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor tapAction:(CCTapActionBlock)tapAction;
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor range:(NSRange)range tapAction:(CCTapActionBlock)tapAction;
+
+/// paragraphStyle
+- (void)cc_setAlignment:(NSTextAlignment)alignment;
+- (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range;
+
+/// attachment
+- (void)cc_setAttachmentWithContent:(id)content
+                        contentMode:(UIViewContentMode)contentMode
+                        contentSize:(CGSize)contentSize alignToFont:(UIFont *)font
+                 attachmentPosition:(CCTextAttachmentPosition)position range:(NSRange)range;
+- (void)cc_setAttachmentStringWithContent:(id)content
+                              contentMode:(UIViewContentMode)contentMode
+                                    width:(CGFloat)width ascent:(CGFloat)ascent descent:(CGFloat)descent range:(NSRange)range;
 
 @end
