@@ -27,6 +27,8 @@ extern NSString *const CCHTMLTagNameBr;
 extern NSString *const CCHTMLTagNameB;
 /// tag <i></i>
 extern NSString *const CCHTMLTagNameI;
+/// tag <u></u> 下划线
+extern NSString *const CCHTMLTagNameU;
 
 @interface CCHTMLTag : NSObject
 

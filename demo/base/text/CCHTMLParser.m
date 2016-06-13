@@ -31,16 +31,15 @@ NSString *const CCHTMLTagNameImg = @"img";
 NSString *const CCHTMLTagNameBr = @"br";
 NSString *const CCHTMLTagNameB = @"b";
 NSString *const CCHTMLTagNameI = @"i";
+NSString *const CCHTMLTagNameU = @"u";
 
 // TODO:
-/// tag <u></u> 下划线
-NSString *const CCHTMLTagU = @"u";
 /// tag <s></s> 删除线
-NSString *const CCHTMLTagS = @"s";
+NSString *const CCHTMLTagNameS = @"s";
 /// tag <sup></sup> 上标
-NSString *const CCHTMLTagSup = @"sup";
+NSString *const CCHTMLTagNameSup = @"sup";
 /// tag <sub></sub> 下标
-NSString *const CCHTMLTagSub = @"sub";
+NSString *const CCHTMLTagNameSub = @"sub";
 
 NSString *const CCHTMLTagAttributeNameHref = @"href";
 NSString *const CCHTMLTagAttributeNameSource = @"src";
@@ -101,7 +100,8 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameImg,
                               CCHTMLTagNameBr,
                               CCHTMLTagNameB,
-                              CCHTMLTagNameI];
+                              CCHTMLTagNameI,
+                              CCHTMLTagNameU];
     });
     
     if ([availableTagNames containsObject:tagName]) {
@@ -272,6 +272,8 @@ static NSDictionary *htmlSpecialCharacterMap;
         if (font) {
             [wholeString cc_setFont:font range:self.effectRange];
         }
+    } else if ([_tagName isEqualToString:CCHTMLTagNameU]) {
+        [wholeString cc_setUnderlineStyle:@(NSUnderlineStyleSingle) range:self.effectRange];
     }
     
     for (CCHTMLTag *item in _subTagItems) {

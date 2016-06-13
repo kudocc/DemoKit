@@ -47,6 +47,30 @@
 }
 
 
+- (UIColor *)cc_underlineColor {
+    return [self cc_underlineColorAtIndex:0];
+}
+- (UIColor *)cc_underlineColorAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return attributes[NSUnderlineColorAttributeName];
+    }
+    return NULL;
+}
+
+
+- (UIColor *)cc_underlineStyle {
+    return [self cc_underlineStyleAtIndex:0];
+}
+- (UIColor *)cc_underlineStyleAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return attributes[NSUnderlineStyleAttributeName];
+    }
+    return NULL;
+}
+
+
 - (UIColor *)cc_bgColor {
     return [self cc_bgColorAtIndex:0];
 }
@@ -163,6 +187,26 @@
 
 - (void)cc_setColor:(UIColor *)color {
     [self cc_setColor:color range:NSMakeRange(0, self.length)];
+}
+
+#pragma mark - NSUnderlineColorAttributeName
+
+- (void)cc_setUnderlineColor:(UIColor *)color {
+    [self cc_setUnderlineColor:color range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setUnderlineColor:(UIColor *)color range:(NSRange)range {
+    [self addAttribute:NSUnderlineColorAttributeName value:color range:range];
+}
+
+#pragma mark - NSUnderlineStyleAttributeName
+
+- (void)cc_setUnderlineStyle:(NSNumber *)style {
+    [self cc_setUnderlineStyle:style range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setUnderlineStyle:(NSNumber *)style range:(NSRange)range {
+    [self addAttribute:NSUnderlineStyleAttributeName value:style range:range];
 }
 
 #pragma mark - CCBackgroundColorAttributeName

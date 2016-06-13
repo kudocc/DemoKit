@@ -180,12 +180,15 @@
         NSString *str = @"\ntest paragraph";
         range.length = str.length;
         [mAttrString appendAttributedString:[[NSAttributedString alloc] initWithString:str]];
+        NSUnderlineStyle style = NSUnderlineStyleThick | NSUnderlinePatternDashDotDot;
+        [mAttrString addAttribute:NSUnderlineStyleAttributeName value:@(style) range:range];
+        [mAttrString addAttribute:NSStrikethroughStyleAttributeName value:@(style) range:range];
         
-        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-        paragraphStyle.alignment = NSTextAlignmentCenter;
-        [mAttrString addAttribute:NSParagraphStyleAttributeName
-                            value:paragraphStyle
-                            range:range];
+//        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+//        paragraphStyle.alignment = NSTextAlignmentCenter;
+//        [mAttrString addAttribute:NSParagraphStyleAttributeName
+//                            value:paragraphStyle
+//                            range:range];
         _content = [mAttrString copy];
         _left = left;
         
@@ -222,7 +225,7 @@
             CGFloat ascent, descent, leading;
             CTLineGetTypographicBounds(line, &ascent, &descent, &leading);
             CGPoint po = positions[i];
-            NSLog(@"line index:%@, pos.x:%@, pos.y:%@, ascent:%@, descent:%@, leading:%@", @(i), @(po.x), @(po.y), @(ascent), @(descent), @(leading));
+//            NSLog(@"line index:%@, pos.x:%@, pos.y:%@, ascent:%@, descent:%@, leading:%@", @(i), @(po.x), @(po.y), @(ascent), @(descent), @(leading));
             CCLine *ccLine = [[CCLine alloc] initWithLine:line];
             ccLine.position = CGPointMake(po.x, (po.y-bottomPosition.y + bottomLineDescent + bottomLineLeading));
             [mArray addObject:ccLine];

@@ -123,6 +123,9 @@
 //        }
 //    }
     
+    
+    NSLog(@"%@, %@", NSUnderlineStyleAttributeName, (id)kCTUnderlineStyleAttributeName);
+    NSLog(@"%@, %@", NSUnderlineColorAttributeName, (id)kCTUnderlineColorAttributeName);
     NSLog(@"%@, %@", NSFontAttributeName, (id)kCTFontAttributeName);
     NSLog(@"%@, %@", NSForegroundColorAttributeName, (id)kCTForegroundColorAttributeName);
     NSLog(@"%@, %@", NSParagraphStyleAttributeName, (id)kCTParagraphStyleAttributeName);

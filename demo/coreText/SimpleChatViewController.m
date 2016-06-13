@@ -107,6 +107,14 @@
             [mAttrString appendAttributedString:subAttrString];
         }
         
+        NSRange range = NSMakeRange(mAttrString.length, 0);
+        NSString *str = @"\ntest paragraph";
+        range.length = str.length;
+        [mAttrString appendAttributedString:[[NSAttributedString alloc] initWithString:str]];
+        NSUnderlineStyle style = NSUnderlineStyleThick | NSUnderlinePatternDashDotDot;
+        [mAttrString addAttribute:NSUnderlineStyleAttributeName value:@(style) range:range];
+        [mAttrString addAttribute:NSStrikethroughStyleAttributeName value:@(style) range:range];
+        
 //        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 //        paragraphStyle.lineSpacing = 0.0;
 //        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;

@@ -26,7 +26,9 @@
     NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"html"];
     NSString *htmlString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
     CCHTMLConfig *config = [CCHTMLConfig defaultConfig];
+    config.colorHyperlinkNormal = [UIColor blueColor];
     config.colorHyperlinkHighlighted = [UIColor blueColor];
+    config.bgcolorHyperlinkHighlighted = [UIColor lightGrayColor];
     config.hyperlinkBlock = ^(NSString *href) {
         NSURL *url = [NSURL URLWithString:href];
         if (url && [[UIApplication sharedApplication] canOpenURL:url]) {

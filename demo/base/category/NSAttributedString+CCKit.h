@@ -24,6 +24,14 @@
 - (UIColor *)cc_color;
 - (UIColor *)cc_colorAtIndex:(NSUInteger)index;
 
+/// get the underline color of the first character
+- (UIColor *)cc_underlineColor;
+- (UIColor *)cc_underlineColorAtIndex:(NSUInteger)index;
+
+/// get the underline style of the first character
+- (UIColor *)cc_underlineStyle;
+- (UIColor *)cc_underlineStyleAtIndex:(NSUInteger)index;
+
 /// get the background color of the first character
 - (UIColor *)cc_bgColor;
 - (UIColor *)cc_bgColorAtIndex:(NSUInteger)index;
@@ -62,6 +70,12 @@
 
 - (void)cc_setColor:(UIColor *)color;
 - (void)cc_setColor:(UIColor *)color range:(NSRange)range;
+
+- (void)cc_setUnderlineColor:(UIColor *)color;
+- (void)cc_setUnderlineColor:(UIColor *)color range:(NSRange)range;
+
+- (void)cc_setUnderlineStyle:(NSNumber *)style;
+- (void)cc_setUnderlineStyle:(NSNumber *)style range:(NSRange)range;
 
 - (void)cc_setBgColor:(UIColor *)bgColor;
 - (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range;
