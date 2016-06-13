@@ -32,10 +32,9 @@ NSString *const CCHTMLTagNameBr = @"br";
 NSString *const CCHTMLTagNameB = @"b";
 NSString *const CCHTMLTagNameI = @"i";
 NSString *const CCHTMLTagNameU = @"u";
-
-// TODO:
-/// tag <s></s> 删除线
 NSString *const CCHTMLTagNameS = @"s";
+
+// TODO: unsupported (but we will) tags
 /// tag <sup></sup> 上标
 NSString *const CCHTMLTagNameSup = @"sup";
 /// tag <sub></sub> 下标
@@ -101,7 +100,8 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameBr,
                               CCHTMLTagNameB,
                               CCHTMLTagNameI,
-                              CCHTMLTagNameU];
+                              CCHTMLTagNameU,
+                              CCHTMLTagNameS];
     });
     
     if ([availableTagNames containsObject:tagName]) {
@@ -115,6 +115,7 @@ static NSDictionary *htmlSpecialCharacterMap;
         }
         return item;
     }
+    NSLog(@"warning: we don't support the tag name:%@", tagName);
     return nil;
 }
 
@@ -273,7 +274,9 @@ static NSDictionary *htmlSpecialCharacterMap;
             [wholeString cc_setFont:font range:self.effectRange];
         }
     } else if ([_tagName isEqualToString:CCHTMLTagNameU]) {
-        [wholeString cc_setUnderlineStyle:@(NSUnderlineStyleSingle) range:self.effectRange];
+        [wholeString cc_setUnderlineStyle:NSUnderlineStyleSingle range:self.effectRange];
+    } else if ([_tagName isEqualToString:CCHTMLTagNameS]) {
+        [wholeString cc_setStrikethroughStyle:NSUnderlineStyleSingle|NSUnderlinePatternDashDot range:self.effectRange];
     }
     
     for (CCHTMLTag *item in _subTagItems) {

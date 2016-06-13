@@ -11,11 +11,11 @@
 
 /// tag <html></html>
 extern NSString *const CCHTMLTagNameHTML;
-/// tag <body></body>
+/// tag <body bgcolor="#xxxxxx"></body>
 extern NSString *const CCHTMLTagNameBody;
 /// tag <a href="xxx"></a>
 extern NSString *const CCHTMLTagNameA;
-/// tag <font color="#ff000000"></font> 字体
+/// tag <font color="#ff000000" size="13"></font> 字体
 extern NSString *const CCHTMLTagNameFont;
 /// tag <p></p>
 extern NSString *const CCHTMLTagNameP;
@@ -29,6 +29,8 @@ extern NSString *const CCHTMLTagNameB;
 extern NSString *const CCHTMLTagNameI;
 /// tag <u></u> 下划线
 extern NSString *const CCHTMLTagNameU;
+/// tag <s></s> 删除线
+extern NSString *const CCHTMLTagNameS;
 
 @interface CCHTMLTag : NSObject
 

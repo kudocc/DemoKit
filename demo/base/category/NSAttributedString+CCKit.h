@@ -29,8 +29,16 @@
 - (UIColor *)cc_underlineColorAtIndex:(NSUInteger)index;
 
 /// get the underline style of the first character
-- (UIColor *)cc_underlineStyle;
-- (UIColor *)cc_underlineStyleAtIndex:(NSUInteger)index;
+- (NSUnderlineStyle)cc_underlineStyle;
+- (NSUnderlineStyle)cc_underlineStyleAtIndex:(NSUInteger)index;
+
+/// get the strikethrough color of the first character
+- (UIColor *)cc_strikethroughColor;
+- (UIColor *)cc_strikethroughColorAtIndex:(NSUInteger)index;
+
+/// get the strikethrough style of the first character
+- (NSUnderlineStyle)cc_strikethroughStyle;
+- (NSUnderlineStyle)cc_strikethroughStyleAtIndex:(NSUInteger)index;
 
 /// get the background color of the first character
 - (UIColor *)cc_bgColor;
@@ -74,8 +82,14 @@
 - (void)cc_setUnderlineColor:(UIColor *)color;
 - (void)cc_setUnderlineColor:(UIColor *)color range:(NSRange)range;
 
-- (void)cc_setUnderlineStyle:(NSNumber *)style;
-- (void)cc_setUnderlineStyle:(NSNumber *)style range:(NSRange)range;
+- (void)cc_setUnderlineStyle:(NSUnderlineStyle)style;
+- (void)cc_setUnderlineStyle:(NSUnderlineStyle)style range:(NSRange)range;
+
+- (void)cc_setStrikethroughColor:(UIColor *)color;
+- (void)cc_setStrikethroughColor:(UIColor *)color range:(NSRange)range;
+
+- (void)cc_setStrikethroughStyle:(NSUnderlineStyle)style;
+- (void)cc_setStrikethroughStyle:(NSUnderlineStyle)style range:(NSRange)range;
 
 - (void)cc_setBgColor:(UIColor *)bgColor;
 - (void)cc_setBgColor:(UIColor *)bgColor range:(NSRange)range;

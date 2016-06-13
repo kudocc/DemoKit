@@ -13,6 +13,11 @@
     KVOStudent *_student;
 }
 
+- (void)dealloc {
+    [_student removeObserver:self forKeyPath:@"grade"];
+    [_student removeObserver:self forKeyPath:@"age"];
+}
+
 - (void)initView {
     [super initView];
     

@@ -13,6 +13,11 @@
     KVOPeople *_people;
 }
 
+- (void)dealloc {
+    [_people removeObserver:self forKeyPath:@"name"];
+    [_people removeObserver:self forKeyPath:@"age"];
+}
+
 - (void)initView {
     [super initView];
     

@@ -139,6 +139,33 @@
     }
 }
 
+- (void)setLineDashContext:(CGContextRef)context withUnderlineStyle:(NSUnderlineStyle)underlineStyle {
+    switch (underlineStyle & 0xff00) {
+        case NSUnderlinePatternDot: {
+            CGFloat pattern[] = {5, 5};
+            CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
+        }
+            break;
+        case NSUnderlinePatternDash: {
+            CGFloat pattern[] = {15, 15};
+            CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
+        }
+            break;
+        case NSUnderlinePatternDashDot: {
+            CGFloat pattern[] = {15, 5, 5};
+            CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
+        }
+            break;
+        case NSUnderlinePatternDashDotDot: {
+            CGFloat pattern[] = {15, 5, 5, 5, 5, 5};
+            CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
+        }
+            break;
+        default:
+            break;
+    }
+}
+
 - (void)drawTextInContext:(CGContextRef)context position:(CGPoint)position size:(CGSize)size isCanceled:(BOOL(^)(void))isCanceled {
     if (isCanceled && isCanceled()) {
         return;
@@ -186,6 +213,36 @@
                 CGContextFillRect(context, frame);
             }
             CTRunDraw(run, context, CFRangeMake(0, 0));
+            
+            // strikethrough color
+            UIColor *strikethroughColor = attr[NSStrikethroughColorAttributeName];
+            // strikethrough style
+            NSNumber *strikethroughStyle = attr[NSStrikethroughStyleAttributeName];
+            if (strikethroughStyle) {
+                CGContextSaveGState(context);
+                CGPoint p0 = CGPointMake(linePosition.x+frame.origin.x, frame.origin.y+frame.size.height/2);
+                CGPoint p1 = CGPointMake(p0.x + frame.size.width, p0.y);
+                NSUnderlineStyle style = [strikethroughStyle integerValue];
+                switch (style & 0xff) {
+                    case NSUnderlineStyleSingle:
+                    case NSUnderlineStyleDouble:
+                        CGContextSetLineWidth(context, 1);
+                        break;
+                    case NSUnderlineStyleThick:
+                        CGContextSetLineWidth(context, 2);
+                        break;
+                    default:
+                        break;
+                }
+                [self setLineDashContext:context withUnderlineStyle:style];
+                CGContextMoveToPoint(context, p0.x, p0.y);
+                CGContextAddLineToPoint(context, p1.x, p1.y);
+                if (strikethroughColor) {
+                    CGContextSetStrokeColorWithColor(context, strikethroughColor.CGColor);
+                }
+                CGContextStrokePath(context);
+                CGContextRestoreGState(context);
+            }
         }
     }
     CGContextRestoreGState(context);

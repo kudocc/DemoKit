@@ -180,9 +180,14 @@
         NSString *str = @"\ntest paragraph";
         range.length = str.length;
         [mAttrString appendAttributedString:[[NSAttributedString alloc] initWithString:str]];
-        NSUnderlineStyle style = NSUnderlineStyleThick | NSUnderlinePatternDashDotDot;
+        // NSUnderlinePatternDot [5, 5]
+        // NSUnderlinePatternDash [15, 15]
+        // NSUnderlinePatternDashDot [15, 5, 5]
+        // NSUnderlinePatternDashDotDot [15, 5, 5, 5, 5, 5]
+        NSUnderlineStyle style = NSUnderlineStyleSingle | NSUnderlinePatternDashDotDot;
         [mAttrString addAttribute:NSUnderlineStyleAttributeName value:@(style) range:range];
-        [mAttrString addAttribute:NSStrikethroughStyleAttributeName value:@(style) range:range];
+// don't support in core text
+//        [mAttrString addAttribute:NSStrikethroughStyleAttributeName value:@(style) range:range];
         
 //        NSMutableParagraphStyle *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 //        paragraphStyle.alignment = NSTextAlignmentCenter;

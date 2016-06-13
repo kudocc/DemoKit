@@ -59,15 +59,39 @@
 }
 
 
-- (UIColor *)cc_underlineStyle {
+- (NSUnderlineStyle)cc_underlineStyle {
     return [self cc_underlineStyleAtIndex:0];
 }
-- (UIColor *)cc_underlineStyleAtIndex:(NSUInteger)index {
+- (NSUnderlineStyle)cc_underlineStyleAtIndex:(NSUInteger)index {
     NSDictionary *attributes = [self cc_attributesAtIndex:index];
     if (attributes) {
-        return attributes[NSUnderlineStyleAttributeName];
+        return [attributes[NSUnderlineStyleAttributeName] integerValue];
+    }
+    return NSUnderlineStyleNone;
+}
+
+
+- (UIColor *)cc_strikethroughColor {
+    return [self cc_strikethroughColorAtIndex:0];
+}
+- (UIColor *)cc_strikethroughColorAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return attributes[NSStrikethroughColorAttributeName];
     }
     return NULL;
+}
+
+
+- (NSUnderlineStyle)cc_strikethroughStyle {
+    return [self cc_strikethroughStyleAtIndex:0];
+}
+- (NSUnderlineStyle)cc_strikethroughStyleAtIndex:(NSUInteger)index {
+    NSDictionary *attributes = [self cc_attributesAtIndex:index];
+    if (attributes) {
+        return [attributes[NSStrikethroughStyleAttributeName] integerValue];
+    }
+    return NSUnderlineStyleNone;
 }
 
 
@@ -201,12 +225,32 @@
 
 #pragma mark - NSUnderlineStyleAttributeName
 
-- (void)cc_setUnderlineStyle:(NSNumber *)style {
+- (void)cc_setUnderlineStyle:(NSUnderlineStyle)style {
     [self cc_setUnderlineStyle:style range:NSMakeRange(0, self.length)];
 }
 
-- (void)cc_setUnderlineStyle:(NSNumber *)style range:(NSRange)range {
-    [self addAttribute:NSUnderlineStyleAttributeName value:style range:range];
+- (void)cc_setUnderlineStyle:(NSUnderlineStyle)style range:(NSRange)range {
+    [self addAttribute:NSUnderlineStyleAttributeName value:@(style) range:range];
+}
+
+#pragma mark - NSStrikethroughColorAttributeName
+
+- (void)cc_setStrikethroughColor:(UIColor *)color {
+    [self cc_setStrikethroughColor:color range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setStrikethroughColor:(UIColor *)color range:(NSRange)range {
+    [self addAttribute:NSStrikethroughColorAttributeName value:color range:range];
+}
+
+#pragma mark - NSStrikethroughStyleAttributeName
+
+- (void)cc_setStrikethroughStyle:(NSUnderlineStyle)style {
+    [self cc_setStrikethroughStyle:style range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setStrikethroughStyle:(NSUnderlineStyle)style range:(NSRange)range {
+    [self addAttribute:NSStrikethroughStyleAttributeName value:@(style) range:range];
 }
 
 #pragma mark - CCBackgroundColorAttributeName
