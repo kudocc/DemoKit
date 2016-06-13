@@ -11,6 +11,7 @@
 #import "NSString+CCKit.h"
 #import "NSAttributedString+CCKit.h"
 #import "UIColor+CCKit.h"
+#import "UIFont+CCKit.h"
 
 //https://en.wikipedia.org/wiki/HTML_attribute
 
@@ -28,12 +29,10 @@ NSString *const CCHTMLTagNameFont = @"font";
 NSString *const CCHTMLTagNameP = @"p";
 NSString *const CCHTMLTagNameImg = @"img";
 NSString *const CCHTMLTagNameBr = @"br";
+NSString *const CCHTMLTagNameB = @"b";
+NSString *const CCHTMLTagNameI = @"i";
 
 // TOOD:
-/// tag <b></b> 粗体
-NSString *const CCHTMLTagNameB = @"b";
-/// tag <i></b> 斜体
-NSString *const CCHTMLTagNameI = @"i";
 /// tag <u></u> 下划线
 NSString *const CCHTMLTagU = @"u";
 /// tag <s></s> 删除线
@@ -56,6 +55,9 @@ static NSDictionary *htmlSpecialCharacterMap;
 
 @interface CCHTMLTag ()
 
+@property (nonatomic) CCHTMLConfig *config;
+/// 直接包含此tag的CCHTMLTag对象
+@property (nonatomic) CCHTMLTag *containerTag;
 @property (nonatomic) NSString *tagName;
 @property (nonatomic) NSMutableDictionary<NSString *, id> *attributes;
 @property (nonatomic) NSMutableArray<CCHTMLTag *> *subTagItems;
@@ -96,7 +98,9 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameFont,
                               CCHTMLTagNameP,
                               CCHTMLTagNameImg,
-                              CCHTMLTagNameBr];
+                              CCHTMLTagNameBr,
+                              CCHTMLTagNameB,
+                              CCHTMLTagNameI];
     });
     
     if ([availableTagNames containsObject:tagName]) {
@@ -153,24 +157,27 @@ static NSDictionary *htmlSpecialCharacterMap;
     
     // apply item attribute
     if ([_tagName isEqualToString:CCHTMLTagNameA]) {
+        if (_config.colorHyperlinkNormal) {
+            [wholeString cc_setColor:_config.colorHyperlinkNormal range:self.effectRange];
+        }
+        if (_config.bgcolorHyperlinkNormal) {
+            [wholeString cc_setBgColor:_config.bgcolorHyperlinkNormal range:self.effectRange];
+        }
         // href
+        __weak typeof(self) wself = self;
         NSString *href = _attributes[CCHTMLTagAttributeNameHref];
-        [wholeString cc_setHighlightedColor:[UIColor grayColor] bgColor:[UIColor blueColor] range:self.effectRange tapAction:^(NSRange range) {
-            NSLog(@"%@, href=%@", NSStringFromRange(range), href);
-            NSURL *url = [NSURL URLWithString:href];
-            if (url && [[UIApplication sharedApplication] canOpenURL:url]) {
-                [[UIApplication sharedApplication] openURL:url];
+        [wholeString cc_setHighlightedColor:_config.colorHyperlinkHighlighted
+                                    bgColor:_config.bgcolorHyperlinkHighlighted
+                                      range:self.effectRange tapAction:^(NSRange range) {
+            if (wself.config.hyperlinkBlock) {
+                wself.config.hyperlinkBlock(href);
             }
         }];
-    } else if ([_tagName isEqualToString:CCHTMLTagNameFont]) {
-        
-    } else if ([_tagName isEqualToString:@"img"]) {
-        // src
+    } else if ([_tagName isEqualToString:CCHTMLTagNameImg]) {
+        // src, width, height
         NSString *src = _attributes[CCHTMLTagAttributeNameSource];
         UIImage *image = [UIImage imageNamed:src];
-        // width
         NSString *strWidth = _attributes[CCHTMLTagAttributeNameWidth];
-        // height
         NSString *strHeight = _attributes[CCHTMLTagAttributeNameHeight];
         if (image && strWidth && strHeight) {
             NSAttributedString *attach = [NSAttributedString cc_attachmentStringWithContent:image contentMode:UIViewContentModeScaleToFill contentSize:CGSizeMake([strWidth integerValue], [strHeight integerValue]) alignToFont:[UIFont systemFontOfSize:14] attachmentPosition:CCTextAttachmentPositionTop];
@@ -179,6 +186,46 @@ static NSDictionary *htmlSpecialCharacterMap;
                 range = NSMakeRange(self.effectRange.location + self.effectRange.length - CCAttachmentCharacter.length, CCAttachmentCharacter.length);
             }
             [wholeString replaceCharactersInRange:range withAttributedString:attach];
+        }
+    } else if ([_tagName isEqualToString:CCHTMLTagNameB]) {
+        // if its ancestors is a <i>, use Bold-Italic
+        BOOL hasItalic = NO;
+        CCHTMLTag *ancestor = self.containerTag;
+        while (ancestor) {
+            if ([ancestor.tagName isEqualToString:CCHTMLTagNameI]) {
+                hasItalic = YES;
+                break;
+            }
+            ancestor = ancestor.containerTag;
+        }
+        UIFont *font = [wholeString cc_fontAtIndex:self.effectRange.location];
+        if (hasItalic) {
+            font = [font cc_boldItalicFont];
+        } else {
+            font = [font cc_boldFont];
+        }
+        if (font) {
+            [wholeString cc_setFont:font range:self.effectRange];
+        }
+    } else if ([_tagName isEqualToString:CCHTMLTagNameI]) {
+        // if its ancestors is a <b>, use Bold-Italic
+        BOOL hasBold = NO;
+        CCHTMLTag *ancestor = self.containerTag;
+        while (ancestor) {
+            if ([ancestor.tagName isEqualToString:CCHTMLTagNameI]) {
+                hasBold = YES;
+                break;
+            }
+            ancestor = ancestor.containerTag;
+        }
+        UIFont *font = [wholeString cc_fontAtIndex:self.effectRange.location];
+        if (hasBold) {
+            font = [font cc_boldItalicFont];
+        } else {
+            font = [font cc_italicFont];
+        }
+        if (font) {
+            [wholeString cc_setFont:font range:self.effectRange];
         }
     }
     
@@ -189,23 +236,40 @@ static NSDictionary *htmlSpecialCharacterMap;
 
 @end
 
+@interface CCHTMLParser ()
+@property (nonatomic, readwrite) CCHTMLConfig *config;
+@end
+
 @implementation CCHTMLParser {
     CCStack *_stack;
 }
 
-+ (CCHTMLParser *)parserWithHTMLString:(NSString *)htmlString {
++ (CCHTMLParser *)parserWithDefaultConfig {
+    return [self parserWithConfig:[CCHTMLConfig defaultConfig]];
+}
+
++ (CCHTMLParser *)parserWithConfig:(CCHTMLConfig *)config {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        // TODO:
+        // TODO: there are more......
         htmlSpecialCharacterMap = @{@"&quot;":@"\"",
                                     @"&nbsp;":@" ",
                                     @"&lt;":@"<",
                                     @"&gt;":@">",
                                     @"&amp;":@"&"};
     });
-    
-    CCHTMLParser *parser = [[CCHTMLParser alloc] initWithHTMLString:htmlString];
+    CCHTMLParser *parser = [[CCHTMLParser alloc] initWithConfig:config];
     return parser;
+}
+
+- (NSAttributedString *)attributedString {
+    NSMutableAttributedString *mutableAttrString = [[NSMutableAttributedString alloc] initWithString:self.mutableString];
+    NSString *fontName = _config.fontName;
+    UIFont *font = [UIFont fontWithName:fontName size:_config.defaultFontSize];
+    [mutableAttrString cc_setFont:font];
+    [mutableAttrString cc_setColor:_config.defaultTextColor];
+    [_rootTag applyAttributeOnMutableAttributedString:mutableAttrString];
+    return mutableAttrString;
 }
 
 - (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font
@@ -217,19 +281,20 @@ static NSDictionary *htmlSpecialCharacterMap;
     return mutableAttrString;
 }
 
-- (id)initWithHTMLString:(NSString *)htmlString {
+- (id)initWithConfig:(CCHTMLConfig *)config {
     self = [super init];
     if (self) {
-        [self parseHTMLString:htmlString];
+        _config = config;
     }
     return self;
 }
 
 - (void)parseHTMLString:(NSString *)htmlString {
     _stack = [[CCStack alloc] init];
-    NSMutableArray *mutableRootArray = [NSMutableArray array];
+    _rootTag = nil;
     _mutableString = [[NSMutableString alloc] init];
     
+    NSMutableArray *mutableRootArray = [NSMutableArray array];
     NSInteger searchPosition = 0;
     while (searchPosition < [htmlString length]) {
         BOOL isStartTag = NO;
@@ -260,13 +325,15 @@ static NSDictionary *htmlSpecialCharacterMap;
             if (!tagItem) {
                 break;
             }
+            tagItem.config = self.config;
             tagItem.effectRange = NSMakeRange([_mutableString length], 0);
             if (tagItem.placeholderBegin) {
                 [_mutableString appendString:tagItem.placeholderBegin];
             }
-            CCHTMLTag *parentItem = [_stack top];
-            if (parentItem) {
-                [parentItem.subTagItems addObject:tagItem];
+            CCHTMLTag *parentTag = [_stack top];
+            if (parentTag) {
+                tagItem.containerTag = parentTag;
+                [parentTag.subTagItems addObject:tagItem];
             } else {
                 [mutableRootArray addObject:tagItem];
             }
@@ -308,6 +375,9 @@ static NSDictionary *htmlSpecialCharacterMap;
             _rootTag.subTagItems = [mutableRootArray copy];
             _rootTag.tagName = @"root";
             _rootTag.effectRange = NSMakeRange(0, _mutableString.length);
+            for (CCHTMLTag *tag in mutableRootArray) {
+                tag.containerTag = _rootTag;
+            }
         } else {
             _rootTag = mutableRootArray.firstObject;
         }

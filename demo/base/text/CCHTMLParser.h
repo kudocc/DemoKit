@@ -6,22 +6,8 @@
 //  Copyright © 2016年 KudoCC. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-
-@interface CCHTMLConfig : NSObject
-
-/// 指定一个fontName，全文都使用此font
-@property (nonatomic) NSString *fontName;
-@property (nonatomic) NSString *boldFontName;
-@property (nonatomic) NSString *italicFontName;
-
-/// TODO:超链接的属性，未选中时的文本颜色和背景颜色；选中时的文本颜色和背景颜色
-/// 超链接点击的回调
-
-- (CCHTMLConfig *)sharedConfig;
-
-@end
+#import "CCHTMLConfig.h"
 
 /// tag <html></html>
 extern NSString *const CCHTMLTagNameHTML;
@@ -37,6 +23,10 @@ extern NSString *const CCHTMLTagNameP;
 extern NSString *const CCHTMLTagNameImg;
 /// tag <br />
 extern NSString *const CCHTMLTagNameBr;
+/// tag <b></b>
+extern NSString *const CCHTMLTagNameB;
+/// tag <i></i>
+extern NSString *const CCHTMLTagNameI;
 
 @interface CCHTMLTag : NSObject
 
@@ -74,10 +64,15 @@ extern NSString *const CCHTMLTagNameBr;
  */
 @interface CCHTMLParser : NSObject
 
-@property (nonatomic) NSMutableString *mutableString;
-@property (nonatomic) CCHTMLTag *rootTag;
+@property (nonatomic, readonly) NSMutableString *mutableString;
+@property (nonatomic, readonly) CCHTMLTag *rootTag;
+@property (nonatomic, readonly) CCHTMLConfig *config;
+@property (nonatomic, readonly) NSAttributedString *attributedString;
 
-+ (CCHTMLParser *)parserWithHTMLString:(NSString *)htmlString;
++ (CCHTMLParser *)parserWithDefaultConfig;
++ (CCHTMLParser *)parserWithConfig:(CCHTMLConfig *)config;
+
+- (void)parseHTMLString:(NSString *)htmlString;
 
 
 - (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font

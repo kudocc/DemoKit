@@ -22,9 +22,21 @@
 - (void)initView {
     [super initView];
     
+    // font point size
+    // test UIFont+CCKit
+    
     NSString *path = [[NSBundle mainBundle] pathForResource:@"test" ofType:@"html"];
     NSString *htmlString = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-    CCHTMLParser *parser = [CCHTMLParser parserWithHTMLString:htmlString];
+    CCHTMLConfig *config = [CCHTMLConfig defaultConfig];
+    config.colorHyperlinkHighlighted = [UIColor blueColor];
+    config.hyperlinkBlock = ^(NSString *href) {
+        NSURL *url = [NSURL URLWithString:href];
+        if (url && [[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url];
+        }
+    };
+    CCHTMLParser *parser = [CCHTMLParser parserWithConfig:config];
+    [parser parseHTMLString:htmlString];
     NSAttributedString *attr = [parser attributedStringWithDefaultFont:[UIFont systemFontOfSize:16.0] defaultTextColor:[UIColor blackColor]];
     
     label = [[CCLabel alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
