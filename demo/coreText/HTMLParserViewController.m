@@ -41,7 +41,7 @@
     
     label = [[CCLabel alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
     label.layer.borderColor = [UIColor greenColor].CGColor;
-    label.layer.borderWidth = Pixel(1);
+    label.layer.borderWidth = PixelToPoint(1);
     label.attributedText = attr;
     label.asyncDisplay = NO;
     label.verticleAlignment = CCTextVerticalAlignmentTop;

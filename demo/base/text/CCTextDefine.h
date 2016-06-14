@@ -10,15 +10,6 @@
 
 extern NSString *const CCAttachmentCharacter;
 
-#define CCMainThreadBlock(block) \
-    if ([NSThread isMainThread]) {\
-        block();\
-    } else {\
-        dispatch_async(dispatch_get_main_queue(), ^() {\
-            block();\
-        });\
-    }
-
 typedef void (^CCTapActionBlock)(NSRange range);
 
 typedef NS_ENUM(NSUInteger, CCTextAttachmentPosition) {

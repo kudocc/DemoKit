@@ -12,6 +12,7 @@
 #import "ChatViewController.h"
 #import "CCLabelDemoViewController.h"
 #import "HTMLParserViewController.h"
+#import "HTMLWebViewController.h"
 #import <CoreText/CoreText.h>
 #import "NSAttributedString+CCKit.h"
 
@@ -134,13 +135,15 @@
                         @"Core Text Chat",
                         @"Asynchonized Text",
                         @"CCLabel demo",
-                        @"HTML parser"];
+                        @"HTML parser",
+                        @"WebView represents the same HTML content of HTML parser"];
     
     self.arrayClass = @[[SimpleChatViewController class],
                         [CoreTextChatViewController class],
                         [ChatViewController class],
                         [CCLabelDemoViewController class],
-                        [HTMLParserViewController class]];
+                        [HTMLParserViewController class],
+                        [HTMLWebViewController class]];
     
 //    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
 //    v.backgroundColor = [UIColor greenColor];

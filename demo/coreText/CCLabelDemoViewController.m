@@ -77,7 +77,7 @@
     
     label = [[CCLabel alloc] initWithFrame:CGRectMake(10, 100, 300, 200)];
     label.layer.borderColor = [UIColor greenColor].CGColor;
-    label.layer.borderWidth = Pixel(1);
+    label.layer.borderWidth = PixelToPoint(1);
     label.attributedText = mutableAttrString;
     label.asyncDisplay = NO;
     [self.view addSubview:label];

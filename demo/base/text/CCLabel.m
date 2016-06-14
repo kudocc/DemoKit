@@ -7,6 +7,7 @@
 //
 
 #import "CCLabel.h"
+#import "CCKitMacro.h"
 #import "UIView+CCKit.h"
 #import "NSAttributedString+CCKit.h"
 #import "CCTextDefine.h"

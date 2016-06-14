@@ -173,6 +173,8 @@ static NSDictionary *htmlSpecialCharacterMap;
     
     // apply item attribute
     if ([_tagName isEqualToString:CCHTMLTagNameA]) {
+        [wholeString cc_setUnderlineStyle:NSUnderlineStyleSingle range:self.effectRange];
+        [wholeString cc_setUnderlineColor:[UIColor blueColor] range:self.effectRange];
         if (_config.colorHyperlinkNormal) {
             [wholeString cc_setColor:_config.colorHyperlinkNormal range:self.effectRange];
         }
@@ -276,7 +278,7 @@ static NSDictionary *htmlSpecialCharacterMap;
     } else if ([_tagName isEqualToString:CCHTMLTagNameU]) {
         [wholeString cc_setUnderlineStyle:NSUnderlineStyleSingle range:self.effectRange];
     } else if ([_tagName isEqualToString:CCHTMLTagNameS]) {
-        [wholeString cc_setStrikethroughStyle:NSUnderlineStyleSingle|NSUnderlinePatternDashDot range:self.effectRange];
+        [wholeString cc_setStrikethroughStyle:NSUnderlineStyleSingle range:self.effectRange];
     }
     
     for (CCHTMLTag *item in _subTagItems) {
@@ -367,7 +369,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             // 将开始标签之前的文本全部加入
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
-            text = [self replaceHtmlSpecialCharacter:text];
+            text = [self replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:text];
             [_mutableString appendString:text];
             searchPosition = tagRange.location + tagRange.length;
             
@@ -405,7 +407,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
-            text = [self replaceHtmlSpecialCharacter:text];
+            text = [self replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:text];
             [_mutableString appendString:text];
             if (top.placeholderEnd) {
                 [_mutableString appendString:top.placeholderEnd];
@@ -434,7 +436,28 @@ static NSDictionary *htmlSpecialCharacterMap;
     }
 }
 
-- (NSString *)replaceHtmlSpecialCharacter:(NSString *)string {
+- (NSString *)replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:(NSString *)string {
+    // remove newline character and combine two or more spaces into one.
+    NSMutableString *mutableString = [NSMutableString string];
+    NSCharacterSet *whitespaceCharSet = [NSCharacterSet whitespaceCharacterSet];
+    NSInteger i = 0;
+    while (i < [string length]) {
+        unichar c = [string characterAtIndex:i];
+        if ([whitespaceCharSet characterIsMember:c]) {
+            NSInteger reachLocation = 0;
+            [string runUntilCharacterSet:[whitespaceCharSet invertedSet] fromLocation:i reachLocation:&reachLocation reachEnd:NULL];
+            [mutableString appendString:@" "];
+            i = reachLocation;
+        } else if (c == '\n' || c == '\r') {
+            ++i;
+        } else {
+            [mutableString appendFormat:@"%C", c];
+            ++i;
+        }
+    }
+    string = [mutableString copy];
+    
+    // replace HTML special character
     __block NSString *str = string;
     [htmlSpecialCharacterMap enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSString *value, BOOL *stop) {
         NSRange range = [str rangeOfString:key];
@@ -442,6 +465,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             str = [str stringByReplacingOccurrencesOfString:key withString:value];
         }
     }];
+    
     return str;
 }
 
@@ -463,7 +487,7 @@ static NSDictionary *htmlSpecialCharacterMap;
     }
     
     NSInteger i = 0;
-    [tagString runUtilNoneSpaceFromLocation:0 noneSpaceLocation:&i reachEnd:NULL];
+    [tagString runUntilNoneSpaceFromLocation:0 noneSpaceLocation:&i reachEnd:NULL];
     // 找到tag名称
     for (i = 0; i < [tagString length]; ++i) {
         unichar c = [tagString characterAtIndex:i];
@@ -476,7 +500,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             // 再向后找到第一个不为' '的字符停止
             NSInteger pos = i+1;
             BOOL end = NO;
-            [tagString runUtilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
+            [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
             if (!end) {
                 tagString = [tagString substringFromIndex:pos];
             } else {
@@ -519,7 +543,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                 // 再向后找到第一个不为' '的字符停止
                 NSInteger pos = i+1;
                 BOOL end = NO;
-                [tagString runUtilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
+                [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
                 if (end) {
                     // error，'=' is the end char, no attribute value
                     return nil;
@@ -548,7 +572,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             }
         }
         
-        [tagString runUtilNoneSpaceFromLocation:i+1 noneSpaceLocation:&i reachEnd:NULL];
+        [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&i reachEnd:NULL];
         if (i < [tagString length]) {
             tagString = [tagString substringFromIndex:i];
         } else {

@@ -9,6 +9,7 @@
 #import "CCTextLayout.h"
 #import "CCTextDefine.h"
 #import "UIView+CCKit.h"
+#import "CCKitMacro.h"
 
 @implementation CCTextLayout {
     CTFramesetterRef _ctFramesetter;
@@ -142,22 +143,22 @@
 - (void)setLineDashContext:(CGContextRef)context withUnderlineStyle:(NSUnderlineStyle)underlineStyle {
     switch (underlineStyle & 0xff00) {
         case NSUnderlinePatternDot: {
-            CGFloat pattern[] = {5, 5};
+            CGFloat pattern[] = {3, 3};
             CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
         }
             break;
         case NSUnderlinePatternDash: {
-            CGFloat pattern[] = {15, 15};
+            CGFloat pattern[] = {10, 5};
             CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
         }
             break;
         case NSUnderlinePatternDashDot: {
-            CGFloat pattern[] = {15, 5, 5};
+            CGFloat pattern[] = {10, 3, 3, 3};
             CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
         }
             break;
         case NSUnderlinePatternDashDotDot: {
-            CGFloat pattern[] = {15, 5, 5, 5, 5, 5};
+            CGFloat pattern[] = {10, 3, 3, 3, 3, 3};
             CGContextSetLineDash(context, 0, pattern, sizeof(pattern)/sizeof(CGFloat));
         }
             break;
@@ -206,45 +207,98 @@
             frame = CGRectOffset(frame, position.x, position.y);
             CTRunRef run = (__bridge CTRunRef)textRun.run;
             NSDictionary *attr = (__bridge id)CTRunGetAttributes(run);
-            // background color
-            UIColor *bgColor = attr[CCBackgroundColorAttributeName];
-            if (bgColor) {
-                CGContextSetFillColorWithColor(context, bgColor.CGColor);
-                CGContextFillRect(context, frame);
+            {// draw background color
+                UIColor *bgColor = attr[CCBackgroundColorAttributeName];
+                if (bgColor) {
+                    CGContextSetFillColorWithColor(context, bgColor.CGColor);
+                    CGContextFillRect(context, frame);
+                }
             }
-            CTRunDraw(run, context, CFRangeMake(0, 0));
+            {// draw ctrun
+                CTRunDraw(run, context, CFRangeMake(0, 0));
+            }
             
-            // strikethrough color
-            UIColor *strikethroughColor = attr[NSStrikethroughColorAttributeName];
-            // strikethrough style
-            NSNumber *strikethroughStyle = attr[NSStrikethroughStyleAttributeName];
-            if (strikethroughStyle) {
-                CGContextSaveGState(context);
-                CGPoint p0 = CGPointMake(linePosition.x+frame.origin.x, frame.origin.y+frame.size.height/2);
-                CGPoint p1 = CGPointMake(p0.x + frame.size.width, p0.y);
-                NSUnderlineStyle style = [strikethroughStyle integerValue];
-                switch (style & 0xff) {
-                    case NSUnderlineStyleSingle:
-                    case NSUnderlineStyleDouble:
-                        CGContextSetLineWidth(context, 1);
-                        break;
-                    case NSUnderlineStyleThick:
-                        CGContextSetLineWidth(context, 2);
-                        break;
-                    default:
-                        break;
-                }
-                [self setLineDashContext:context withUnderlineStyle:style];
-                CGContextMoveToPoint(context, p0.x, p0.y);
-                CGContextAddLineToPoint(context, p1.x, p1.y);
-                if (strikethroughColor) {
-                    CGContextSetStrokeColorWithColor(context, strikethroughColor.CGColor);
-                }
-                CGContextStrokePath(context);
-                CGContextRestoreGState(context);
+            {// draw strikethrough line
+                [self drawStrikethroughInContext:context run:textRun inFrame:frame];
             }
         }
     }
+    CGContextRestoreGState(context);
+}
+
+- (void)addStrikethroughLineInContext:(CGContextRef)context fromPosition:(CGPoint)from toPosition:(CGPoint)to {
+    CGContextMoveToPoint(context, from.x, from.y);
+    CGContextAddLineToPoint(context, to.x, to.y);
+}
+
+- (void)drawStrikethroughInContext:(CGContextRef)context run:(CCTextRun *)textRun inFrame:(CGRect)frame {
+    CTRunRef run = (__bridge CTRunRef)textRun.run;
+    NSDictionary *attr = (__bridge id)CTRunGetAttributes(run);
+    NSNumber *numberStyle = attr[NSStrikethroughStyleAttributeName];
+    NSUnderlineStyle style = [numberStyle integerValue];
+    if (!numberStyle || (style & 0xff) == NSUnderlineStyleNone) {
+        return;
+    }
+    
+    CGContextSaveGState(context);
+    // set strikethrough color
+    UIColor *strikethroughColor = attr[NSStrikethroughColorAttributeName];
+    if (strikethroughColor) {
+        CGContextSetStrokeColorWithColor(context, strikethroughColor.CGColor);
+    }
+    [self setLineDashContext:context withUnderlineStyle:style];
+    CGFloat x = frame.origin.x;
+    CGFloat centerY = frame.origin.y + frame.size.height/2;
+    switch (style & 0xff) {
+        case NSUnderlineStyleSingle:
+            CGContextSetLineWidth(context, 1);
+            break;
+        case NSUnderlineStyleDouble: {
+            NSInteger pixel = (NSInteger)((2 * [UIScreen mainScreen].scale)/3);
+            if (pixel == 0) pixel = 1;
+            CGFloat h = PixelToPoint(pixel);
+            CGContextSetLineWidth(context, h);
+        }
+            break;
+        case NSUnderlineStyleThick:
+            CGContextSetLineWidth(context, 2);
+            break;
+        default:
+            break;
+    }
+    
+    // TODO:NSUnderlineByWord
+    // BOOL underLineByWord = (style & 0xff0000) == NSUnderlineByWord;
+    CGPoint p0, p1;
+    switch (style & 0xff) {
+        case NSUnderlineStyleSingle:
+            p0 = CGPointMake(x, centerY);
+            p1 = CGPointMake(p0.x + frame.size.width, p0.y);
+            [self addStrikethroughLineInContext:context fromPosition:p0 toPosition:p1];
+            break;
+        case NSUnderlineStyleDouble: {
+            NSInteger pixel = (NSInteger)((2 * [UIScreen mainScreen].scale)/3);
+            if (pixel == 0) pixel = 1;
+            CGFloat h = PixelToPoint(pixel);
+            p0 = CGPointMake(x, centerY-h);
+            p1 = CGPointMake(p0.x + frame.size.width, p0.y);
+            [self addStrikethroughLineInContext:context fromPosition:p0 toPosition:p1];
+            p0 = CGPointMake(x, centerY+h);
+            p1 = CGPointMake(p0.x + frame.size.width, p0.y);
+            [self addStrikethroughLineInContext:context fromPosition:p0 toPosition:p1];
+        }
+            break;
+        case NSUnderlineStyleThick: {
+            p0 = CGPointMake(x, centerY);
+            p1 = CGPointMake(p0.x + frame.size.width, p0.y);
+            [self addStrikethroughLineInContext:context fromPosition:p0 toPosition:p1];
+        }
+            break;
+        default:
+            break;
+    }
+    
+    CGContextStrokePath(context);
     CGContextRestoreGState(context);
 }
 
