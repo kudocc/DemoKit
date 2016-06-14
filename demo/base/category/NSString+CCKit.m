@@ -20,28 +20,28 @@
 
 @implementation NSString (Other)
 
-- (void)runUtilNoneSpaceFromLocation:(NSInteger)location
-                   noneSpaceLocation:(NSInteger *)noneSpaceLocation
-                            reachEnd:(BOOL *)end {
-    [self runUtilCharacter:' ' fromLocation:location noneSpaceLocation:noneSpaceLocation reachEnd:end];
+- (void)runUntilNoneSpaceFromLocation:(NSInteger)location noneSpaceLocation:(NSInteger *)noneSpaceLocation reachEnd:(BOOL *)end {
+    [self runUntilCharacterSet:[[NSCharacterSet characterSetWithCharactersInString:@" "] invertedSet]
+                  fromLocation:location
+                 reachLocation:noneSpaceLocation
+                      reachEnd:end];
 }
 
-- (void)runUtilCharacter:(unichar)character
-            fromLocation:(NSInteger)location
-       noneSpaceLocation:(NSInteger *)noneSpaceLocation
-                reachEnd:(BOOL *)end {
+- (void)runUntilCharacterSet:(NSCharacterSet *)characterSet
+                fromLocation:(NSInteger)location
+               reachLocation:(NSInteger *)reachLocation
+                    reachEnd:(BOOL *)end {
     while (location < [self length]) {
         unichar c = [self characterAtIndex:location];
-        if (c != character) {
-            if (noneSpaceLocation) *noneSpaceLocation = location;
+        if ([characterSet characterIsMember:c]) {
+            if (reachLocation) *reachLocation = location;
             if (end) *end = NO;
             return;
         }
         ++location;
     }
-    if (noneSpaceLocation) *noneSpaceLocation = location;
+    if (reachLocation) *reachLocation = location;
     if (end) *end = YES;
 }
-
 
 @end

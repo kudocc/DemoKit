@@ -16,13 +16,19 @@
 
 @interface NSString (Other)
 
-- (void)runUtilNoneSpaceFromLocation:(NSInteger)location
-                   noneSpaceLocation:(NSInteger *)noneSpaceLocation
-                            reachEnd:(BOOL *)end;
 
-- (void)runUtilCharacter:(unichar)character
-            fromLocation:(NSInteger)location
-       noneSpaceLocation:(NSInteger *)noneSpaceLocation
-                reachEnd:(BOOL *)end;
+- (void)runUntilNoneSpaceFromLocation:(NSInteger)location
+                    noneSpaceLocation:(NSInteger *)noneSpaceLocation
+                             reachEnd:(BOOL *)end;
+
+/**
+ @param walk the string until we meet a character in characterSet
+ @param location walk from the location
+ @param reachLocation if we find a character in characterSet, the location points to that character, else the location points to the last character + 1
+ */
+- (void)runUntilCharacterSet:(NSCharacterSet *)characterSet
+                fromLocation:(NSInteger)location
+               reachLocation:(NSInteger *)reachLocation
+                    reachEnd:(BOOL *)end;
 
 @end

@@ -88,7 +88,7 @@
         CALayer *layer = [CALayer layer];
         layer.frame = faceBounds;
         layer.borderColor = [UIColor yellowColor].CGColor;
-        layer.borderWidth = Pixel(1);
+        layer.borderWidth = PixelToPoint(1);
         [_imageView.layer addSublayer:layer];
         
         if (f.hasLeftEyePosition) {

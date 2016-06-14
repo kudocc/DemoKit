@@ -13,6 +13,7 @@
 #import "CoordinateViewController.h"
 #import "ShadowGradientsViewController.h"
 #import "ImageBlendViewController.h"
+#import "LineViewController.h"
 
 @interface Quartz2DViewController ()
 
@@ -24,8 +25,9 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.arrayTitle = @[@"ImageMask", @"Path", @"Colored & Stencil Pattern", @"Coordinate Test", @"Shadow", @"Image Blend"];
-    self.arrayClass = @[[ImageMaskViewController class],
+    self.arrayTitle = @[@"Line", @"ImageMask", @"Path", @"Colored & Stencil Pattern", @"Coordinate Test", @"Shadow", @"Image Blend"];
+    self.arrayClass = @[[LineViewController class],
+                        [ImageMaskViewController class],
                         [PathViewController class],
                         [PatternViewController class],
                         [CoordinateViewController class],

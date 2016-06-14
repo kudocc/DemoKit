@@ -57,6 +57,8 @@
 		A7583C4D1CE31BFB007558CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7583C4B1CE31BFB007558CB /* LaunchScreen.storyboard */; };
 		A7583C581CE31BFB007558CB /* demoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C571CE31BFB007558CB /* demoTests.m */; };
 		A7583C631CE31BFB007558CB /* demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C621CE31BFB007558CB /* demoUITests.m */; };
+		A7699BCE1D0F9D9200250024 /* HTMLWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699BCD1D0F9D9200250024 /* HTMLWebViewController.m */; };
+		A7699BD11D0FA65F00250024 /* LineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699BD01D0FA65F00250024 /* LineViewController.m */; };
 		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
 		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
 		A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */; };
@@ -232,6 +234,11 @@
 		A7583C5E1CE31BFB007558CB /* demoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = demoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A7583C621CE31BFB007558CB /* demoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = demoUITests.m; sourceTree = "<group>"; };
 		A7583C641CE31BFB007558CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A7699BCC1D0F9D9200250024 /* HTMLWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTMLWebViewController.h; sourceTree = "<group>"; };
+		A7699BCD1D0F9D9200250024 /* HTMLWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTMLWebViewController.m; sourceTree = "<group>"; };
+		A7699BCF1D0FA65F00250024 /* LineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineViewController.h; sourceTree = "<group>"; };
+		A7699BD01D0FA65F00250024 /* LineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineViewController.m; sourceTree = "<group>"; };
+		A7699BD21D0FC86600250024 /* CCKitMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCKitMacro.h; sourceTree = "<group>"; };
 		A773F6771CE810E40098F1C8 /* PathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathViewController.h; sourceTree = "<group>"; };
 		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
 		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
@@ -446,6 +453,8 @@
 				A7147EEC1D0172B40090FCCB /* CCLabelDemoViewController.m */,
 				A73B4F1E1D080BC8002E1A1A /* HTMLParserViewController.h */,
 				A73B4F1F1D080BC8002E1A1A /* HTMLParserViewController.m */,
+				A7699BCC1D0F9D9200250024 /* HTMLWebViewController.h */,
+				A7699BCD1D0F9D9200250024 /* HTMLWebViewController.m */,
 			);
 			path = coreText;
 			sourceTree = "<group>";
@@ -526,17 +535,17 @@
 				A73B4EF91D0792BE002E1A1A /* other */,
 				A7F5F0781CE31F7F0064AAB7 /* base */,
 				A7127FA21CEE8C440023E4FB /* block */,
+				A7147EBE1CFD24900090FCCB /* coreText */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
-				A785B03F1CE3295D00A7686D /* performance */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
 				A773F6941CEC50CE0098F1C8 /* coreImage */,
-				A7147EBE1CFD24900090FCCB /* coreText */,
+				A70E90BD1CF2A862008D5924 /* network */,
+				A7147EAA1CF7EFE00090FCCB /* model */,
 				A7583C751CE31C88007558CB /* urlSession */,
 				A785B0751CE32EF800A7686D /* webView */,
 				A7F5F0551CE31DE60064AAB7 /* audio */,
-				A70E90BD1CF2A862008D5924 /* network */,
-				A7147EAA1CF7EFE00090FCCB /* model */,
+				A785B03F1CE3295D00A7686D /* performance */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
 				A73B4F1C1D0807EB002E1A1A /* test.html */,
@@ -641,6 +650,8 @@
 			children = (
 				A785B0331CE3258C00A7686D /* Quartz2DViewController.h */,
 				A785B0341CE3258C00A7686D /* Quartz2DViewController.m */,
+				A7699BCF1D0FA65F00250024 /* LineViewController.h */,
+				A7699BD01D0FA65F00250024 /* LineViewController.m */,
 				A785B0291CE3258C00A7686D /* ImageMaskViewController.h */,
 				A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */,
 				A773F6771CE810E40098F1C8 /* PathViewController.h */,
@@ -740,6 +751,7 @@
 		A7F5F0781CE31F7F0064AAB7 /* base */ = {
 			isa = PBXGroup;
 			children = (
+				A7699BD21D0FC86600250024 /* CCKitMacro.h */,
 				A7147EA31CF699F90090FCCB /* model */,
 				A7F5F0791CE31F7F0064AAB7 /* category */,
 				A7F5F07A1CE31F7F0064AAB7 /* subclass */,
@@ -993,6 +1005,7 @@
 				A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */,
 				A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */,
 				A72FEF9A1D0E4E6000B9AC45 /* UIFont+CCKit.m in Sources */,
+				A7699BCE1D0F9D9200250024 /* HTMLWebViewController.m in Sources */,
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
 				A73B4F181D07DFEE002E1A1A /* CCStack.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
@@ -1053,6 +1066,7 @@
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,
 				A73B4F091D07973A002E1A1A /* OtherViewController.m in Sources */,
 				A73B4EF21D051838002E1A1A /* CCTextDefine.m in Sources */,
+				A7699BD11D0FA65F00250024 /* LineViewController.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
 				A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */,
 				A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */,
