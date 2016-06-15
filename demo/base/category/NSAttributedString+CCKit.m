@@ -281,6 +281,16 @@
     [self addAttribute:CCHighlightedAttributeName value:hi range:range];
 }
 
+#pragma mark - Core Text Attribute
+
+- (void)cc_setSuperscript:(NSInteger)superScript {
+    [self cc_setSuperscript:superScript range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setSuperscript:(NSInteger)superScript range:(NSRange)range {
+    [self addAttribute:(__bridge id)kCTSuperscriptAttributeName value:@(superScript) range:range];
+}
+
 #pragma mark - ParagraphStyle
 
 - (void)cc_setAlignment:(NSTextAlignment)alignment {

@@ -97,6 +97,10 @@
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor tapAction:(CCTapActionBlock)tapAction;
 - (void)cc_setHighlightedColor:(UIColor *)color bgColor:(UIColor *)bgColor range:(NSRange)range tapAction:(CCTapActionBlock)tapAction;
 
+/// default is 0, If supported by the specified font, a value of 1 enables superscripting and a value of -1 enables subscripting
+- (void)cc_setSuperscript:(NSInteger)superScript;
+- (void)cc_setSuperscript:(NSInteger)superScript range:(NSRange)range;
+
 /// paragraphStyle
 - (void)cc_setAlignment:(NSTextAlignment)alignment;
 - (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range;

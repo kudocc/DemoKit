@@ -331,6 +331,7 @@
     }
 }
 
+// TODO:when the last run is a image, position is the end + 1. why???
 - (NSInteger)stringIndexAtPosition:(CGPoint)position {
     for (CCTextLine *line in _textLines) {
         if (CGRectContainsPoint(line.frame, position)) {

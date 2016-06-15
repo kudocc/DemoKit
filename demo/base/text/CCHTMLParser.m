@@ -104,7 +104,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                               CCHTMLTagNameS];
     });
     
-    if ([availableTagNames containsObject:tagName]) {
+//    if ([availableTagNames containsObject:tagName]) {
         CCHTMLTag *item = [[CCHTMLTag alloc] init];
         item.tagName = tagName;
         item.supportedAttributes = tagNameToAttributes[tagName];
@@ -114,9 +114,9 @@ static NSDictionary *htmlSpecialCharacterMap;
             item.placeholderEnd = placeholders[1];
         }
         return item;
-    }
-    NSLog(@"warning: we don't support the tag name:%@", tagName);
-    return nil;
+//    }
+//    NSLog(@"warning: we don't support the tag name:%@", tagName);
+//    return nil;
 }
 
 - (id)init {
