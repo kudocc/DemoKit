@@ -59,6 +59,7 @@
 		A7583C631CE31BFB007558CB /* demoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = A7583C621CE31BFB007558CB /* demoUITests.m */; };
 		A7699BCE1D0F9D9200250024 /* HTMLWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699BCD1D0F9D9200250024 /* HTMLWebViewController.m */; };
 		A7699BD11D0FA65F00250024 /* LineViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699BD01D0FA65F00250024 /* LineViewController.m */; };
+		A7699BD51D11369A00250024 /* CoreTextHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699BD41D11369A00250024 /* CoreTextHelper.m */; };
 		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
 		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
 		A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */; };
@@ -239,6 +240,8 @@
 		A7699BCF1D0FA65F00250024 /* LineViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LineViewController.h; sourceTree = "<group>"; };
 		A7699BD01D0FA65F00250024 /* LineViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LineViewController.m; sourceTree = "<group>"; };
 		A7699BD21D0FC86600250024 /* CCKitMacro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CCKitMacro.h; sourceTree = "<group>"; };
+		A7699BD31D11369A00250024 /* CoreTextHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoreTextHelper.h; sourceTree = "<group>"; };
+		A7699BD41D11369A00250024 /* CoreTextHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoreTextHelper.m; sourceTree = "<group>"; };
 		A773F6771CE810E40098F1C8 /* PathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathViewController.h; sourceTree = "<group>"; };
 		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
 		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
@@ -441,6 +444,8 @@
 		A7147EBE1CFD24900090FCCB /* coreText */ = {
 			isa = PBXGroup;
 			children = (
+				A7699BD31D11369A00250024 /* CoreTextHelper.h */,
+				A7699BD41D11369A00250024 /* CoreTextHelper.m */,
 				A7147EBF1CFD24B70090FCCB /* CoreTextViewController.h */,
 				A7147EC01CFD24B70090FCCB /* CoreTextViewController.m */,
 				A7147EC51CFD26070090FCCB /* SimpleChatViewController.h */,
@@ -1084,6 +1089,7 @@
 				A73B4F031D079383002E1A1A /* KVOPeople.m in Sources */,
 				A7147EB01CF9C0E10090FCCB /* NSObject+CCKit.m in Sources */,
 				A785B0871CE32EF800A7686D /* WKWebViewViewController.m in Sources */,
+				A7699BD51D11369A00250024 /* CoreTextHelper.m in Sources */,
 				A785B06F1CE32D9F00A7686D /* DataTaskBasicAuthViewController.m in Sources */,
 				A785B0981CE42F3200A7686D /* ShadowGradientsViewController.m in Sources */,
 			);

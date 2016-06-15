@@ -102,8 +102,34 @@
 - (void)cc_setSuperscript:(NSInteger)superScript range:(NSRange)range;
 
 /// paragraphStyle
-- (void)cc_setAlignment:(NSTextAlignment)alignment;
-- (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range;
+- (void)cc_setAlignment:(NSTextAlignment)alignment NS_AVAILABLE_IOS(6_0);
+- (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setFirstLineHeadIndent:(CGFloat)indent NS_AVAILABLE_IOS(6_0);
+- (void)cc_setFirstLineHeadIndent:(CGFloat)indent range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setHeadIndent:(CGFloat)indent NS_AVAILABLE_IOS(6_0);
+- (void)cc_setHeadIndent:(CGFloat)indent range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setTailIndent:(CGFloat)indent NS_AVAILABLE_IOS(6_0);
+- (void)cc_setTailIndent:(CGFloat)indent range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setLineBreakModel:(NSLineBreakMode)mode NS_AVAILABLE_IOS(6_0);
+- (void)cc_setLineBreakModel:(NSLineBreakMode)mode range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setLineSpacing:(CGFloat)spacing NS_AVAILABLE_IOS(6_0);
+- (void)cc_setLineSpacing:(CGFloat)spacing range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setParagraphSpacing:(CGFloat)spacing NS_AVAILABLE_IOS(6_0);
+- (void)cc_setParagraphSpacing:(CGFloat)spacing range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+- (void)cc_setParagraphSpacingBefore:(CGFloat)spacing NS_AVAILABLE_IOS(6_0);
+- (void)cc_setParagraphSpacingBefore:(CGFloat)spacing range:(NSRange)range NS_AVAILABLE_IOS(6_0);
+
+/// Core Text doesn't support automatic hyphenation, maybe we should use TextKit.
+/// check `CTParagraphStyleSpecifier` for more infomation.
+- (void)cc_setHyphenationFactor:(float)factor NS_AVAILABLE_IOS(6_0);
+- (void)cc_setHyphenationFactor:(float)factor range:(NSRange)range NS_AVAILABLE_IOS(6_0);
 
 /// attachment
 - (void)cc_setAttachmentWithContent:(id)content

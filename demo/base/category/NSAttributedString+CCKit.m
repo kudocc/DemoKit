@@ -293,23 +293,97 @@
 
 #pragma mark - ParagraphStyle
 
+#ifndef CCSetParagraphStyle
+
+#define CCSetParagraphStyle(property, value) {\
+    NSParagraphStyle *style = [self cc_paragraphStyleAtIndex:range.location];\
+    if (!style) {\
+        style = [NSParagraphStyle defaultParagraphStyle];\
+    }\
+    NSMutableParagraphStyle *mutableStyle = nil;\
+    if ([style isKindOfClass:[NSMutableParagraphStyle class]]) {\
+        mutableStyle = (NSMutableParagraphStyle *)style;\
+    } else {\
+        mutableStyle = [style mutableCopy];\
+    }\
+    if (mutableStyle) {\
+        mutableStyle.property = value;\
+        [self cc_addAttributes:@{NSParagraphStyleAttributeName: mutableStyle} range:range overrideOldAttribute:YES];\
+    }\
+}\
+
+#endif
+
 - (void)cc_setAlignment:(NSTextAlignment)alignment {
     [self cc_setAlignment:alignment range:NSMakeRange(0, self.length)];
 }
 
 - (void)cc_setAlignment:(NSTextAlignment)alignment range:(NSRange)range {
-    NSParagraphStyle *style = [self cc_paragraphStyleAtIndex:range.location];
-    if (!style) {
-        style = [NSParagraphStyle defaultParagraphStyle];
-    }
-    NSMutableParagraphStyle *mutableStyle = nil;
-    if (style && ![style isKindOfClass:[NSMutableParagraphStyle class]]) {
-        mutableStyle = [style mutableCopy];
-    }
-    if (mutableStyle) {
-        mutableStyle.alignment = alignment;
-        [self cc_addAttributes:@{NSParagraphStyleAttributeName: mutableStyle} range:range overrideOldAttribute:YES];
-    }
+    CCSetParagraphStyle(alignment, alignment)
+}
+
+- (void)cc_setFirstLineHeadIndent:(CGFloat)indent {
+    [self cc_setFirstLineHeadIndent:indent range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setFirstLineHeadIndent:(CGFloat)indent range:(NSRange)range {
+    CCSetParagraphStyle(firstLineHeadIndent, indent)
+}
+
+- (void)cc_setHeadIndent:(CGFloat)indent {
+    [self cc_setHeadIndent:indent range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setHeadIndent:(CGFloat)indent range:(NSRange)range {
+    CCSetParagraphStyle(headIndent, indent)
+}
+
+- (void)cc_setTailIndent:(CGFloat)indent {
+    [self cc_setTailIndent:indent range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setTailIndent:(CGFloat)indent range:(NSRange)range {
+    CCSetParagraphStyle(tailIndent, indent)
+}
+
+- (void)cc_setLineBreakModel:(NSLineBreakMode)mode {
+    [self cc_setLineBreakModel:mode range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setLineBreakModel:(NSLineBreakMode)mode range:(NSRange)range {
+    CCSetParagraphStyle(lineBreakMode, mode)
+}
+
+- (void)cc_setLineSpacing:(CGFloat)spacing {
+    [self cc_setLineSpacing:spacing range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setLineSpacing:(CGFloat)spacing range:(NSRange)range {
+    CCSetParagraphStyle(lineSpacing, spacing)
+}
+
+- (void)cc_setParagraphSpacing:(CGFloat)spacing {
+    [self cc_setParagraphSpacing:spacing range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setParagraphSpacing:(CGFloat)spacing range:(NSRange)range {
+    CCSetParagraphStyle(paragraphSpacing, spacing)
+}
+
+- (void)cc_setParagraphSpacingBefore:(CGFloat)spacing {
+    [self cc_setParagraphSpacingBefore:spacing range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setParagraphSpacingBefore:(CGFloat)spacing range:(NSRange)range {
+    CCSetParagraphStyle(paragraphSpacingBefore, spacing)
+}
+
+- (void)cc_setHyphenationFactor:(float)factor {
+    [self cc_setHyphenationFactor:factor range:NSMakeRange(0, self.length)];
+}
+
+- (void)cc_setHyphenationFactor:(float)factor range:(NSRange)range {
+    CCSetParagraphStyle(hyphenationFactor, factor)
 }
 
 #pragma mark - Attachment

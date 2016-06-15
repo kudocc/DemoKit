@@ -45,14 +45,17 @@
     CGFloat textHeight = 0;
     CFIndex lastLineIndex = numLines - 1;
     
+    CGPoint origins[numLines];
+    CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
     for(CFIndex index = 0; index < numLines; index++) {
         CGFloat ascent, descent, leading, width;
         CTLineRef line = (CTLineRef) CFArrayGetValueAtIndex(lines, index);
         width = CTLineGetTypographicBounds(line, &ascent,  &descent, &leading);
+        // when we set any indent related property of NSParagraphStyle, origin.x of line will be great than 0.
+        width += origins[index].x > 0 ? origins[index].x : 0;
         if (width > maxWidth) { maxWidth = width; }
         if (index == lastLineIndex) {
-            CGPoint lastLineOrigin;
-            CTFrameGetLineOrigins(frame, CFRangeMake(lastLineIndex, 1), &lastLineOrigin);
+            CGPoint lastLineOrigin = origins[index];
             textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent + leading;
         }
     }

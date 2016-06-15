@@ -26,6 +26,8 @@
 @property (nonatomic, readonly) NSArray<CCTextAttachment *> *attachments;
 @property (nonatomic, readonly) NSArray<NSValue *> *attachmentFrames;
 
++ (CGSize)measureFrame:(CTFrameRef)frame;
+
 - (void)drawInContext:(CGContextRef)context
                  view:(UIView *)view layer:(CALayer *)layer
              position:(CGPoint)position size:(CGSize)size

@@ -4,6 +4,12 @@
 <array>
 	<dict>
 		<key>content</key>
+		<string>。。。</string>
+		<key>left</key>
+		<true/>
+	</dict>
+	<dict>
+		<key>content</key>
 		<string>Hi, I&apos;m hungry!!! Let&apos;s go and have a good lunch!!! Do you have some adivce?</string>
 		<key>left</key>
 		<true/>
@@ -47,7 +53,7 @@
 	<dict>
 		<key>content</key>
 		<string>就吃那个xxxxxxxxx吧，很便宜，又好吃，就是要排队，你早点过去排队吧，
-        嘎嘎嘎A understand understand word</string>
+嘎嘎嘎A understand understand understand understand word</string>
 		<key>left</key>
 		<true/>
 	</dict>
