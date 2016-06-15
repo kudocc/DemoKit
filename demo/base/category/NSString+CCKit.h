@@ -17,18 +17,22 @@
 @interface NSString (Other)
 
 
-- (void)runUntilNoneSpaceFromLocation:(NSInteger)location
-                    noneSpaceLocation:(NSInteger *)noneSpaceLocation
-                             reachEnd:(BOOL *)end;
+- (void)cc_runUntilNoneSpaceFromLocation:(NSInteger)location noneSpaceLocation:(NSInteger *)noneSpaceLocation reachEnd:(BOOL *)end;
 
 /**
  @param walk the string until we meet a character in characterSet
  @param location walk from the location
  @param reachLocation if we find a character in characterSet, the location points to that character, else the location points to the last character + 1
  */
-- (void)runUntilCharacterSet:(NSCharacterSet *)characterSet
-                fromLocation:(NSInteger)location
-               reachLocation:(NSInteger *)reachLocation
-                    reachEnd:(BOOL *)end;
+- (void)cc_runUntilCharacterSet:(NSCharacterSet *)characterSet fromLocation:(NSInteger)location reachLocation:(NSInteger *)reachLocation reachEnd:(BOOL *)end;
+
+- (NSString *)cc_stringByRemovingCharactersInCharacterSet:(NSCharacterSet *)characterSet;
+
+@end
+
+
+@interface NSMutableString (CCKit)
+
+- (void)cc_deleteCharacterInCharacterSet:(NSCharacterSet *)characterSet;
 
 @end

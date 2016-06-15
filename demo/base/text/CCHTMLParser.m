@@ -341,6 +341,30 @@ static NSDictionary *htmlSpecialCharacterMap;
     return self;
 }
 
+- (void)appendString:(NSString *)string combineWhitespaceToMutableString:(NSMutableString *)mutableString {
+    // 换行符后不要whitespace，whitespace后不要whitespace，mutableString加入的第一个字符不能是whitespace
+    if ([mutableString length] > 0) {
+        unichar c = [mutableString characterAtIndex:mutableString.length-1];
+        if ([[NSCharacterSet whitespaceCharacterSet] characterIsMember:c] ||
+            [[NSCharacterSet newlineCharacterSet] characterIsMember:c]) {
+            NSInteger reach = 0;
+            [string cc_runUntilCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet] fromLocation:0 reachLocation:&reach reachEnd:NULL];
+            if (reach > 0) {
+                string = [string substringFromIndex:reach];
+            }
+        }
+    } else {
+        NSInteger reach = 0;
+        [string cc_runUntilCharacterSet:[[NSCharacterSet whitespaceCharacterSet] invertedSet] fromLocation:0 reachLocation:&reach reachEnd:NULL];
+        if (reach > 0) {
+            string = [string substringFromIndex:reach];
+        }
+    }
+    if (string.length > 0) {
+        [mutableString appendString:string];
+    }
+}
+
 - (void)parseHTMLString:(NSString *)htmlString {
     _stack = [[CCStack alloc] init];
     _rootTag = nil;
@@ -369,19 +393,22 @@ static NSDictionary *htmlSpecialCharacterMap;
             // 将开始标签之前的文本全部加入
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
-            text = [self replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:text];
-            [_mutableString appendString:text];
             searchPosition = tagRange.location + tagRange.length;
             
             CCHTMLTag *tagItem = [self constructTagWithTagStartString:tag];
             if (!tagItem) {
                 break;
             }
+            
+            text = [self replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:text];
+            [self appendString:text combineWhitespaceToMutableString:_mutableString];
+            
             tagItem.config = self.config;
             tagItem.effectRange = NSMakeRange([_mutableString length], 0);
             if (tagItem.placeholderBegin) {
                 [_mutableString appendString:tagItem.placeholderBegin];
             }
+            
             CCHTMLTag *parentTag = [_stack top];
             if (parentTag) {
                 tagItem.containerTag = parentTag;
@@ -408,7 +435,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             NSRange rangeText = NSMakeRange(searchPosition, RangeLength(searchPosition, tagRange.location-1));
             NSString *text = [htmlString substringWithRange:rangeText];
             text = [self replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:text];
-            [_mutableString appendString:text];
+            [self appendString:text combineWhitespaceToMutableString:_mutableString];
             if (top.placeholderEnd) {
                 [_mutableString appendString:top.placeholderEnd];
             }
@@ -417,8 +444,8 @@ static NSDictionary *htmlSpecialCharacterMap;
         }
     }
     
-    NSAssert([_stack isEmpty], @"html string not valid");
     if (![_stack isEmpty]) {
+        NSLog(@"error, tag stack is not empty after parse");
         _mutableString = nil;
         [_stack popAll];
     } else {
@@ -437,19 +464,21 @@ static NSDictionary *htmlSpecialCharacterMap;
 }
 
 - (NSString *)replaceHTMLSpecialCharacterAndTrimWhiltespaceNewlineCharater:(NSString *)string {
-    // remove newline character and combine two or more spaces into one.
+    // replace '\r' '\n' with space
+    NSArray *array = [string componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    string = [array componentsJoinedByString:@" "];
+    
+    // compose two or more whitespace into one
+    NSInteger i = 0;
     NSMutableString *mutableString = [NSMutableString string];
     NSCharacterSet *whitespaceCharSet = [NSCharacterSet whitespaceCharacterSet];
-    NSInteger i = 0;
     while (i < [string length]) {
         unichar c = [string characterAtIndex:i];
         if ([whitespaceCharSet characterIsMember:c]) {
             NSInteger reachLocation = 0;
-            [string runUntilCharacterSet:[whitespaceCharSet invertedSet] fromLocation:i reachLocation:&reachLocation reachEnd:NULL];
+            [string cc_runUntilCharacterSet:[whitespaceCharSet invertedSet] fromLocation:i reachLocation:&reachLocation reachEnd:NULL];
             [mutableString appendString:@" "];
             i = reachLocation;
-        } else if (c == '\n' || c == '\r') {
-            ++i;
         } else {
             [mutableString appendFormat:@"%C", c];
             ++i;
@@ -487,7 +516,7 @@ static NSDictionary *htmlSpecialCharacterMap;
     }
     
     NSInteger i = 0;
-    [tagString runUntilNoneSpaceFromLocation:0 noneSpaceLocation:&i reachEnd:NULL];
+    [tagString cc_runUntilNoneSpaceFromLocation:0 noneSpaceLocation:&i reachEnd:NULL];
     // 找到tag名称
     for (i = 0; i < [tagString length]; ++i) {
         unichar c = [tagString characterAtIndex:i];
@@ -500,7 +529,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             // 再向后找到第一个不为' '的字符停止
             NSInteger pos = i+1;
             BOOL end = NO;
-            [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
+            [tagString cc_runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
             if (!end) {
                 tagString = [tagString substringFromIndex:pos];
             } else {
@@ -543,7 +572,7 @@ static NSDictionary *htmlSpecialCharacterMap;
                 // 再向后找到第一个不为' '的字符停止
                 NSInteger pos = i+1;
                 BOOL end = NO;
-                [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
+                [tagString cc_runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&pos reachEnd:&end];
                 if (end) {
                     // error，'=' is the end char, no attribute value
                     return nil;
@@ -572,7 +601,7 @@ static NSDictionary *htmlSpecialCharacterMap;
             }
         }
         
-        [tagString runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&i reachEnd:NULL];
+        [tagString cc_runUntilNoneSpaceFromLocation:i+1 noneSpaceLocation:&i reachEnd:NULL];
         if (i < [tagString length]) {
             tagString = [tagString substringFromIndex:i];
         } else {
