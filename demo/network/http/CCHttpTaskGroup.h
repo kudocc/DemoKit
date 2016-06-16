@@ -82,7 +82,7 @@
 - (void)groupTaskWillStart:(CCHttpTaskGroup *)groupTask;
 - (void)groupTaskDidEnd:(CCHttpTaskGroup *)groupTask;
 
-/// invoke just before the task starts, this is the last chance for you to modify its properties
+/// invoke just before the task starts, this is the last chance for you to modify the property of task
 - (void)taskWillStart:(CCHttpTask *)task inGroup:(CCHttpTaskGroup *)groupTask;
 
 @end
