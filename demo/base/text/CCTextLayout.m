@@ -47,7 +47,7 @@
     
     CGPoint origins[numLines];
     CTFrameGetLineOrigins(frame, CFRangeMake(0, 0), origins);
-    for(CFIndex index = 0; index < numLines; index++) {
+    for (CFIndex index = 0; index < numLines; index++) {
         CGFloat ascent, descent, leading, width;
         CTLineRef line = (CTLineRef) CFArrayGetValueAtIndex(lines, index);
         width = CTLineGetTypographicBounds(line, &ascent,  &descent, &leading);
@@ -83,9 +83,31 @@
     CGRect boundsContent = CGRectMake(0, 0, _textContainer.contentSize.width, _textContainer.contentSize.height);
     CGRect textFrame = UIEdgeInsetsInsetRect(boundsContent, _textContainer.contentInsets);
     CGPathRef textConstraintPath = CGPathCreateWithRect(textFrame, NULL);
+    if ([_textContainer.exclusionPaths count] > 0) {
+        CGMutablePathRef mutablePath = CGPathCreateMutableCopyByTransformingPath(textConstraintPath, NULL);
+        CGPathRelease(textConstraintPath);
+        for (UIBezierPath *path in _textContainer.exclusionPaths) {
+            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _textContainer.contentSize.height);
+            transform = CGAffineTransformScale(transform, 1, -1);
+            CGPathRef pathRef = CGPathCreateMutableCopyByTransformingPath(path.CGPath, &transform);
+            CGPathAddPath(mutablePath, NULL, pathRef);
+            CGPathRelease(pathRef);
+        }
+        textConstraintPath = CGPathCreateCopy(mutablePath);
+        CGPathRelease(mutablePath);
+    }
+    
+    NSMutableDictionary *frameAttribute = [NSMutableDictionary dictionary];
+    if (!_textContainer.useEvenOddFillPathRule) {
+        frameAttribute[(__bridge NSString *)kCTFramePathFillRuleAttributeName] = @(kCTFramePathFillWindingNumber);
+    }
+    if (_textContainer.pathWidth > 0) {
+        frameAttribute[(__bridge NSString *)kCTFramePathWidthAttributeName] = @(_textContainer.pathWidth);
+    }
     
     _ctFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
-    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath, NULL);
+    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath, (__bridge CFDictionaryRef)frameAttribute);
+    CGPathRelease(textConstraintPath);
     
     CFArrayRef lines = CTFrameGetLines(_ctFrame);
     CFIndex count = CFArrayGetCount(lines);

@@ -32,4 +32,6 @@
 
 @property (nonatomic) CCTextLayout *textLayout;
 
+@property (nonatomic) NSArray<UIBezierPath *> *exclusionPaths;
+
 @end

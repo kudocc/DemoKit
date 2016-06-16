@@ -15,6 +15,7 @@
 #import "HTMLWebViewController.h"
 #import <CoreText/CoreText.h>
 #import "NSAttributedString+CCKit.h"
+#import "CoreTextExclusivePathViewController.h"
 
 @interface TestLayer : CALayer
 
@@ -147,14 +148,16 @@
                         @"Asynchonized Text",
                         @"CCLabel demo",
                         @"HTML parser",
-                        @"WebView represents the same HTML content of HTML parser"];
+                        @"WebView represents the same HTML content of HTML parser",
+                        @"Exclusive path"];
     
     self.arrayClass = @[[SimpleChatViewController class],
                         [CoreTextChatViewController class],
                         [ChatViewController class],
                         [CCLabelDemoViewController class],
                         [HTMLParserViewController class],
-                        [HTMLWebViewController class]];
+                        [HTMLWebViewController class],
+                        [CoreTextExclusivePathViewController class]];
     
 //    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
 //    v.backgroundColor = [UIColor greenColor];

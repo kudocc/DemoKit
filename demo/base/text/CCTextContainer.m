@@ -29,6 +29,7 @@ const CGFloat CCTextMaxContainerHeight = 9999.0;
             _contentSize.height = CCTextMaxContainerHeight;
         }
         _contentInsets = contentInsets;
+        _useEvenOddFillPathRule = YES;
         _maxNumberOfLines = 0;
     }
     return self;
@@ -37,6 +38,9 @@ const CGFloat CCTextMaxContainerHeight = 9999.0;
 - (id)copyWithZone:(NSZone *)zone {
     CCTextContainer *container = [[CCTextContainer alloc] initWithContentSize:self.contentSize contentInsets:self.contentInsets];
     container.maxNumberOfLines = self.maxNumberOfLines;
+    container.useEvenOddFillPathRule = self.useEvenOddFillPathRule;
+    container.exclusionPaths = [self.exclusionPaths copy];
+    container.pathWidth = self.pathWidth;
     return container;
 }
 

@@ -13,9 +13,10 @@
 #import "CCTextDefine.h"
 
 @implementation CCLabel {
+    BOOL _needUpdateLayout;
     NSMutableAttributedString *_innerAttributedString;
     CCTextContainer *_textContainer;
-    BOOL _needUpdateLayout;
+    
     NSDictionary *_textHighlightedAttributeSaved;
     CCTextHighlighted *_textHighlighted;
     NSRange _effectiveRangeTextHighlighted;
@@ -150,6 +151,18 @@
     [super setFrame:frame];
     if (!CGSizeEqualToSize(oldFrame.size, frame.size)) {
         _textContainer.contentSize = frame.size;
+        [self _setNeedsUpdateLayout];
+    }
+}
+
+- (void)setExclusionPaths:(NSArray<UIBezierPath *> *)exclusionPaths {
+    if (!exclusionPaths) {
+        exclusionPaths = @[];
+    }
+    if (![_exclusionPaths isEqualToArray:exclusionPaths]) {
+        _exclusionPaths = [exclusionPaths copy];
+        _textContainer.exclusionPaths = _exclusionPaths;
+        
         [self _setNeedsUpdateLayout];
     }
 }

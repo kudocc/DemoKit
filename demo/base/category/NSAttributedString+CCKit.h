@@ -126,7 +126,7 @@
 - (void)cc_setParagraphSpacingBefore:(CGFloat)spacing NS_AVAILABLE_IOS(6_0);
 - (void)cc_setParagraphSpacingBefore:(CGFloat)spacing range:(NSRange)range NS_AVAILABLE_IOS(6_0);
 
-/// Core Text doesn't support automatic hyphenation, maybe we should use TextKit.
+/// Core Text doesn't support automatic hyphenation, maybe you can use TextKit.
 /// check `CTParagraphStyleSpecifier` for more infomation.
 - (void)cc_setHyphenationFactor:(float)factor NS_AVAILABLE_IOS(6_0);
 - (void)cc_setHyphenationFactor:(float)factor range:(NSRange)range NS_AVAILABLE_IOS(6_0);
