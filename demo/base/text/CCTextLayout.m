@@ -56,7 +56,7 @@
         if (width > maxWidth) { maxWidth = width; }
         if (index == lastLineIndex) {
             CGPoint lastLineOrigin = origins[index];
-            textHeight =  CGRectGetMaxY(frameRect) - lastLineOrigin.y + descent + leading;
+            textHeight = CGRectGetHeight(frameRect) - (lastLineOrigin.y - descent - leading);
         }
     }
     return CGSizeMake(ceil(maxWidth), ceil(textHeight));
@@ -82,19 +82,14 @@
 - (void)layout {
     CGRect boundsContent = CGRectMake(0, 0, _textContainer.contentSize.width, _textContainer.contentSize.height);
     CGRect textFrame = UIEdgeInsetsInsetRect(boundsContent, _textContainer.contentInsets);
-    CGPathRef textConstraintPath = CGPathCreateWithRect(textFrame, NULL);
+    CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _textContainer.contentSize.height);
+    transform = CGAffineTransformScale(transform, 1, -1);
+    textFrame = CGRectApplyAffineTransform(textFrame, transform);
+    UIBezierPath *textConstraintPath = [UIBezierPath bezierPathWithRect:textFrame];
     if ([_textContainer.exclusionPaths count] > 0) {
-        CGMutablePathRef mutablePath = CGPathCreateMutableCopyByTransformingPath(textConstraintPath, NULL);
-        CGPathRelease(textConstraintPath);
         for (UIBezierPath *path in _textContainer.exclusionPaths) {
-            CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _textContainer.contentSize.height);
-            transform = CGAffineTransformScale(transform, 1, -1);
-            CGPathRef pathRef = CGPathCreateMutableCopyByTransformingPath(path.CGPath, &transform);
-            CGPathAddPath(mutablePath, NULL, pathRef);
-            CGPathRelease(pathRef);
+            [textConstraintPath appendPath:path];
         }
-        textConstraintPath = CGPathCreateCopy(mutablePath);
-        CGPathRelease(mutablePath);
     }
     
     NSMutableDictionary *frameAttribute = [NSMutableDictionary dictionary];
@@ -105,9 +100,9 @@
         frameAttribute[(__bridge NSString *)kCTFramePathWidthAttributeName] = @(_textContainer.pathWidth);
     }
     
+//    CGRect boundingBox = CGPathGetBoundingBox(textConstraintPath.CGPath);
     _ctFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
-    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath, (__bridge CFDictionaryRef)frameAttribute);
-    CGPathRelease(textConstraintPath);
+    _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath.CGPath, (__bridge CFDictionaryRef)frameAttribute);
     
     CFArrayRef lines = CTFrameGetLines(_ctFrame);
     CFIndex count = CFArrayGetCount(lines);
@@ -145,6 +140,7 @@
     
     CGSize size = [CCTextLayout measureFrame:_ctFrame];
     _textBounds = size;
+    _contentBounds = CGSizeMake(_textContainer.contentInsets.left + _textContainer.contentInsets.right + _textBounds.width, _textContainer.contentInsets.top + _textContainer.contentInsets.bottom + _textBounds.height);
 }
 
 - (void)drawInContext:(CGContextRef)context
@@ -152,9 +148,22 @@
              position:(CGPoint)position size:(CGSize)size
            isCanceled:(BOOL(^)(void))isCanceled {
     
+    if (context) {
+        CGContextSaveGState(context);
+        CGContextSetTextMatrix(context, CGAffineTransformIdentity);
+        CGContextTranslateCTM(context, 0, size.height);
+        CGContextScaleCTM(context, 1.0, -1.0);
+        
+        CGRect frame = CGRectMake(position.x, position.y, _contentBounds.width, _contentBounds.height);
+        CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+        CGContextStrokeRect(context, frame);
+        
+        CGContextRestoreGState(context);
+    }
+    
     // textContainer.contentInsets
     position.x += _textContainer.contentInsets.left;
-    position.y += _textContainer.contentInsets.top;
+    position.y += _textContainer.contentInsets.bottom;
     
     if (context) {
         [self drawTextInContext:context position:position size:size isCanceled:isCanceled];
@@ -201,6 +210,7 @@
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextTranslateCTM(context, 0, size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
+    
     for (CCTextLine *line in _textLines) {
         if (isCanceled && isCanceled()) {
             return;

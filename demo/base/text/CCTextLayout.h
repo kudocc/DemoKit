@@ -21,13 +21,20 @@
 
 @property (nonatomic, readonly) CCTextContainer *textContainer;
 @property (nonatomic, readonly) NSAttributedString *attributedString;
+/// the size match text
 @property (nonatomic, readonly) CGSize textBounds;
+/// the size match text and text container contentInsets
+@property (nonatomic, readonly) CGSize contentBounds;
 @property (nonatomic, readonly) NSArray<CCTextLine *> *textLines;
 @property (nonatomic, readonly) NSArray<CCTextAttachment *> *attachments;
 @property (nonatomic, readonly) NSArray<NSValue *> *attachmentFrames;
 
 + (CGSize)measureFrame:(CTFrameRef)frame;
 
+/**
+ @param position the postion to draw, it's in the Core Text coordinate
+ @param size size of context
+ */
 - (void)drawInContext:(CGContextRef)context
                  view:(UIView *)view layer:(CALayer *)layer
              position:(CGPoint)position size:(CGSize)size

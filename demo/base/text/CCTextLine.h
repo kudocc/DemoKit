@@ -16,9 +16,9 @@
 
 + (CCTextLine *)textLineWithPosition:(CGPoint)position line:(CTLineRef)line;
 
-/// line's origin in CTFrame
+/// line's origin in CTFrame content
 @property (nonatomic) CGPoint position;
-/// line's frame in CTFrame
+/// line's frame in CTFrame content
 @property (nonatomic) CGRect frame;
 
 @property (nonatomic) CTLineRef line;

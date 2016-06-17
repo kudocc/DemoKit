@@ -155,13 +155,36 @@
     }
 }
 
+- (BOOL)useEvenOddFillPathRule {
+    return _textContainer.useEvenOddFillPathRule;
+}
+
+- (void)setUseEvenOddFillPathRule:(BOOL)useEvenOddFillPathRule {
+    if (_textContainer.useEvenOddFillPathRule != useEvenOddFillPathRule) {
+        _textContainer.useEvenOddFillPathRule = useEvenOddFillPathRule;
+        
+        [self _setNeedsUpdateLayout];
+    }
+}
+
 - (void)setExclusionPaths:(NSArray<UIBezierPath *> *)exclusionPaths {
     if (!exclusionPaths) {
         exclusionPaths = @[];
     }
     if (![_exclusionPaths isEqualToArray:exclusionPaths]) {
         _exclusionPaths = [exclusionPaths copy];
-        _textContainer.exclusionPaths = _exclusionPaths;
+        
+        [self _setNeedsUpdateLayout];
+    }
+}
+
+- (CGFloat)pathWidth {
+    return _textContainer.pathWidth;
+}
+
+- (void)setPathWidth:(CGFloat)pathWidth {
+    if (_textContainer.pathWidth != pathWidth) {
+        _textContainer.pathWidth = pathWidth;
         
         [self _setNeedsUpdateLayout];
     }
@@ -196,18 +219,12 @@
     return [CCAsyncLayer class];
 }
 
-#pragma mark - Touch
-
 - (CGPoint)convertPoint:(CGPoint)point toTextLayout:(CCTextLayout *)layout {
-    CGSize size = self.layer.bounds.size;
     CGFloat offsetY = 0;
     if (_verticleAlignment == CCTextVerticalAlignmentCenter) {
-        offsetY = (size.height - layout.textBounds.height)/2;
+        offsetY = (self.height - layout.contentBounds.height)/2;
     } else if (_verticleAlignment == CCTextVerticalAlignmentBottom) {
-        offsetY = size.height - layout.textBounds.height;
-    }
-    if (offsetY < 0) {
-        offsetY = 0;
+        offsetY = self.height - layout.contentBounds.height;
     }
     point = CGPointMake(point.x, point.y - offsetY);
     CGAffineTransform transform = CGAffineTransformMakeTranslation(0, layout.textBounds.height);
@@ -215,6 +232,8 @@
     point = CGPointApplyAffineTransform(point, transform);
     return point;
 }
+
+#pragma mark - Touch
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
     [super touchesBegan:touches withEvent:event];
@@ -296,6 +315,7 @@
     BOOL needUpdateLayout = _needUpdateLayout;
     CCTextVerticalAlignment verticleAlignment = _verticleAlignment;
     NSAttributedString *attributedString = [_innerAttributedString copy];
+    CGSize labelSize = self.size;
     __block CCTextLayout *layout = _textLayout;
     
     CCAsyncLayerDisplayTask *task = [CCAsyncLayerDisplayTask new];
@@ -309,6 +329,16 @@
                 CALayer *layer = attachment.content;
                 [layer removeFromSuperlayer];
             }
+            
+            NSMutableArray *mutableArray = [NSMutableArray array];
+            for (UIBezierPath *path in _exclusionPaths) {
+                UIBezierPath *pathCopy = [path copy];
+                CGAffineTransform transform = CGAffineTransformMakeTranslation(0, labelSize.height);
+                transform = CGAffineTransformScale(transform, 1, -1);
+                [pathCopy applyTransform:transform];
+                [mutableArray addObject:pathCopy];
+            }
+            _textContainer.exclusionPaths = [mutableArray copy];
         }
     };
     
@@ -316,33 +346,24 @@
         if (needUpdateLayout) {
             layout = [CCTextLayout textLayoutWithContainer:_textContainer attributedText:attributedString];
         }
-        
         CGPoint position = CGPointZero;
         if (verticleAlignment == CCTextVerticalAlignmentCenter) {
-            position.y = (size.height - layout.textBounds.height)/2;
+            position.y = (labelSize.height - layout.contentBounds.height)/2;
         } else if (verticleAlignment == CCTextVerticalAlignmentTop) {
-            position.y = size.height - layout.textBounds.height;
+            position.y = labelSize.height - layout.contentBounds.height;
         }
-        if (position.y < 0) {
-            position.y = 0;
-        }
-        
         [layout drawInContext:context view:nil layer:nil position:position size:size isCanceled:isCancelled];
     };
     
     task.didDisplay = ^(CALayer *layer, BOOL finished) {
         CCMainThreadBlock(^() {
-            CGSize size = layer.bounds.size;
             CGPoint position = CGPointZero;
             if (verticleAlignment == CCTextVerticalAlignmentCenter) {
-                position.y = (size.height - layout.textBounds.height)/2;
-            } else if (verticleAlignment == CCTextVerticalAlignmentBottom) {
-                position.y = size.height - layout.textBounds.height;
+                position.y = (labelSize.height - layout.contentBounds.height)/2;
+            } else if (verticleAlignment == CCTextVerticalAlignmentTop) {
+                position.y = labelSize.height - layout.contentBounds.height;
             }
-            if (position.y < 0) {
-                position.y = 0;
-            }
-            [layout drawInContext:nil view:self layer:self.layer position:position size:size isCanceled:nil];
+            [layout drawInContext:nil view:self layer:self.layer position:position size:labelSize isCanceled:nil];
             
             NSMutableArray *attachViews = [NSMutableArray array];
             NSMutableArray *attachLayers = [NSMutableArray array];

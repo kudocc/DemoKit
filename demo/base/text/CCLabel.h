@@ -32,6 +32,10 @@
 
 @property (nonatomic) CCTextLayout *textLayout;
 
+@property (nonatomic) BOOL useEvenOddFillPathRule;
+
 @property (nonatomic) NSArray<UIBezierPath *> *exclusionPaths;
+
+@property (nonatomic) CGFloat pathWidth;
 
 @end
