@@ -16,15 +16,15 @@
 
 + (CCTextLine *)textLineWithPosition:(CGPoint)position line:(CTLineRef)line;
 
-/// line's origin in CTFrame content
+/// line's origin in CCTextContainer's coordinate, UP and Right
 @property (nonatomic) CGPoint position;
-/// line's frame in CTFrame content
+/// line's frame in CCTextContainer's coordinate, UP and Right
 @property (nonatomic) CGRect frame;
 
 @property (nonatomic) CTLineRef line;
 
 @property (nonatomic) NSArray<CCTextAttachment *> *attachments;
-/// array of attachment frame in Core Text Coordinate, zero position is the last line's leading position
+/// array of attachment frame in CCTextContainer's coordinate, UP and Right
 @property (nonatomic) NSArray<NSValue *> *attachmentFrames;
 /// array of CCTextRun
 @property (nonatomic) NSArray<CCTextRun *> *textRuns;
@@ -34,8 +34,6 @@
 
 @interface CCTextRun : NSObject
 
-/// position.x is x offset from its line's origin.x, position.y is its line's position.y
-@property (nonatomic) CGPoint position;
 /// text frame in Core Text Coordinate, zero position is the last line's leading position
 @property (nonatomic) CGRect frame;
 

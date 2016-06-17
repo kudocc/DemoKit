@@ -45,7 +45,6 @@
                 [attachmentFrames addObject:[NSValue valueWithCGRect:frame]];
             } else {
                 CCTextRun *textRun = [[CCTextRun alloc] init];
-                textRun.position = CGPointMake(runPosition.x+_position.x, _position.y);
                 textRun.frame = frame;
                 textRun.run = (__bridge_transfer id)run;
                 [textRuns addObject:textRun];

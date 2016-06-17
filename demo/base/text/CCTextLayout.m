@@ -100,7 +100,7 @@
         frameAttribute[(__bridge NSString *)kCTFramePathWidthAttributeName] = @(_textContainer.pathWidth);
     }
     
-//    CGRect boundingBox = CGPathGetBoundingBox(textConstraintPath.CGPath);
+    CGRect boundingBox = CGPathGetBoundingBox(textConstraintPath.CGPath);
     _ctFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
     _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath.CGPath, (__bridge CFDictionaryRef)frameAttribute);
     
@@ -120,7 +120,7 @@
         for (CFIndex i = count-1; i >= 0; --i) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
             CGPoint po = positions[i];
-            po = CGPointMake(po.x, po.y-bottom);
+            po = CGPointMake(po.x+boundingBox.origin.x, po.y-bottom+boundingBox.origin.y);
             CCTextLine *ccLine = [CCTextLine textLineWithPosition:po line:line];
             [mutableArray addObject:ccLine];
         }
@@ -162,8 +162,8 @@
     }
     
     // textContainer.contentInsets
-    position.x += _textContainer.contentInsets.left;
-    position.y += _textContainer.contentInsets.bottom;
+//    position.x += _textContainer.contentInsets.left;
+//    position.y += _textContainer.contentInsets.bottom;
     
     if (context) {
         [self drawTextInContext:context position:position size:size isCanceled:isCanceled];
