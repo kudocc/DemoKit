@@ -147,7 +147,7 @@
         }
         _ccLines = [mArray copy];
         
-        CGSize size = [CCTextLayout measureFrame:_frame];
+        CGSize size = [CCTextLayout textBoundsOfFrame:_frame];
 //        _contentWidth = ceil(size.width);
         _contentHeight = ceil(size.height);
         _cellHeight = _contentHeight + [self.class paddingY];

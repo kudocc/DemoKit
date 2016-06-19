@@ -11,6 +11,15 @@
 
 @implementation NSAttributedString (CCKit)
 
++ (instancetype)cc_attributedStringWithString:(NSString *)string {
+    return [self cc_attributedStringWithString:string attributes:nil];
+}
+
++ (instancetype)cc_attributedStringWithString:(NSString *)string attributes:(NSDictionary<NSString *,id> *)attributes {
+    return [[self.class alloc] initWithString:string attributes:attributes];
+}
+
+
 - (NSDictionary *)cc_attributes {
     return [self cc_attributesAtIndex:0];
 }

@@ -29,7 +29,7 @@
 @property (nonatomic, readonly) NSArray<CCTextAttachment *> *attachments;
 @property (nonatomic, readonly) NSArray<NSValue *> *attachmentFrames;
 
-+ (CGSize)measureFrame:(CTFrameRef)frame;
++ (CGSize)textBoundsOfFrame:(CTFrameRef)frame;
 
 /**
  @param position the postion to draw, it's in the Core Text coordinate

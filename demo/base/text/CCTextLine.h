@@ -14,10 +14,10 @@
 @class CCTextRun;
 @interface CCTextLine : NSObject
 
-+ (CCTextLine *)textLineWithPosition:(CGPoint)position line:(CTLineRef)line;
++ (CCTextLine *)textLineWithOrigin:(CGPoint)origin frame:(CGRect)frame line:(CTLineRef)line;
 
 /// line's origin in CCTextContainer's coordinate, UP and Right
-@property (nonatomic) CGPoint position;
+@property (nonatomic) CGPoint origin;
 /// line's frame in CCTextContainer's coordinate, UP and Right
 @property (nonatomic) CGRect frame;
 

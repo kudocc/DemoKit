@@ -24,18 +24,16 @@
 
 @property (nonatomic) NSAttributedString *attributedText;
 
+// from CCTextContainer
 @property (nonatomic) UIEdgeInsets contentInsets;
-
 @property (nonatomic) NSInteger numberOfLines;
+@property (nonatomic) NSAttributedString *truncationToken;
+@property (nonatomic) BOOL useEvenOddFillPathRule;
+@property (nonatomic) NSArray<UIBezierPath *> *exclusionPaths;
+@property (nonatomic) CGFloat pathWidth;
 
 @property (nonatomic) CCTextVerticalAlignment verticleAlignment;
 
 @property (nonatomic) CCTextLayout *textLayout;
-
-@property (nonatomic) BOOL useEvenOddFillPathRule;
-
-@property (nonatomic) NSArray<UIBezierPath *> *exclusionPaths;
-
-@property (nonatomic) CGFloat pathWidth;
 
 @end

@@ -61,8 +61,6 @@
 - (void)extractValueFromTextLayout:(CCTextLayout *)textLayout {
     self.attributedText = textLayout.attributedString;
     _textContainer = [textLayout.textContainer copy];
-    _contentInsets = _textContainer.contentInsets;
-    _numberOfLines = _textContainer.maxNumberOfLines;
     self.size = _textContainer.contentSize;
 }
 
@@ -117,20 +115,6 @@
     [self _setNeedsUpdateLayout];
 }
 
-- (void)setContentInsets:(UIEdgeInsets)contentInsets {
-    if (UIEdgeInsetsEqualToEdgeInsets(_contentInsets, contentInsets)) return;
-    _textContainer.contentInsets = contentInsets;
-    
-    [self _setNeedsUpdateLayout];
-}
-
-- (void)setNumberOfLines:(NSInteger)numberOfLines {
-    if (_numberOfLines == numberOfLines) return;
-    _numberOfLines = numberOfLines;
-    
-    [self _setNeedsUpdateLayout];
-}
-
 - (void)setVerticleAlignment:(CCTextVerticalAlignment)verticleAlignment {
     if (_verticleAlignment == verticleAlignment) return;
     _verticleAlignment = verticleAlignment;
@@ -153,6 +137,41 @@
         _textContainer.contentSize = frame.size;
         [self _setNeedsUpdateLayout];
     }
+}
+
+#pragma mark - from CCTextContainer
+
+- (UIEdgeInsets)contentInsets {
+    return _textContainer.contentInsets;
+}
+
+- (void)setContentInsets:(UIEdgeInsets)contentInsets {
+    if (UIEdgeInsetsEqualToEdgeInsets(_textContainer.contentInsets, contentInsets)) return;
+    _textContainer.contentInsets = contentInsets;
+    
+    [self _setNeedsUpdateLayout];
+}
+
+- (NSInteger)numberOfLines {
+    return _textContainer.maxNumberOfLines;
+}
+
+- (void)setNumberOfLines:(NSInteger)numberOfLines {
+    if (_textContainer.maxNumberOfLines == numberOfLines) return;
+    _textContainer.maxNumberOfLines = numberOfLines;
+    
+    [self _setNeedsUpdateLayout];
+}
+
+- (NSAttributedString *)truncationToken {
+    return _textContainer.truncationToken;
+}
+
+- (void)setTruncateToken:(NSAttributedString *)truncateToken {
+    if ([_textContainer.truncationToken isEqualToAttributedString:truncateToken]) return;
+    _textContainer.truncationToken = truncateToken;
+    
+    [self _setNeedsUpdateLayout];
 }
 
 - (BOOL)useEvenOddFillPathRule {

@@ -51,13 +51,14 @@
     CTFrameRef _frame;
     CFArrayRef _lines;
     NSAttributedString *_attributedString;
+    
+    CTLineRef _lineTruncatedString;
 }
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        
-        NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+        NSMutableAttributedString *attriString = [NSMutableAttributedString cc_attributedStringWithString:@"a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
         [attriString addAttribute:NSForegroundColorAttributeName value:[UIColor redColor] range:NSMakeRange(0, 10)];
         [attriString cc_setColor:[UIColor blueColor] range:NSMakeRange(0, 3)];
         [attriString cc_setAlignment:NSTextAlignmentRight];
@@ -65,9 +66,18 @@
         
         _framesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
         CGRect bounds = CGRectMake(0, 0, frame.size.width, frame.size.height);
-        CGPathRef path = CGPathCreateWithRect(bounds, NULL);
+#if 0
+        UIEdgeInsets edge = UIEdgeInsetsMake(10, 0, 20, 0);
+        CGRect frame = UIEdgeInsetsInsetRect(bounds, edge);
+#else
+        CGRect frame = bounds;
+#endif
+        CGPathRef path = CGPathCreateWithRect(frame, NULL);
         _frame = CTFramesetterCreateFrame(_framesetter, CFRangeMake(0, [_attributedString length]), path, NULL);
         CGPathRelease(path);
+        
+        NSAttributedString *truncatedToken = [NSAttributedString cc_attributedStringWithString:@"©©©"];
+        _lineTruncatedString = CTLineCreateWithAttributedString((__bridge CFTypeRef)truncatedToken);
     }
     return self;
 }
@@ -75,24 +85,14 @@
 - (void)drawRect:(CGRect)rect {
     CGContextRef context = UIGraphicsGetCurrentContext();
     
-    CGAffineTransform transform = CGContextGetCTM(context);
-    NSLog(@"%@", NSStringFromCGAffineTransform(transform));
-    
     CGContextSetTextMatrix(context, CGAffineTransformIdentity);
     CGContextTranslateCTM(context, 0, self.bounds.size.height);
     CGContextScaleCTM(context, 1.0, -1.0);
     
-    transform = CGContextGetCTM(context);
-    NSLog(@"%@", NSStringFromCGAffineTransform(transform));
+//    CTFrameDraw(_frame, context);
+//    CFRange range = CTFrameGetVisibleStringRange(_frame);
     
-    CGContextMoveToPoint(context, 0, 0);
-    CGContextAddLineToPoint(context, 10, 10);
-    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
-    CGContextStrokePath(context);
-    
-    CGContextSetTextPosition(context, 10, 10);
     CFArrayRef lines = CTFrameGetLines(_frame);
-    
     CFIndex lineCount = CFArrayGetCount(lines);
     CGPoint posLines[lineCount];
     CTFrameGetLineOrigins(_frame, CFRangeMake(0, 0), posLines);
@@ -100,12 +100,18 @@
     {
         for (CFIndex lineIndex = 0; lineIndex < lineCount; ++lineIndex) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, lineIndex);
+            
             CGPoint pos = posLines[lineIndex];
             NSLog(@"%@", NSStringFromCGPoint(pos));
             CGContextSetTextPosition(context, pos.x, pos.y);
+            
+            double lineWidth = CTLineGetTypographicBounds(line, NULL, NULL, NULL)-CTLineGetTrailingWhitespaceWidth(line);
+            CTLineRef lineTrancated = CTLineCreateTruncatedLine(line, floor(lineWidth)-1, kCTLineTruncationEnd, _lineTruncatedString);
+#if 1
+            CTLineDraw(lineTrancated, context);
+#else
             CTLineDraw(line, context);
-            
-            
+#endif
 //            CFArrayRef runs = CTLineGetGlyphRuns(line);
 //            if (CFArrayGetCount(runs) > 1) {
 //                for (CFIndex i = 0; i < CFArrayGetCount(runs); ++i) {
@@ -117,6 +123,12 @@
         }
         
     }
+    
+    
+    CGPathRef path = CTFrameGetPath(_frame);
+    CGContextAddPath(context, path);
+    CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
+    CGContextStrokePath(context);
 }
 @end
 
@@ -159,9 +171,20 @@
                         [HTMLWebViewController class],
                         [CoreTextExclusivePathViewController class]];
     
-//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-//    v.backgroundColor = [UIColor greenColor];
-//    [self.view addSubview:v];
+    
+    
+    
+    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+    v.backgroundColor = [UIColor greenColor];
+    [self.view addSubview:v];
+    
+//    NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
+// If the text is exceed the line count which numberOfLines property indicates, the truncated token takes the place at the end of last line.
+//    UILabel *label = [[UILabel alloc] init];
+//    [self.view addSubview:label];
+//    label.frame = v.frame;
+//    label.attributedText = attriString;
+//    label.numberOfLines = 2;
 }
 
 //- (void)repeate:(id)timer {

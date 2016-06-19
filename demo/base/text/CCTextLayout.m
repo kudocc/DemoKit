@@ -10,6 +10,7 @@
 #import "CCTextDefine.h"
 #import "UIView+CCKit.h"
 #import "CCKitMacro.h"
+#import "NSAttributedString+CCKit.h"
 
 @implementation CCTextLayout {
     CTFramesetterRef _ctFramesetter;
@@ -36,7 +37,7 @@
     return textLayout;
 }
 
-+ (CGSize)measureFrame:(CTFrameRef)frame {
++ (CGSize)textBoundsOfFrame:(CTFrameRef)frame {
     CGPathRef framePath = CTFrameGetPath(frame);
     CGRect frameRect = CGPathGetBoundingBox(framePath);
     CFArrayRef lines = CTFrameGetLines(frame);
@@ -62,6 +63,22 @@
     return CGSizeMake(ceil(maxWidth), ceil(textHeight));
 }
 
++ (CGSize)textBoundsOfLines:(NSArray<CCTextLine *> *)lines {
+    CGFloat maxWidth = 0;
+    CGFloat textHeight = 0;
+    if (lines.count > 0) {
+        CGRect frameFirstLine = lines.firstObject.frame;
+        CGRect frameLastLine = lines.lastObject.frame;
+        textHeight = CGRectGetMaxY(frameFirstLine)-CGRectGetMinY(frameLastLine);
+        for (CCTextLine *line in lines) {
+            if (CGRectGetMaxX(line.frame) > maxWidth) {
+                maxWidth = CGRectGetMaxX(line.frame);
+            }
+        }
+    }
+    return CGSizeMake(ceil(maxWidth), ceil(textHeight));
+}
+
 - (void)dealloc {
     if (_ctFramesetter) {
         CFRelease(_ctFramesetter);
@@ -80,11 +97,13 @@
 }
 
 - (void)layout {
-    CGRect boundsContent = CGRectMake(0, 0, _textContainer.contentSize.width, _textContainer.contentSize.height);
-    CGRect textFrame = UIEdgeInsetsInsetRect(boundsContent, _textContainer.contentInsets);
-    CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _textContainer.contentSize.height);
-    transform = CGAffineTransformScale(transform, 1, -1);
-    textFrame = CGRectApplyAffineTransform(textFrame, transform);
+    CGRect textFrame = CGRectMake(0, 0, _textContainer.contentSize.width, _textContainer.contentSize.height);
+    if (!UIEdgeInsetsEqualToEdgeInsets(_textContainer.contentInsets, UIEdgeInsetsZero)) {
+        textFrame = UIEdgeInsetsInsetRect(textFrame, _textContainer.contentInsets);
+        CGAffineTransform transform = CGAffineTransformMakeTranslation(0, _textContainer.contentSize.height);
+        transform = CGAffineTransformScale(transform, 1, -1);
+        textFrame = CGRectApplyAffineTransform(textFrame, transform);
+    }
     UIBezierPath *textConstraintPath = [UIBezierPath bezierPathWithRect:textFrame];
     if ([_textContainer.exclusionPaths count] > 0) {
         for (UIBezierPath *path in _textContainer.exclusionPaths) {
@@ -106,28 +125,62 @@
     
     CFArrayRef lines = CTFrameGetLines(_ctFrame);
     CFIndex count = CFArrayGetCount(lines);
+    NSMutableArray *mutableLines = [NSMutableArray array];
+    BOOL needTruncate = NO;
     if (count > 0) {
         CGPoint positions[count];
         CTFrameGetLineOrigins(_ctFrame, CFRangeMake(0, 0), positions);
         
-        CTLineRef bottomLine = CFArrayGetValueAtIndex(lines, count-1);
-        CGPoint bottomPosition = positions[count-1];
+        NSInteger bottomLineIndex = count-1;
+        if (_textContainer.maxNumberOfLines != 0 && count > _textContainer.maxNumberOfLines) {
+            needTruncate = YES;
+            bottomLineIndex = _textContainer.maxNumberOfLines-1;
+        }
+        
+        CTLineRef bottomLine = CFArrayGetValueAtIndex(lines, bottomLineIndex);
+        CGPoint bottomPosition = positions[bottomLineIndex];
         CGFloat bottomLineDescent, bottomLineLeading;
         CTLineGetTypographicBounds(bottomLine, NULL, &bottomLineDescent, &bottomLineLeading);
         CGFloat bottom = bottomPosition.y - bottomLineDescent - bottomLineLeading;
         
-        NSMutableArray *mutableArray = [NSMutableArray array];
-        for (CFIndex i = count-1; i >= 0; --i) {
+        for (CFIndex i = 0; i <= bottomLineIndex; ++i) {
             CTLineRef line = CFArrayGetValueAtIndex(lines, i);
-            CGPoint po = positions[i];
-            po = CGPointMake(po.x+boundingBox.origin.x, po.y-bottom+boundingBox.origin.y);
-            CCTextLine *ccLine = [CCTextLine textLineWithPosition:po line:line];
-            [mutableArray addObject:ccLine];
+            CGPoint origin = positions[i];
+            origin = CGPointMake(origin.x+boundingBox.origin.x, origin.y-bottom+boundingBox.origin.y);
+            CGFloat lineAscent = 0, lineDescent = 0, lineLeading = 0;
+            CGFloat width = CTLineGetTypographicBounds(line, &lineAscent, &lineDescent, &lineLeading);
+            CGRect frame = CGRectMake(origin.x, origin.y-lineDescent-lineLeading, width, lineAscent+lineDescent+lineLeading);
+            CCTextLine *ccLine = [CCTextLine textLineWithOrigin:origin frame:frame line:line];
+            [mutableLines addObject:ccLine];
         }
-        _textLines = [mutableArray copy];
-    } else {
-        _textLines = nil;
     }
+    
+    // check if the CTFrame contain all the text
+    if (!needTruncate) {
+        CFRange visibleRange = CTFrameGetVisibleStringRange(_ctFrame);
+        if (visibleRange.length < _attributedString.length) {
+            needTruncate = YES;
+        }
+    }
+    
+    
+    if (needTruncate && [mutableLines count] > 0) {
+        NSAttributedString *truncationToken = _textContainer.truncationToken ?: [NSAttributedString cc_attributedStringWithString:@"..."];
+        CCTextLine *textLine = [mutableLines lastObject];
+        double lineWidth = CTLineGetTypographicBounds(textLine.line, NULL, NULL, NULL) - CTLineGetTrailingWhitespaceWidth(textLine.line);
+        CTLineRef lineTruncationToken = CTLineCreateWithAttributedString((__bridge CFTypeRef)truncationToken);
+        CTLineRef lineAfterTruncation = CTLineCreateTruncatedLine(textLine.line, lineWidth-1, kCTLineTruncationEnd, lineTruncationToken);
+        if (lineAfterTruncation) {
+            CGPoint origin = textLine.origin;
+            CGFloat lineAscent = 0, lineDescent = 0, lineLeading = 0;
+            CGFloat width = CTLineGetTypographicBounds(lineAfterTruncation, &lineAscent, &lineDescent, &lineLeading);
+            CGRect frame = CGRectMake(origin.x, origin.y-lineDescent-lineLeading, width, lineAscent+lineDescent+lineLeading);
+            CCTextLine *textLine = [CCTextLine textLineWithOrigin:origin frame:frame line:lineAfterTruncation];
+            [mutableLines removeObjectAtIndex:mutableLines.count-1];
+            [mutableLines addObject:textLine];
+        }
+    }
+    _textLines = [mutableLines count] > 0 ? [mutableLines copy] : nil;
     
     NSMutableArray *attachments = [NSMutableArray array];
     NSMutableArray *attachmentFrames = [NSMutableArray array];
@@ -138,7 +191,7 @@
     _attachments = [attachments copy];
     _attachmentFrames = [attachmentFrames copy];
     
-    CGSize size = [CCTextLayout measureFrame:_ctFrame];
+    CGSize size = [CCTextLayout textBoundsOfLines:_textLines];
     _textBounds = size;
     _contentBounds = CGSizeMake(_textContainer.contentInsets.left + _textContainer.contentInsets.right + _textBounds.width, _textContainer.contentInsets.top + _textContainer.contentInsets.bottom + _textBounds.height);
 }
@@ -233,9 +286,9 @@
             }
         }
         
-        CGPoint linePosition = line.position;
-        linePosition = CGPointMake(linePosition.x + position.x, line.position.y + position.y);
-        CGContextSetTextPosition(context, linePosition.x, linePosition.y);
+        CGPoint lineOrigin = line.origin;
+        lineOrigin = CGPointMake(lineOrigin.x + position.x, lineOrigin.y + position.y);
+        CGContextSetTextPosition(context, lineOrigin.x, lineOrigin.y);
         // draw text run
         for (CCTextRun *textRun in line.textRuns) {
             CGRect frame = textRun.frame;
@@ -370,7 +423,7 @@
 - (NSInteger)stringIndexAtPosition:(CGPoint)position {
     for (CCTextLine *line in _textLines) {
         if (CGRectContainsPoint(line.frame, position)) {
-            CGPoint positionInLine = CGPointMake(position.x-line.position.x, position.y-line.position.y);
+            CGPoint positionInLine = CGPointMake(position.x-line.origin.x, position.y-line.origin.y);
             CFIndex position = CTLineGetStringIndexForPosition(line.line, positionInLine);
             if (position == kCFNotFound) {
                 return NSNotFound;

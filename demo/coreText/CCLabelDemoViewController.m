@@ -80,6 +80,9 @@
     label.layer.borderWidth = PixelToPoint(1);
     label.attributedText = mutableAttrString;
     label.asyncDisplay = NO;
+    label.truncationToken = [NSAttributedString cc_attributedStringWithString:@"øøø"];
+    label.numberOfLines = 4;
+    label.verticleAlignment = CCTextVerticalAlignmentCenter;
     [self.view addSubview:label];
     
     viewDrag = [[UIView alloc] initWithFrame:CGRectMake(label.right-10, label.bottom-10, 20, 20)];

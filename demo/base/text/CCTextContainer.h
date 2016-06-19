@@ -22,5 +22,6 @@
 
 /// default is 0, no limit
 @property (nonatomic) NSInteger maxNumberOfLines;
+@property (nonatomic) NSAttributedString *truncationToken;
 
 @end

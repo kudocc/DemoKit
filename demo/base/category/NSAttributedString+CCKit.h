@@ -12,6 +12,9 @@
 
 @interface NSAttributedString (CCKit)
 
++ (instancetype)cc_attributedStringWithString:(NSString *)string;
++ (instancetype)cc_attributedStringWithString:(NSString *)string attributes:(NSDictionary<NSString *,id> *)attributes;
+
 /// get the attributes of the first character
 - (NSDictionary *)cc_attributes;
 - (NSDictionary *)cc_attributesAtIndex:(NSUInteger)index;
