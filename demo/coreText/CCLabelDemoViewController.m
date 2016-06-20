@@ -81,7 +81,6 @@
     label.attributedText = mutableAttrString;
     label.asyncDisplay = NO;
     label.truncationToken = [NSAttributedString cc_attributedStringWithString:@"øøø"];
-    label.numberOfLines = 4;
     label.verticleAlignment = CCTextVerticalAlignmentCenter;
     [self.view addSubview:label];
     

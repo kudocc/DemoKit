@@ -167,9 +167,9 @@
     return _textContainer.truncationToken;
 }
 
-- (void)setTruncateToken:(NSAttributedString *)truncateToken {
-    if ([_textContainer.truncationToken isEqualToAttributedString:truncateToken]) return;
-    _textContainer.truncationToken = truncateToken;
+- (void)setTruncationToken:(NSAttributedString *)truncationToken {
+    if ([_textContainer.truncationToken isEqualToAttributedString:truncationToken]) return;
+    _textContainer.truncationToken = truncationToken;
     
     [self _setNeedsUpdateLayout];
 }
