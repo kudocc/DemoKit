@@ -48,7 +48,7 @@
     [self.view addSubview:_label];
     _label.asyncDisplay = NO;
     _label.verticleAlignment = CCTextVerticalAlignmentTop;
-    _label.contentInsets = UIEdgeInsetsMake(0, 20, 10, 0);
+    _label.contentInsets = UIEdgeInsetsMake(10, 0, 10, 0);
     
     _ellipseView = [[EllipseView alloc] initWithFrame:CGRectMake(0, 0, 100, 100)];
     [self.view addSubview:_ellipseView];

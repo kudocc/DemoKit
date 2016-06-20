@@ -123,12 +123,15 @@
     _ctFramesetter = CTFramesetterCreateWithAttributedString((__bridge CFAttributedStringRef)_attributedString);
     _ctFrame = CTFramesetterCreateFrame(_ctFramesetter, CFRangeMake(0, 0), textConstraintPath.CGPath, (__bridge CFDictionaryRef)frameAttribute);
     
+    // if the path(textConstraintPath.CGPath) can't wrap all the content of attributed text, CTFrameGetLines just returns the visiable lines
     CFArrayRef lines = CTFrameGetLines(_ctFrame);
     CFIndex count = CFArrayGetCount(lines);
     NSMutableArray *mutableLines = [NSMutableArray array];
     BOOL needTruncate = NO;
     if (count > 0) {
         CGPoint positions[count];
+        // the position is the relative position to the path(the path of CTFramesetterCreateFrame's third paramter)'s bounding box
+        // position at 0 is the topest line
         CTFrameGetLineOrigins(_ctFrame, CFRangeMake(0, 0), positions);
         
         NSInteger bottomLineIndex = count-1;
@@ -208,15 +211,12 @@
         CGContextScaleCTM(context, 1.0, -1.0);
         
         CGRect frame = CGRectMake(position.x, position.y, _contentBounds.width, _contentBounds.height);
+        CGContextSetLineWidth(context, 1);
         CGContextSetStrokeColorWithColor(context, [UIColor redColor].CGColor);
         CGContextStrokeRect(context, frame);
         
         CGContextRestoreGState(context);
     }
-    
-    // textContainer.contentInsets
-//    position.x += _textContainer.contentInsets.left;
-//    position.y += _textContainer.contentInsets.bottom;
     
     if (context) {
         [self drawTextInContext:context position:position size:size isCanceled:isCanceled];

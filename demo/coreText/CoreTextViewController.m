@@ -171,12 +171,9 @@
                         [HTMLWebViewController class],
                         [CoreTextExclusivePathViewController class]];
     
-    
-    
-    
-    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
-    v.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:v];
+//    CoreView *v = [[CoreView alloc] initWithFrame:CGRectMake(0, 84, 100, 100)];
+//    v.backgroundColor = [UIColor greenColor];
+//    [self.view addSubview:v];
     
 //    NSMutableAttributedString *attriString = [[NSMutableAttributedString alloc] initWithString:@"just test a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z a b c d e f g h i j k l m n o p q r s t u v w x y z" attributes:@{NSForegroundColorAttributeName:[UIColor blackColor], NSFontAttributeName:[UIFont systemFontOfSize:14]}];
 // If the text is exceed the line count which numberOfLines property indicates, the truncated token takes the place at the end of last line.
