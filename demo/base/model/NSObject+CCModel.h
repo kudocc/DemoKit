@@ -47,26 +47,27 @@
 - (NSData *)ccmodel_jsonObjectData;
 - (NSString *)ccmodel_jsonObjectString;
 
-/// NSCopying
+/// NSCopying protocol
 - (id)ccmodel_copyWithZone:(NSZone *)zone;
 
-/// NSCoding
+/// NSCoding protocol
 - (id)ccmodel_initWithCoder:(NSCoder *)coder;
 - (void)ccmodel_encodeWithCoder:(NSCoder *)coder;
 
-/// NSObject
+/// NSObject protocol
 /**
  Compare all the properties, only if all the properties are equal it would return YES, or returns NO.
  
  if you don't implement `propertyNameCalculateHash` method and the two object is not the same object, we just return NO.
  */
 - (BOOL)ccmodel_isEqual:(id)object;
+
 /**
  In Apple's documentation, it talks about the `hash` method in NSObject protocol :
  "If two objects are equal (as determined by the isEqual: method), they must have the same hash value. This last point is particularly important if you define hash in a subclass and intend to put instances of that subclass into a collection.
  If a mutable object is added to a collection that uses hash values to determine the object’s position in the collection, the value returned by the hash method of the object must not change while the object is in the collection. Therefore, either the hash method must not rely on any of the object’s internal state information or you must make sure the object’s internal state information does not change while the object is in the collection. Thus, for example, a mutable dictionary can be put in a hash table but you must not change it while it is in there. (Note that it can be difficult to know whether or not a given object is in a collection.)"
  
- We don't know if you would add the object into a collection, if so we also don't know which property won't be changed so it can be used to calculate the hash. Therefore we recommand you to implement `+ (NSSet<NSString *> *)propertyNameCalculateHash` method, so we can use the returned `NSSet` to calculate the hash or we just use the address of the Model as the hash.
+ As we don't know if you would add the object into a collection, if you do intend to add it in a collection, we also don't know which property won't be changed so it can be used to calculate the hash. Therefore we recommand you to implement `+ (NSSet<NSString *> *)propertyNameCalculateHash` method, so we can use the returned `NSSet` to calculate the hash, OR we just use the address of the Model as the hash.
  */
 - (NSUInteger)ccmodel_hash;
 

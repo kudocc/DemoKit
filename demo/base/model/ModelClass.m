@@ -355,12 +355,12 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
             // custom getter
             property.encodingType |= CCEncodingTypePropertyCustomGetter;
             NSString *value = [NSString stringWithUTF8String:attribute.value];
-            property.getterName = value;
+            property.getter = NSSelectorFromString(value);
         } else if ([attributeName isEqualToString:@"S"]) {
             // custom setter
             property.encodingType |= CCEncodingTypePropertyCustomSetter;
             NSString *value = [NSString stringWithUTF8String:attribute.value];
-            property.setterName = value;
+            property.setter = NSSelectorFromString(value);
         } else if ([attributeName isEqualToString:@"D"]) {
             // dynamic
             property.encodingType |= CCEncodingTypePropertyDynamic;
@@ -373,35 +373,20 @@ BOOL isContainerTypeForObjectType(CCObjectType type) {
         free(attributeList);
     }
     
-    if (!property.getterName && [property.propertyName length] > 0) {
-        NSString *getterName = property.propertyName;
-        property.getterName = getterName;
+    if (!property.getter && [property.propertyName length] > 0) {
+        property.getter = NSSelectorFromString(property.propertyName);
     }
     
-    if (!property.setterName &&
+    if (!property.setter &&
         [property.propertyName length] > 0 &&
         (property.encodingType & CCEncodingTypePropertyReadonly) != CCEncodingTypePropertyReadonly) {
         NSString *first = [[property.propertyName substringToIndex:1] uppercaseString];
         NSString *left = [property.propertyName substringFromIndex:1];
         NSString *setterName = [NSString stringWithFormat:@"set%@%@:", first, left];
-        property.setterName = setterName;
+        property.setter = NSSelectorFromString(setterName);
     }
     
     return property;
-}
-
-- (SEL)getter {
-    if (!_getterName) {
-        return nil;
-    }
-    return NSSelectorFromString(_getterName);
-}
-
-- (SEL)setter {
-    if (!_setterName) {
-        return nil;
-    }
-    return NSSelectorFromString(_setterName);
 }
 
 @end

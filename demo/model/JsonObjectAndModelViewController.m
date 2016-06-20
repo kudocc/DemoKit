@@ -126,10 +126,19 @@
 @property NSDictionary *people;
 
 @property NSURL *homePageURL;
+
+@property NSInteger studentCount;
+@property NSInteger teacherCount;
+
 @end
 @implementation School
 
 #pragma mark - CCModel
+
++ (NSDictionary<NSString *, NSString *> *)propertyNameToJsonKeyMap {
+    return @{@"studentCount":@"people.student.count",
+             @"teacherCount":@"people.teacher.count"};
+}
 
 + (NSDictionary<NSString *, ContainerTypeObject *> *)propertyNameToContainerTypeObjectMap {
     ContainerTypeObject *countObj = [[ContainerTypeObject alloc] initWithClass:[NSNumber class]];
@@ -290,7 +299,7 @@
         {\
             \"student\":\
                 {\
-                    \"count\":2,\
+                    \"count\":1112,\
                     \"value\":\
                         [\
                             {\"name\":\"kudo\", \"age\":17, \"g\":3},\
@@ -387,6 +396,7 @@
     
     [self testNestedDictionary];
     
+    // test property to json key path
     [self testPeople];
     
     [self testNSCopying_NSCoding];

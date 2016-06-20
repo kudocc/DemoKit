@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+CCModel.h"
+#import "NSDictionary+CCKit.h"
 
 @interface NSObject (CCModel_Util)
 
@@ -152,7 +153,7 @@
         }
         CCEncodingType encodingType = property.encodingType;
         if (isNumberTypeOfEncodingType(encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
             if (number) {
                 [mutableString appendFormat:@"%@:%@\n", property.propertyName, number];
             }
@@ -161,12 +162,12 @@
                 ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
                 NSAssert(containerTypeObject, @"container need description");
                 if (!containerTypeObject) continue;
-                id jsonObj = [self getContainerProperty:property withContainerTypeObject:containerTypeObject];
+                id jsonObj = [self getContainerValueWithProperty:property containerTypeObject:containerTypeObject];
                 if (jsonObj) {
                     [mutableString appendFormat:@"%@:%@\n", property.propertyName, jsonObj];
                 }
             } else {
-                id jsonObj = [self getObjectProperty:property];
+                id jsonObj = [self getObjectValueWithProperty:property];
                 if (jsonObj) {
                     [mutableString appendFormat:@"%@:%@\n", property.propertyName, jsonObj];
                 }
@@ -189,7 +190,7 @@
     if ([classInfo.propertyNameCalculateHash count] == 0) return NO;
     
     for (CCProperty *property in [classInfo.properties allValues]) {
-        if (!property.setter || !property.getterName) {
+        if (!property.setter || !property.getter) {
             continue;
         }
         
@@ -198,8 +199,8 @@
         }
         
         if (isNumberTypeOfEncodingType(property.encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
-            NSNumber *numberTarget = [object getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
+            NSNumber *numberTarget = [object getNumberValueWithProperty:property];
             if (number && numberTarget) {
                 if (![number isEqualToNumber:numberTarget]) {
                     return NO;
@@ -234,14 +235,14 @@
     
     NSUInteger hash = 0;
     for (CCProperty *property in [classInfo.properties allValues]) {
-        if (!property.setter || !property.getterName) {
+        if (!property.setter || !property.getter) {
             continue;
         }
         if (![classInfo.propertyNameCalculateHash containsObject:property.propertyName]) {
             continue;
         }
         if (isNumberTypeOfEncodingType(property.encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
             hash ^= [number hash];
         } else if (isObjectTypeOfEncodingType(property.encodingType)) {
             id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
@@ -262,7 +263,7 @@
     
     id target = [[self.class alloc] init];
     for (CCProperty *property in [classInfo.properties allValues]) {
-        if (!property.setter || !property.getterName) {
+        if (!property.setter || !property.getter) {
             continue;
         }
         
@@ -271,7 +272,7 @@
         }
         
         if (isNumberTypeOfEncodingType(property.encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
             if (number) {
                 [target setNumberProperty:property withJsonObj:number];
             }
@@ -337,7 +338,7 @@
         }
         
         if (isNumberTypeOfEncodingType(property.encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
             if (number) {
                 [coder encodeObject:number forKey:property.propertyName];
             }
@@ -391,7 +392,7 @@
             continue;
         }
         
-        id jsonObj = jsonDictionary[property.jsonKey];
+        id jsonObj = [jsonDictionary cc_objectForKeyPath:property.jsonKey];
         if (!jsonObj) {
             // property not exists in json
             continue;
@@ -448,23 +449,23 @@
         
         CCEncodingType encodingType = property.encodingType;
         if (isNumberTypeOfEncodingType(encodingType)) {
-            NSNumber *number = [self getNumberProperty:property];
+            NSNumber *number = [self getNumberValueWithProperty:property];
             if (number) {
-                mutableDictionary[property.jsonKey] = number;
+                [mutableDictionary cc_setObject:number forKeyPath:property.jsonKey];
             }
         } else if (isObjectTypeOfEncodingType(encodingType)) {
             if (isContainerTypeForObjectType(property.objectType)) {
                 ContainerTypeObject *containerTypeObject = classInfo.propertyNameToContainerTypeObjectMap[property.propertyName];
                 NSAssert(containerTypeObject, @"container need description");
                 if (!containerTypeObject) continue;
-                id jsonObj = [self getContainerProperty:property withContainerTypeObject:containerTypeObject];
+                id jsonObj = [self getContainerValueWithProperty:property containerTypeObject:containerTypeObject];
                 if (jsonObj) {
-                    mutableDictionary[property.jsonKey] = jsonObj;
+                    [mutableDictionary cc_setObject:jsonObj forKeyPath:property.jsonKey];
                 }
             } else {
-                id jsonObj = [self getObjectProperty:property];
+                id jsonObj = [self getObjectValueWithProperty:property];
                 if (jsonObj) {
-                    mutableDictionary[property.jsonKey] = jsonObj;
+                    [mutableDictionary cc_setObject:jsonObj forKeyPath:property.jsonKey];
                 }
             }
         }
@@ -496,7 +497,7 @@
     return nil;
 }
 
-- (NSNumber *)getNumberProperty:(CCProperty *)property {
+- (NSNumber *)getNumberValueWithProperty:(CCProperty *)property {
     switch (property.encodingType & CCEncodingTypeMask) {
         case CCEncodingTypeChar:
             return @(((char (*)(id, SEL))objc_msgSend)(self, property.getter));
@@ -530,12 +531,12 @@
     return nil;
 }
 
-- (id)getObjectProperty:(CCProperty *)property {
+- (id)getObjectValueWithProperty:(CCProperty *)property {
     id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
     return [NSObject deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:nil];
 }
 
-- (id)getContainerProperty:(CCProperty *)property withContainerTypeObject:(ContainerTypeObject *)containerTypeObj {
+- (id)getContainerValueWithProperty:(CCProperty *)property containerTypeObject:(ContainerTypeObject *)containerTypeObj {
     id obj = ((id (*)(id, SEL))objc_msgSend)(self, property.getter);
     return [NSObject deserializeFromObject:obj fromClass:property.propertyClass withContainerTypeObject:containerTypeObj];
 }

@@ -132,11 +132,8 @@ extern BOOL isContainerTypeForObjectType(CCObjectType type);
 @property (nonatomic) CCEncodingType encodingType;
 @property (nonatomic) CCObjectType objectType;
 @property (nonatomic, strong) Class propertyClass;
-@property (nonatomic, copy) NSString *setterName;
-@property (nonatomic, copy) NSString *getterName;
-
-- (SEL)getter;
-- (SEL)setter;
+@property (nonatomic) SEL getter;
+@property (nonatomic) SEL setter;
 
 + (CCProperty *)propertyWithRuntime:(objc_property_t)objc_property;
 

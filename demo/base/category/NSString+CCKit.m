@@ -18,7 +18,49 @@
 @end
 
 
-@implementation NSString (Other)
+@implementation NSString (CCKit)
+
+- (NSString *)cc_stringByTrimLastTrivalZero {
+    NSRange range = [self rangeOfString:@"."];
+    if (range.location == NSNotFound) {
+        return [self copy];
+    } else {
+        // We find '.'
+        NSRange rangeTrim = NSMakeRange(NSNotFound, 0);
+        for (NSInteger i = [self length]-1; i > range.location; --i) {
+            if ([self characterAtIndex:i] == '0') {
+                rangeTrim.location = i;
+                ++rangeTrim.length;
+            } else {
+                break;
+            }
+        }
+        if (rangeTrim.location != NSNotFound) {
+            NSRange subRange = NSMakeRange(0, [self length] - rangeTrim.length);
+            NSString *subStr = [self substringWithRange:subRange];
+            if ([subStr characterAtIndex:[subStr length]-1] == '.') {
+                subStr = [subStr substringToIndex:subRange.length-1];
+            }
+            return subStr;
+        } else {
+            return [self copy];
+        }
+    }
+}
+
+- (BOOL)cc_isValidEmail {
+    BOOL stricterFilter = NO;
+    NSString *stricterFilterString = @"^[A-Z0-9a-z\\._%+-]+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2,4}$";
+    NSString *laxString = @"^.+@([A-Za-z0-9-]+\\.)+[A-Za-z]{2}[A-Za-z]*$";
+    NSString *emailRegex = stricterFilter ? stricterFilterString : laxString;
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:self];
+}
+
+- (NSString *)cc_stringByRemovingCharactersInCharacterSet:(NSCharacterSet *)characterSet {
+    NSArray *array = [self componentsSeparatedByCharactersInSet:characterSet];
+    return [array componentsJoinedByString:@""];
+}
 
 - (void)cc_runUntilNoneSpaceFromLocation:(NSInteger)location noneSpaceLocation:(NSInteger *)noneSpaceLocation reachEnd:(BOOL *)end {
     [self cc_runUntilCharacterSet:[[NSCharacterSet characterSetWithCharactersInString:@" "] invertedSet]
@@ -39,11 +81,6 @@
     }
     if (reachLocation) *reachLocation = location;
     if (end) *end = YES;
-}
-
-- (NSString *)cc_stringByRemovingCharactersInCharacterSet:(NSCharacterSet *)characterSet {
-    NSArray *array = [self componentsSeparatedByCharactersInSet:characterSet];
-    return [array componentsJoinedByString:@""];
 }
 
 @end
