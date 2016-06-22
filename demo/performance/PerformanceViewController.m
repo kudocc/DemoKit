@@ -7,10 +7,8 @@
 //
 
 #import "PerformanceViewController.h"
-#import "TableViewPerformanceViewController.h"
-#import "TestMissalignedViewController.h"
-#import "TestBlendViewController.h"
-#import "TestDrawScaleViewController.h"
+#import "ImageViewContainer.h"
+#import "DrawViewContainer.h"
 
 @interface PerformanceViewController ()
 
@@ -23,11 +21,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor = [UIColor whiteColor];
     
-    self.arrayTitle = @[@"Test clipToMask", @"Test draw scale", @"Test missaligned", @"Test blend"];
-    self.arrayClass = @[[TableViewPerformanceViewController class],
-                    [TestDrawScaleViewController class],
-                    [TestBlendViewController class],
-                    [TestMissalignedViewController class]];
+    self.arrayTitle = @[@"Performance with container as UImageView", @"Performance with container as UIView"];
+    self.arrayClass = @[[ImageViewContainer class], [DrawViewContainer class]];
 }
 
 @end

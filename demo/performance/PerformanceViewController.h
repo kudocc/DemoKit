@@ -10,6 +10,5 @@
 
 @interface PerformanceViewController : HomeTableViewController
 
-
 @end
 

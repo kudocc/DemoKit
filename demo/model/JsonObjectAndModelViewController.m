@@ -378,7 +378,6 @@
             NSLog(@"%@(NSCoding), %@", NSStringFromSelector(_cmd), dict);
         }
     }
-    
 }
 
 - (void)initView {

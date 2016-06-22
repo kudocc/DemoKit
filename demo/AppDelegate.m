@@ -13,12 +13,13 @@
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
+#import "ModelViewController.h"
 #import "UrlSessionViewController.h"
 #import "AudioViewController.h"
 #import "WebViewController.h"
 #import "NetworkViewController.h"
-#import "ModelViewController.h"
 #import "OtherViewController.h"
+#import "PerformanceViewController.h"
 
 @interface AppDelegate ()
 
@@ -36,6 +37,7 @@
                       @"Core Image",
                       @"Network - Dependency HTTP Task",
                       @"Model",
+                      @"Performance",
                       @"URLSession",
                       @"WebView & WebCache",
                       @"Audio",
@@ -47,6 +49,7 @@
                       [CoreImageViewController class],
                       [NetworkViewController class],
                       [ModelViewController class],
+                      [PerformanceViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
                       [AudioViewController class],
