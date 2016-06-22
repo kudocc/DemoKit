@@ -20,6 +20,9 @@
 
 @property (nonatomic) UIColor *textColor;
 
+// default is NSTextAlignmentNatural
+@property (nonatomic) NSTextAlignment textAlignment;
+
 @property (nonatomic) NSString *text;
 
 @property (nonatomic) NSAttributedString *attributedText;

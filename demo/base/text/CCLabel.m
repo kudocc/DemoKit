@@ -51,9 +51,12 @@
     
     _font = [CCLabel defaultLabelFont];
     _textColor = [CCLabel defaultLabelColor];
+    _textAlignment = NSTextAlignmentNatural;
+    
     _innerAttributedString = [[NSMutableAttributedString alloc] initWithString:@""];
     [_innerAttributedString cc_setFont:_font];
     [_innerAttributedString cc_setColor:_textColor];
+    [_innerAttributedString cc_setAlignment:_textAlignment];
     
     _verticleAlignment = CCTextVerticalAlignmentCenter;
 }
@@ -86,6 +89,14 @@
     _textColor = textColor;
     [_innerAttributedString cc_setColor:textColor];
     [self _setNeedsUpdateDisplay];
+}
+
+- (void)setTextAlignment:(NSTextAlignment)textAlignment {
+    if (_textAlignment == textAlignment) return;
+    _textAlignment = textAlignment;
+    [_innerAttributedString cc_setAlignment:textAlignment];
+    
+    [self _setNeedsUpdateLayout];
 }
 
 - (NSString *)text {
