@@ -20,11 +20,21 @@
         _defaultFontSize = 14.0;
         _defaultTextColor = [UIColor blackColor];
         _fontName = @"Helvetica";
-//        _boldFontName = @"Helvetica-Bold";
-//        _italicFontName = @"Helvetica-Oblique";
-//        _boldItalicFontName = @"Helvetica-BoldOblique";
     }
     return self;
+}
+
+- (id)copyWithZone:(NSZone *)zone {
+    typeof(self) obj = [[self.class alloc] init];
+    obj.defaultFontSize = self.defaultFontSize;
+    obj.defaultTextColor = [self.defaultTextColor copy];
+    obj.fontName = [self.fontName copy];
+    obj.colorHyperlinkNormal = [self.colorHyperlinkNormal copy];
+    obj.colorHyperlinkHighlighted = [self.colorHyperlinkHighlighted copy];
+    obj.bgcolorHyperlinkNormal = [self.bgcolorHyperlinkNormal copy];
+    obj.bgcolorHyperlinkHighlighted = [self.bgcolorHyperlinkHighlighted copy];
+    obj.hyperlinkBlock = [self.hyperlinkBlock copy];
+    return obj;
 }
 
 @end

@@ -37,7 +37,7 @@
     };
     CCHTMLParser *parser = [CCHTMLParser parserWithConfig:config];
     [parser parseHTMLString:htmlString];
-    NSAttributedString *attr = [parser attributedStringWithDefaultFont:[UIFont systemFontOfSize:16.0] defaultTextColor:[UIColor blackColor]];
+    NSAttributedString *attr = [parser attributedString];
     
     label = [[CCLabel alloc] initWithFrame:CGRectMake(0, 64, ScreenWidth, ScreenHeight-64)];
     label.layer.borderColor = [UIColor greenColor].CGColor;

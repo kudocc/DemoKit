@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void(^TapHyperlinkBlock)(NSString *href);
 
-@interface CCHTMLConfig : NSObject
+@interface CCHTMLConfig : NSObject <NSCopying>
 
 /// default is 14.0
 @property (nonatomic) CGFloat defaultFontSize;
@@ -21,10 +21,6 @@ typedef void(^TapHyperlinkBlock)(NSString *href);
 
 /// 指定一个fontName，全文都使用此font, default is Helvetica
 @property (nonatomic) NSString *fontName;
-
-//@property (nonatomic, nullable) NSString *boldFontName;
-//@property (nonatomic, nullable) NSString *italicFontName;
-//@property (nonatomic, nullable) NSString *boldItalicFontName;
 
 /// default is nil
 @property (nonatomic, nullable) UIColor *colorHyperlinkNormal;

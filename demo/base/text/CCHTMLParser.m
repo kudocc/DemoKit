@@ -324,19 +324,10 @@ static NSDictionary *htmlSpecialCharacterMap;
     return mutableAttrString;
 }
 
-- (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font
-                                       defaultTextColor:(UIColor *)defaultTextColor {
-    NSMutableAttributedString *mutableAttrString = [[NSMutableAttributedString alloc] initWithString:self.mutableString];
-    [mutableAttrString cc_setFont:font];
-    [mutableAttrString cc_setColor:defaultTextColor];
-    [_rootTag applyAttributeOnMutableAttributedString:mutableAttrString];
-    return mutableAttrString;
-}
-
 - (id)initWithConfig:(CCHTMLConfig *)config {
     self = [super init];
     if (self) {
-        _config = config;
+        _config = [config copy];
     }
     return self;
 }

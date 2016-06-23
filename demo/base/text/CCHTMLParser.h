@@ -78,8 +78,6 @@ extern NSString *const CCHTMLTagNameS;
 
 - (void)parseHTMLString:(NSString *)htmlString;
 
-
-- (NSAttributedString *)attributedStringWithDefaultFont:(UIFont *)font
-                                       defaultTextColor:(UIColor *)defaultTextColor;
+- (NSAttributedString *)attributedString;
 
 @end
