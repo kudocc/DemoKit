@@ -29,6 +29,9 @@
 @property (nonatomic, readonly) CGFloat middleX;
 @property (nonatomic, readonly) CGFloat middleY;
 
+@property (nonatomic, readonly) CGFloat maxX;
+@property (nonatomic, readonly) CGFloat maxY;
+
 - (void)logViewHierarchy;
 
 + (CGRect)cc_frameOfContentWithContentSize:(CGSize)contentSize

@@ -14,6 +14,12 @@
 - (id)cc_objectForKeyPath:(NSString *)keyPath;
 - (id)cc_objectForKeyPath:(NSString *)keyPath separator:(NSString *)separator;
 
+/// get object for key with type check
+- (NSString *)cc_stringForKey:(NSString *)key;
+- (NSNumber *)cc_numberForKey:(NSString *)key;
+- (NSArray *)cc_arrayForKey:(NSString *)key;
+- (NSDictionary *)cc_dictionaryForKey:(NSString *)key;
+
 @end
 
 

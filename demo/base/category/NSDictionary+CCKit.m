@@ -27,6 +27,38 @@
     return value;
 }
 
+- (NSString *)cc_stringForKey:(NSString *)key {
+    id obj = self[key];
+    if (![obj isKindOfClass:[NSString class]]) {
+        return nil;
+    }
+    return obj;
+}
+
+- (NSNumber *)cc_numberForKey:(NSString *)key {
+    id obj = self[key];
+    if (![obj isKindOfClass:[NSNumber class]]) {
+        return nil;
+    }
+    return obj;
+}
+
+- (NSArray *)cc_arrayForKey:(NSString *)key {
+    id obj = self[key];
+    if (![obj isKindOfClass:[NSArray class]]) {
+        return nil;
+    }
+    return obj;
+}
+
+- (NSDictionary *)cc_dictionaryForKey:(NSString *)key {
+    id obj = self[key];
+    if (![obj isKindOfClass:[NSDictionary class]]) {
+        return nil;
+    }
+    return obj;
+}
+
 @end
 
 

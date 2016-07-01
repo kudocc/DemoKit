@@ -149,6 +149,16 @@
     return self.height / 2;
 }
 
+- (CGFloat) maxX
+{
+    return CGRectGetMaxX(self.frame);
+}
+
+- (CGFloat)maxY
+{
+    return CGRectGetMaxY(self.frame);
+}
+
 #pragma mark Recursion All Subviews
 
 - (void)logViewHierarchy

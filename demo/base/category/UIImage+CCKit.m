@@ -12,6 +12,14 @@
 
 @implementation UIImage (CCKit)
 
++ (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size {
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+    [color setFill];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
 + (UIImage *)cc_resizeImage:(UIImage *)image contentMode:(UIViewContentMode)contentMode size:(CGSize)size {
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGRect frameImage = [UIView cc_frameOfContentWithContentSize:image.size containerSize:size contentMode:contentMode];
@@ -26,7 +34,6 @@
 }
 
 + (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor {
-    // 如果opaque为YES，背景全黑了
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
     
     CGContextRef context = UIGraphicsGetCurrentContext();

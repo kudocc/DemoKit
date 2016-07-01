@@ -10,16 +10,25 @@
 
 @interface UIImage (CCKit)
 
+/// create a image with UIColor
++ (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size;
+
+/// resize image to `size` response to `contentMode`
 + (UIImage *)cc_resizeImage:(UIImage *)image contentMode:(UIViewContentMode)contentMode size:(CGSize)size;
 
 + (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor;
 + (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor;
 
+/// create a round corner image with `size`, scale image with `UIViewContentModeScaleToFill` contentMode
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius;
+/// create a round corner image with `size`, scale image with `contentMode`, no border
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius contentMode:(UIViewContentMode)contentMode;
+/// create a round corner image with `size`, scale image with `contentMode`, with border and border color
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor contentMode:(UIViewContentMode)contentMode;
 
+/// convert UIImageOrientation to exif orientation
 + (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation;
+/// convert exif orientation to UIImageOrientation
 + (UIImageOrientation)cc_exifOrientationToiOSOrientation:(int)exifOrientation;
 
 - (NSString *)cc_description;
