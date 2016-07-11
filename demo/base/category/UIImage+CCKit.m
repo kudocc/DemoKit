@@ -13,46 +13,70 @@
 @implementation UIImage (CCKit)
 
 + (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size {
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
+    if (size.width == 0 || size.height == 0) {
+        return nil;
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     [color setFill];
+    UIRectFill(CGRectMake(0, 0, size.width, size.height));
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
++ (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor cornerRadius:(CGFloat)radius {
+    if (size.width == 0 || size.height == 0) {
+        return nil;
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    [color setFill];
+    CGRect frame = CGRectMake(0, 0, size.width, size.height);
+    frame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(borderWidth/2, borderWidth/2, borderWidth/2, borderWidth/2));
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:radius];
+    [path setLineWidth:borderWidth];
+    [borderColor setStroke];
+    [path fill];
+    [path stroke];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
+
++ (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size lineWidth:(CGFloat)lineWidth dashLineColor:(UIColor *)dashLineColor cornerRadius:(CGFloat)radius {
+    if (size.width == 0 || size.height == 0) {
+        return nil;
+    }
+    
+    UIGraphicsBeginImageContextWithOptions(size, NO, 0);
+    [color setFill];
+    CGRect frame = CGRectMake(0, 0, size.width, size.height);
+    frame = UIEdgeInsetsInsetRect(frame, UIEdgeInsetsMake(lineWidth/2, lineWidth/2, lineWidth/2, lineWidth/2));
+    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:frame cornerRadius:radius];
+    CGFloat dash[2] = {2, 2};
+    [path setLineDash:dash count:2 phase:2];
+    [path setLineWidth:lineWidth];
+    [path setLineCapStyle:kCGLineCapRound];
+    [dashLineColor setStroke];
+    [path fill];
+    [path stroke];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return image;
 }
 
 + (UIImage *)cc_resizeImage:(UIImage *)image contentMode:(UIViewContentMode)contentMode size:(CGSize)size {
+    if (size.width == 0 || size.height == 0) {
+        return nil;
+    }
+    
     UIGraphicsBeginImageContextWithOptions(size, NO, 0);
     CGRect frameImage = [UIView cc_frameOfContentWithContentSize:image.size containerSize:size contentMode:contentMode];
     [image drawInRect:frameImage];
     UIImage *resImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     return resImage;
-}
-
-+ (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor {
-    return [self cc_transparentCenterImageWithSize:size cornerRadius:radius backgroundColor:bgColor borderWidth:0 borderColor:nil];
-}
-
-+ (UIImage *)cc_transparentCenterImageWithSize:(CGSize)size cornerRadius:(CGFloat)radius backgroundColor:(UIColor *)bgColor borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor {
-    UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, bgColor.CGColor);
-    CGContextFillRect(context, CGRectMake(0.0, 0.0, size.width, size.height));
-    
-    UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(0.0, 0.0, size.width, size.height) cornerRadius:radius];
-    [path addClip];
-    CGContextClearRect(context, CGRectMake(0, 0, size.width, size.height));
-    if (borderWidth > 0 && borderColor) {
-        path.lineWidth = borderWidth*2;
-        CGContextSetStrokeColorWithColor(context, borderColor.CGColor);
-        [path stroke];
-    }
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return image;
 }
 
 
@@ -65,6 +89,10 @@
 }
 
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor contentMode:(UIViewContentMode)contentMode {
+    if (size.width == 0 || size.height == 0) {
+        return nil;
+    }
+    
     UIGraphicsBeginImageContextWithOptions(size, NO, 0.0);
     
     CGContextRef context = UIGraphicsGetCurrentContext();
