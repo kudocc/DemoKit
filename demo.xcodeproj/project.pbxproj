@@ -82,7 +82,6 @@
 		A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0451CE3295D00A7686D /* TestDrawScaleViewController.m */; };
 		A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0471CE3295D00A7686D /* TestMissalignedViewController.m */; };
 		A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B04C1CE3295D00A7686D /* CornerRadiusView.m */; };
-		A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B04E1CE3295D00A7686D /* UIView+CornerRadius.m */; };
 		A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0521CE3295D00A7686D /* PerformanceViewController.m */; };
 		A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B05D1CE3298A00A7686D /* UIImage+CCKit.m */; };
 		A785B0611CE32B5A00A7686D /* CornerRadiusView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0601CE32B5A00A7686D /* CornerRadiusView+WebCache.m */; };
@@ -290,8 +289,6 @@
 		A785B0471CE3295D00A7686D /* TestMissalignedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestMissalignedViewController.m; sourceTree = "<group>"; };
 		A785B04B1CE3295D00A7686D /* CornerRadiusView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CornerRadiusView.h; sourceTree = "<group>"; };
 		A785B04C1CE3295D00A7686D /* CornerRadiusView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CornerRadiusView.m; sourceTree = "<group>"; };
-		A785B04D1CE3295D00A7686D /* UIView+CornerRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+CornerRadius.h"; sourceTree = "<group>"; };
-		A785B04E1CE3295D00A7686D /* UIView+CornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+CornerRadius.m"; sourceTree = "<group>"; };
 		A785B0511CE3295D00A7686D /* PerformanceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformanceViewController.h; sourceTree = "<group>"; };
 		A785B0521CE3295D00A7686D /* PerformanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformanceViewController.m; sourceTree = "<group>"; };
 		A785B05C1CE3298A00A7686D /* UIImage+CCKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+CCKit.h"; sourceTree = "<group>"; };
@@ -718,8 +715,6 @@
 				A785B04C1CE3295D00A7686D /* CornerRadiusView.m */,
 				A785B05F1CE32B5A00A7686D /* CornerRadiusView+WebCache.h */,
 				A785B0601CE32B5A00A7686D /* CornerRadiusView+WebCache.m */,
-				A785B04D1CE3295D00A7686D /* UIView+CornerRadius.h */,
-				A785B04E1CE3295D00A7686D /* UIView+CornerRadius.m */,
 			);
 			path = tools;
 			sourceTree = "<group>";
@@ -1040,7 +1035,6 @@
 				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
 				A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */,
 				A7147EED1D0172B40090FCCB /* CCLabelDemoViewController.m in Sources */,
-				A785B0591CE3295D00A7686D /* UIView+CornerRadius.m in Sources */,
 				A73B4EF41D051838002E1A1A /* CCTextLine.m in Sources */,
 				A73B4F061D079524002E1A1A /* KVOSubViewController.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,

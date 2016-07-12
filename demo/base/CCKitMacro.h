@@ -11,7 +11,8 @@
 #define ScreenWidth [UIScreen mainScreen].bounds.size.width
 #define ScreenHeight [UIScreen mainScreen].bounds.size.height
 
-#define PixelToPoint(x) (x/[UIScreen mainScreen].scale)
+#define PixelToPoint(pixel)  (pixel/[UIScreen mainScreen].scale)
+#define AllignToPixel(point) (floor(point*[UIScreen mainScreen].scale)/[UIScreen mainScreen].scale)
 
 #define CCMainThreadBlock(block) \
     if ([NSThread isMainThread]) {\
