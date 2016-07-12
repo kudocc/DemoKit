@@ -79,7 +79,7 @@
     } else if (type == CCObjectTypeNSArray ||
                type == CCObjectTypeNSMutableArray) {
         NSParameterAssert(containerTypeObj.valueClassObj);
-        NSArray *array = [NSArray ccmodel_arrayWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
+        NSArray *array = [NSArray ccmodel_modelArrayWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
         if (type == CCObjectTypeNSMutableArray) {
             return [array mutableCopy];
         }
@@ -88,9 +88,9 @@
                type == CCObjectTypeNSMutableDictionary) {
         NSDictionary *dict = nil;
         if (containerTypeObj.keyToClass) {
-            dict = [NSDictionary ccmodel_dictionaryWithJSON:jsonObj withKeyToValueType:containerTypeObj.keyToClass];
+            dict = [NSDictionary ccmodel_modelDictionaryWithJSON:jsonObj withKeyToValueType:containerTypeObj.keyToClass];
         } else if (containerTypeObj.valueClassObj) {
-            dict = [NSDictionary ccmodel_dictionaryWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
+            dict = [NSDictionary ccmodel_modelDictionaryWithJSON:jsonObj withValueType:containerTypeObj.valueClassObj];
         }
         if (dict && type == CCObjectTypeNSMutableDictionary) {
             return [dict mutableCopy];
@@ -100,7 +100,7 @@
         // try to convert to class
         return [classObject ccmodel_modelWithJSON:jsonObj];
     }
-    NSLog(@"%@, don't support the class:%@", NSStringFromSelector(_cmd), classObject);
+    NSLog(@"%@, can't serialize object class(%@) from json object(%@)", NSStringFromSelector(_cmd), classObject, jsonObj);
     return nil;
 }
 
@@ -631,7 +631,7 @@
 
 @implementation NSArray (CCModel)
 
-+ (id)ccmodel_arrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject {
++ (id)ccmodel_modelArrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject {
     NSArray *array = nil;
     NSData *data = nil;
     if ([json isKindOfClass:[NSArray class]]) {
@@ -645,13 +645,13 @@
         array = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     }
     if (array && [array isKindOfClass:[NSArray class]]) {
-        id obj = [self ccmodel_arrayWithJSONArray:array withValueType:typeObject];
+        id obj = [self ccmodel_modelArrayWithJSONArray:array withValueType:typeObject];
         return obj;
     }
     return nil;
 }
 
-+ (id)ccmodel_arrayWithJSONArray:(NSArray *)jsonArray withValueType:(ContainerTypeObject *)typeObject {
++ (id)ccmodel_modelArrayWithJSONArray:(NSArray *)jsonArray withValueType:(ContainerTypeObject *)typeObject {
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id json in jsonArray) {
         id obj = [NSObject serializeJSONObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
@@ -674,7 +674,7 @@
 
 @implementation NSDictionary (CCModel)
 
-+ (id)ccmodel_dictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject {
++ (id)ccmodel_modelDictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject {
     NSDictionary *dict = nil;
     NSData *data = nil;
     if ([json isKindOfClass:[NSDictionary class]]) {
@@ -688,13 +688,13 @@
         dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     }
     if (dict && [dict isKindOfClass:[NSDictionary class]]) {
-        id obj = [self ccmodel_dictionaryWithJSONDictionary:dict withValueType:typeObject];
+        id obj = [self ccmodel_modelDictionaryWithJSONDictionary:dict withValueType:typeObject];
         return obj;
     }
     return nil;
 }
 
-+ (id)ccmodel_dictionaryWithJSONDictionary:(NSDictionary *)jsonDictionary withValueType:(ContainerTypeObject *)typeObject {
++ (id)ccmodel_modelDictionaryWithJSONDictionary:(NSDictionary *)jsonDictionary withValueType:(ContainerTypeObject *)typeObject {
     NSParameterAssert(typeObject);
     if (!typeObject) {
         return nil;
@@ -709,7 +709,7 @@
     return [mutableDictionary copy];
 }
 
-+ (id)ccmodel_dictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType {
++ (id)ccmodel_modelDictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType {
     NSDictionary *dict = nil;
     NSData *data = nil;
     if ([json isKindOfClass:[NSDictionary class]]) {
@@ -723,13 +723,13 @@
         dict = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
     }
     if (dict && [dict isKindOfClass:[NSDictionary class]]) {
-        id obj = [self ccmodel_dictionaryWithJSONDictionary:dict withKeyToValueType:keyToValueType];
+        id obj = [self ccmodel_modelDictionaryWithJSONDictionary:dict withKeyToValueType:keyToValueType];
         return obj;
     }
     return nil;
 }
 
-+ (id)ccmodel_dictionaryWithJSONDictionary:(NSDictionary *)jsonDictionary withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType {
++ (id)ccmodel_modelDictionaryWithJSONDictionary:(NSDictionary *)jsonDictionary withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType {
     NSParameterAssert(keyToValueType);
     if (!keyToValueType) {
         return nil;

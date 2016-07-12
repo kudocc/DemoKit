@@ -224,7 +224,7 @@
 - (void)testSimpleArray {
     NSString *jsonString = @"[1, 2, 3, 4, 5]";
     ContainerTypeObject *container = [ContainerTypeObject containerTypeObjectWithClass:[NSNumber class]];
-    NSArray *array = [NSArray ccmodel_arrayWithJSON:jsonString withValueType:container];
+    NSArray *array = [NSArray ccmodel_modelArrayWithJSON:jsonString withValueType:container];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), array);
     NSArray *arrayModel = [array ccmodel_jsonObjectArrayWithValueType:container];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), arrayModel);
@@ -234,7 +234,7 @@
     // nested array
     NSString *jsonString = @"[[1, 2, 3], [4, 5, 6]]";
     ContainerTypeObject *container = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[NSNumber class]];
-    NSArray *array = [NSArray ccmodel_arrayWithJSON:jsonString withValueType:container];
+    NSArray *array = [NSArray ccmodel_modelArrayWithJSON:jsonString withValueType:container];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), array);
     NSArray *arrayModel = [array ccmodel_jsonObjectArrayWithValueType:container];
     NSLog(@"%@, arrayModel:%@", NSStringFromSelector(_cmd), arrayModel);
@@ -254,7 +254,7 @@
         ]\
     ]";
     ContainerTypeObject *container = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[Student class]];
-    NSArray *array = [NSArray ccmodel_arrayWithJSON:jsonString withValueType:container];
+    NSArray *array = [NSArray ccmodel_modelArrayWithJSON:jsonString withValueType:container];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), array);
 }
 
@@ -263,7 +263,7 @@
     NSString *jsonString = @"{\"name\":\"KudoCC\", \"count\":2}";
     ContainerTypeObject *objectForName = [ContainerTypeObject containerTypeObjectWithClass:[NSString class]];
     ContainerTypeObject *objectForCount = [ContainerTypeObject containerTypeObjectWithClass:[NSNumber class]];
-    NSDictionary *dictionary = [NSDictionary ccmodel_dictionaryWithJSON:jsonString withKeyToValueType:@{@"name":objectForName, @"count":objectForCount}];
+    NSDictionary *dictionary = [NSDictionary ccmodel_modelDictionaryWithJSON:jsonString withKeyToValueType:@{@"name":objectForName, @"count":objectForCount}];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictionary);
     NSDictionary *dictModel = [dictionary ccmodel_jsonObjectDictionaryWithKeyToValueType:@{@"name":objectForName, @"count":objectForCount}];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);
@@ -285,7 +285,7 @@
     ContainerTypeObject *objectForHabbitCount = [ContainerTypeObject containerTypeObjectWithClass:[NSNumber class]];
     ContainerTypeObject *objectForHabbitValue = [ContainerTypeObject arrayContainerTypeObjectWithValueClass:[NSString class]];
     objectForHabbit.keyToClass = @{@"count":objectForHabbitCount, @"value":objectForHabbitValue};
-    NSDictionary *dictionary = [NSDictionary ccmodel_dictionaryWithJSON:jsonString withKeyToValueType:@{@"name":objectForName, @"habbit":objectForHabbit}];
+    NSDictionary *dictionary = [NSDictionary ccmodel_modelDictionaryWithJSON:jsonString withKeyToValueType:@{@"name":objectForName, @"habbit":objectForHabbit}];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictionary);
     NSDictionary *dictModel = [dictionary ccmodel_jsonObjectDictionaryWithKeyToValueType:@{@"name":objectForName, @"habbit":objectForHabbit}];
     NSLog(@"%@, %@", NSStringFromSelector(_cmd), dictModel);

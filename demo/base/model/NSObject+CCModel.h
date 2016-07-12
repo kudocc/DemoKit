@@ -80,12 +80,16 @@
 @interface NSArray (CCModel)
 
 /**
- Create a NSArray with json object
- @param json it must be NSArray or NSString or NSData
+ convert json array to Objective-C object array, all values in array must be the same type.
+ @param json json must be NSDictionary or NSString or NSData
  @param typeObject describe the value type
  */
-+ (id)ccmodel_arrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
++ (id)ccmodel_modelArrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
 
+/**
+ convert Objective-C object array to json array, all values in array must be the same type.
+ @param typeObject describe the value type
+ */
 - (NSArray *)ccmodel_jsonObjectArrayWithValueType:(ContainerTypeObject *)typeObject;
 
 @end
@@ -93,12 +97,28 @@
 
 @interface NSDictionary (CCModel)
 
-/// json must be NSDictionary or NSString or NSData
-+ (id)ccmodel_dictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
-+ (id)ccmodel_dictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
+/**
+ convert json dictionary to Objective-C object dictionary, all values in dictionary is same type.
+ @param json json must be NSDictionary or NSString or NSData
+ @param typeObject describe the value type
+ */
++ (id)ccmodel_modelDictionaryWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;
+/**
+ convert json dictionary to Objective-C object dictionary, value type is indicated by keyToValueType.
+ @param json json must be NSDictionary or NSString or NSData
+ @param typeObject describe the value type
+ */
++ (id)ccmodel_modelDictionaryWithJSON:(id)json withKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
 
-
+/**
+ convert Objective-C object dictionary to json dictionary, all values has the same type indicated by typeObject.
+ @param typeObject describe the value type
+ */
 - (NSDictionary *)ccmodel_jsonObjectDictionaryWithValueType:(ContainerTypeObject *)typeObject;
+/**
+ convert Objective-C object dictionary to json dictionary, value's type is indicated by keyToValueType.
+ @param typeObject describe the value type
+ */
 - (NSDictionary *)ccmodel_jsonObjectDictionaryWithKeyToValueType:(NSDictionary<NSString *, ContainerTypeObject *> *)keyToValueType;
 
 @end
