@@ -75,6 +75,7 @@
 		A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6961CEC50DF0098F1C8 /* CoreImageViewController.m */; };
 		A773F69A1CEC51D60098F1C8 /* BuiltinFilterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6991CEC51D60098F1C8 /* BuiltinFilterViewController.m */; };
 		A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */; };
+		A77E16B61D373264006E637D /* QRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A77E16B51D373264006E637D /* QRCodeViewController.m */; };
 		A785B0251CE321B000A7686D /* HomeTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0241CE321B000A7686D /* HomeTableViewController.m */; };
 		A785B0361CE3258C00A7686D /* ImageMaskViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B02A1CE3258C00A7686D /* ImageMaskViewController.m */; };
 		A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0341CE3258C00A7686D /* Quartz2DViewController.m */; };
@@ -275,6 +276,8 @@
 		A773F6991CEC51D60098F1C8 /* BuiltinFilterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BuiltinFilterViewController.m; sourceTree = "<group>"; };
 		A773F69C1CEC54920098F1C8 /* ImagePickerViewControllerHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewControllerHelper.h; sourceTree = "<group>"; };
 		A773F69D1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewControllerHelper.m; sourceTree = "<group>"; };
+		A77E16B41D373264006E637D /* QRCodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRCodeViewController.h; sourceTree = "<group>"; };
+		A77E16B51D373264006E637D /* QRCodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRCodeViewController.m; sourceTree = "<group>"; };
 		A785B0231CE321B000A7686D /* HomeTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeTableViewController.h; sourceTree = "<group>"; };
 		A785B0241CE321B000A7686D /* HomeTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeTableViewController.m; sourceTree = "<group>"; };
 		A785B0291CE3258C00A7686D /* ImageMaskViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageMaskViewController.h; sourceTree = "<group>"; };
@@ -646,6 +649,8 @@
 				A75723761CED51AC0065AA2E /* BuiltinFilterChainViewController.m */,
 				A757237B1CED54560065AA2E /* FaceDetectorViewController.h */,
 				A757237C1CED54560065AA2E /* FaceDetectorViewController.m */,
+				A77E16B41D373264006E637D /* QRCodeViewController.h */,
+				A77E16B51D373264006E637D /* QRCodeViewController.m */,
 			);
 			path = coreImage;
 			sourceTree = "<group>";
@@ -1029,6 +1034,7 @@
 				A785B03B1CE3258C00A7686D /* Quartz2DViewController.m in Sources */,
 				A73B4F181D07DFEE002E1A1A /* CCStack.m in Sources */,
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
+				A77E16B61D373264006E637D /* QRCodeViewController.m in Sources */,
 				A73B4F201D080BC8002E1A1A /* HTMLParserViewController.m in Sources */,
 				A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */,
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,

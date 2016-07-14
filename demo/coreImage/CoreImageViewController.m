@@ -10,6 +10,7 @@
 #import "BuiltinFilterViewController.h"
 #import "BuiltinFilterChainViewController.h"
 #import "FaceDetectorViewController.h"
+#import "QRCodeViewController.h"
 
 @implementation CoreImageViewController
 
@@ -18,10 +19,12 @@
     
     self.arrayTitle = @[@"builtin filter",
                         @"builtin chained filter",
-                        @"face detector"];
+                        @"face detector",
+                        @"qr code"];
     self.arrayClass = @[[BuiltinFilterViewController class],
                         [BuiltinFilterChainViewController class],
-                        [FaceDetectorViewController class]];
+                        [FaceDetectorViewController class],
+                        [QRCodeViewController class]];
     
 //    [self logAllFilters];
 }

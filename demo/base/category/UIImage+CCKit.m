@@ -117,6 +117,25 @@
     return image;
 }
 
++ (UIImage *)cc_imageWithQRCodeString:(NSString *)qrCode imageSize:(CGSize)size {
+    NSData *stringData = [qrCode dataUsingEncoding:NSUTF8StringEncoding];
+    CIFilter *qrFilter = [CIFilter filterWithName:@"CIQRCodeGenerator"];
+    // Set the message content and error-correction level
+    [qrFilter setValue:stringData forKey:@"inputMessage"];
+    [qrFilter setValue:@"H" forKey:@"inputCorrectionLevel"];
+    CIImage *ciImage = qrFilter.outputImage;
+    // Render the CIImage into a CGImage
+    CGImageRef cgImage = [[CIContext contextWithOptions:nil] createCGImage:ciImage fromRect:ciImage.extent];
+    UIGraphicsBeginImageContext(size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    // We don't want to interpolate (since we've got a pixel-correct image)
+    CGContextSetInterpolationQuality(context, kCGInterpolationNone);
+    CGContextDrawImage(context, CGContextGetClipBoundingBox(context), cgImage);
+    UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    CGImageRelease(cgImage);
+    return scaledImage;
+}
 
 // Reference: http://sylvana.net/jpegcrop/exif_orientation.html
 + (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation {

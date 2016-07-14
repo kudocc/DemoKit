@@ -10,6 +10,10 @@
 
 @interface UIImage (CCKit)
 
+///---------------------
+/// @name Create a image with UIColor
+///---------------------
+
 /// create a image with UIColor
 + (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size;
 
@@ -19,9 +23,17 @@
 /// create a image with UIColor, dash line width, dash line border color and corner radius
 + (UIImage *)cc_imageWithColor:(UIColor *)color size:(CGSize)size lineWidth:(CGFloat)lineWidth dashLineColor:(UIColor *)dashLineColor cornerRadius:(CGFloat)radius;
 
+
+///---------------------
+/// @name Create a image through resize self with UIViewContentMode
+///---------------------
+
 /// resize image to `size` response to `contentMode`
 + (UIImage *)cc_resizeImage:(UIImage *)image contentMode:(UIViewContentMode)contentMode size:(CGSize)size;
 
+///---------------------
+/// @name Create a round corner image through modifying self with many options
+///---------------------
 
 /// create a round corner image with `size`, scale image with `UIViewContentModeScaleToFill` contentMode
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius;
@@ -29,6 +41,12 @@
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius contentMode:(UIViewContentMode)contentMode;
 /// create a round corner image with `size`, scale image with `contentMode`, with border and border color
 - (UIImage *)cc_imageWithSize:(CGSize)size cornerRadius:(CGFloat)radius borderWidth:(CGFloat)borderWidth borderColor:(UIColor *)borderColor contentMode:(UIViewContentMode)contentMode;
+
+///---------------------
+/// @name Others
+///---------------------
+
++ (UIImage *)cc_imageWithQRCodeString:(NSString *)qrCode imageSize:(CGSize)size;
 
 /// convert UIImageOrientation to exif orientation
 + (int)cc_iOSOrientationToExifOrientation:(UIImageOrientation)iOSOrientation;
