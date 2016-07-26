@@ -655,7 +655,9 @@
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id json in jsonArray) {
         id obj = [NSObject serializeJSONObj:json toClass:typeObject.classObj withContainerTypeObject:typeObject];
-        [mutableArray addObject:obj];
+        if (obj) {
+            [mutableArray addObject:obj];
+        }
     }
     return [mutableArray copy];
 }
@@ -664,7 +666,9 @@
     NSMutableArray *mutableArray = [NSMutableArray array];
     for (id obj in self) {
         id jsonObj = [NSObject deserializeFromObject:obj fromClass:typeObject.classObj withContainerTypeObject:typeObject];
-        [mutableArray addObject:jsonObj];
+        if (jsonObj) {
+            [mutableArray addObject:jsonObj];
+        }
     }
     return [mutableArray copy];
 }

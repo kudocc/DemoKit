@@ -59,6 +59,17 @@
     return obj;
 }
 
+- (NSString *)cc_stringAllowNSNumberForKey:(NSString *)key {
+    id obj = self[key];
+    if ([obj isKindOfClass:[NSString class]]) {
+        return obj;
+    }
+    if ([obj isKindOfClass:[NSNumber class]]) {
+        return [obj description];
+    }
+    return nil;
+}
+
 @end
 
 

@@ -81,7 +81,7 @@
 
 /**
  convert json array to Objective-C object array, all values in array must be the same type.
- @param json json must be NSDictionary or NSString or NSData
+ @param json json must be NSArray or NSString or NSData
  @param typeObject describe the value type
  */
 + (id)ccmodel_modelArrayWithJSON:(id)json withValueType:(ContainerTypeObject *)typeObject;

@@ -19,6 +19,7 @@
 - (NSNumber *)cc_numberForKey:(NSString *)key;
 - (NSArray *)cc_arrayForKey:(NSString *)key;
 - (NSDictionary *)cc_dictionaryForKey:(NSString *)key;
+- (NSString *)cc_stringAllowNSNumberForKey:(NSString *)key;
 
 @end
 

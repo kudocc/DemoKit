@@ -17,8 +17,13 @@
 @interface NSString (CCKit)
 
 /**
+ if string length is zero, return 0.
+ */
+- (unichar)cc_lastCharacter;
+
+/**
  remove the trival zeroes at the end of string
- for example: 1000->1000, 0.100->0.1, 0.1010->0.101
+ for example: 1000->1000, 0.100->0.1, 1.00->1
  */
 - (NSString *)cc_stringByTrimLastTrivalZero;
 
@@ -42,6 +47,11 @@
  @param reachLocation if we find a character in characterSet, the location points to that character, else the location points to the last character + 1
  */
 - (void)cc_runUntilCharacterSet:(NSCharacterSet *)characterSet fromLocation:(NSInteger)location reachLocation:(NSInteger *)reachLocation reachEnd:(BOOL *)end;
+
+/**
+ @"北京"->@"bei jing"
+ */
+- (NSString *)cc_transformToPinyin;
 
 @end
 

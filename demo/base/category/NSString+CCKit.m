@@ -20,6 +20,14 @@
 
 @implementation NSString (CCKit)
 
+- (unichar)cc_lastCharacter {
+    if (self.length > 0) {
+        return [self characterAtIndex:self.length-1];
+    } else {
+        return 0;
+    }
+}
+
 - (NSString *)cc_stringByTrimLastTrivalZero {
     NSRange range = [self rangeOfString:@"."];
     if (range.location == NSNotFound) {
@@ -38,7 +46,7 @@
         if (rangeTrim.location != NSNotFound) {
             NSRange subRange = NSMakeRange(0, [self length] - rangeTrim.length);
             NSString *subStr = [self substringWithRange:subRange];
-            if ([subStr characterAtIndex:[subStr length]-1] == '.') {
+            if ([subStr cc_lastCharacter] == '.') {
                 subStr = [subStr substringToIndex:subRange.length-1];
             }
             return subStr;
@@ -81,6 +89,13 @@
     }
     if (reachLocation) *reachLocation = location;
     if (end) *end = YES;
+}
+
+- (NSString *)cc_transformToPinyin {
+    NSMutableString *mutableString = [NSMutableString stringWithString:self];
+    CFStringTransform((CFMutableStringRef)mutableString, NULL, kCFStringTransformToLatin, false);
+    mutableString = (NSMutableString *)[mutableString stringByFoldingWithOptions:NSDiacriticInsensitiveSearch locale:[NSLocale currentLocale]];
+    return [mutableString stringByReplacingOccurrencesOfString:@"'" withString:@""];
 }
 
 @end
