@@ -33,17 +33,21 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    Class class = _arrayClass[indexPath.row];
-    UIViewController *vc = (UIViewController *)[[class alloc] init];
-    vc.title = _arrayTitle[indexPath.row];
-    id property = _arraySetProperty[indexPath.row];
-    if (property != [NSNull null]) {
-        NSDictionary<NSString *, id> *dictProperty = property;
-        [dictProperty enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-            [vc setValue:obj forKey:key];
-        }];
+    if (_cellSelectedBlock) {
+        _cellSelectedBlock(indexPath);
+    } else {
+        Class class = _arrayClass[indexPath.row];
+        UIViewController *vc = (UIViewController *)[[class alloc] init];
+        vc.title = _arrayTitle[indexPath.row];
+        id property = _arraySetProperty[indexPath.row];
+        if (property != [NSNull null]) {
+            NSDictionary<NSString *, id> *dictProperty = property;
+            [dictProperty enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
+                [vc setValue:obj forKey:key];
+            }];
+        }
+        [self.navigationController pushViewController:vc animated:YES];
     }
-    [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UITableViewDataSource

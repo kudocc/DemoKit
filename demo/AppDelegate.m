@@ -10,6 +10,7 @@
 #import "HomeTableViewController.h"
 #import "CoreTextViewController.h"
 #import "AnimationViewController.h"
+#import "VCTransitionViewController.h"
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
@@ -32,6 +33,7 @@
     HomeTableViewController *vc = [[HomeTableViewController alloc] init];
     vc.arrayTitle = @[@"Core Text",
                       @"Animation",
+                      @"Custom Transition",
                       @"Quartz 2D",
                       @"Image I/O",
                       @"Core Image",
@@ -44,6 +46,7 @@
                       @"Other"];
     vc.arrayClass = @[[CoreTextViewController class],
                       [AnimationViewController class],
+                      [VCTransitionViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
                       [CoreImageViewController class],

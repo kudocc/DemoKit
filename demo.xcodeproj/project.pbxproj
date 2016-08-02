@@ -104,6 +104,11 @@
 		A785B0981CE42F3200A7686D /* ShadowGradientsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */; };
 		A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B09A1CE42FB900A7686D /* UILinearGradientView.m */; };
 		A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C31CF2A902008D5924 /* CCHttpTaskGroup.m */; };
+		A7C6FD181D503E8B00FE4807 /* VCTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */; };
+		A7C6FD211D506F9800FE4807 /* CustomNavigationChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD201D506F9800FE4807 /* CustomNavigationChildViewController.m */; };
+		A7C6FD251D507B4E00FE4807 /* CustomAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */; };
+		A7C6FD291D507C9400FE4807 /* SimpleNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */; };
+		A7C6FD2C1D507D8600FE4807 /* InteractiveNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */; };
 		A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */; };
 		A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0591CE31DE60064AAB7 /* AudioRecordViewController.m */; };
 		A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F05D1CE31DE60064AAB7 /* AudioViewController.m */; };
@@ -329,6 +334,16 @@
 		A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowGradientsViewController.m; sourceTree = "<group>"; };
 		A785B0991CE42FB900A7686D /* UILinearGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILinearGradientView.h; sourceTree = "<group>"; };
 		A785B09A1CE42FB900A7686D /* UILinearGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILinearGradientView.m; sourceTree = "<group>"; };
+		A7C6FD161D503E8B00FE4807 /* VCTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCTransitionViewController.h; sourceTree = "<group>"; };
+		A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTransitionViewController.m; sourceTree = "<group>"; };
+		A7C6FD1F1D506F9800FE4807 /* CustomNavigationChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationChildViewController.h; sourceTree = "<group>"; };
+		A7C6FD201D506F9800FE4807 /* CustomNavigationChildViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomNavigationChildViewController.m; sourceTree = "<group>"; };
+		A7C6FD231D507B4E00FE4807 /* CustomAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomAnimator.h; sourceTree = "<group>"; };
+		A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomAnimator.m; sourceTree = "<group>"; };
+		A7C6FD271D507C9400FE4807 /* SimpleNavigationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleNavigationDelegate.h; sourceTree = "<group>"; };
+		A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleNavigationDelegate.m; sourceTree = "<group>"; };
+		A7C6FD2A1D507D8600FE4807 /* InteractiveNavigationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InteractiveNavigationDelegate.h; sourceTree = "<group>"; };
+		A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InteractiveNavigationDelegate.m; sourceTree = "<group>"; };
 		A7F5F0561CE31DE60064AAB7 /* AudioPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlaybackViewController.h; sourceTree = "<group>"; };
 		A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlaybackViewController.m; sourceTree = "<group>"; };
 		A7F5F0581CE31DE60064AAB7 /* AudioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecordViewController.h; sourceTree = "<group>"; };
@@ -556,6 +571,7 @@
 				A7127FA21CEE8C440023E4FB /* block */,
 				A7147EBE1CFD24900090FCCB /* coreText */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
+				A7C6FD151D503E5700FE4807 /* view_controller_transition */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
 				A773F6941CEC50CE0098F1C8 /* coreImage */,
@@ -741,6 +757,23 @@
 			path = webView;
 			sourceTree = "<group>";
 		};
+		A7C6FD151D503E5700FE4807 /* view_controller_transition */ = {
+			isa = PBXGroup;
+			children = (
+				A7C6FD161D503E8B00FE4807 /* VCTransitionViewController.h */,
+				A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */,
+				A7C6FD1F1D506F9800FE4807 /* CustomNavigationChildViewController.h */,
+				A7C6FD201D506F9800FE4807 /* CustomNavigationChildViewController.m */,
+				A7C6FD271D507C9400FE4807 /* SimpleNavigationDelegate.h */,
+				A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */,
+				A7C6FD2A1D507D8600FE4807 /* InteractiveNavigationDelegate.h */,
+				A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */,
+				A7C6FD231D507B4E00FE4807 /* CustomAnimator.h */,
+				A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */,
+			);
+			path = view_controller_transition;
+			sourceTree = "<group>";
+		};
 		A7F5F0551CE31DE60064AAB7 /* audio */ = {
 			isa = PBXGroup;
 			children = (
@@ -905,6 +938,7 @@
 				TargetAttributes = {
 					A7583C391CE31BFB007558CB = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = 253F6MZR4T;
 					};
 					A7583C521CE31BFB007558CB = {
 						CreatedOnToolsVersion = 7.3;
@@ -1025,6 +1059,7 @@
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
 				A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */,
+				A7C6FD2C1D507D8600FE4807 /* InteractiveNavigationDelegate.m in Sources */,
 				A75723771CED51AC0065AA2E /* BuiltinFilterChainViewController.m in Sources */,
 				A734D1201CF42BCB008276C9 /* HttpViewController.m in Sources */,
 				A773F6971CEC50DF0098F1C8 /* CoreImageViewController.m in Sources */,
@@ -1036,6 +1071,7 @@
 				A785B0841CE32EF800A7686D /* URLSessionCacheViewController.m in Sources */,
 				A77E16B61D373264006E637D /* QRCodeViewController.m in Sources */,
 				A73B4F201D080BC8002E1A1A /* HTMLParserViewController.m in Sources */,
+				A7C6FD211D506F9800FE4807 /* CustomNavigationChildViewController.m in Sources */,
 				A785B0541CE3295D00A7686D /* TestBlendViewController.m in Sources */,
 				A7F5F0771CE31E420064AAB7 /* AnimationViewController.m in Sources */,
 				A7147EC71CFD26070090FCCB /* SimpleChatViewController.m in Sources */,
@@ -1073,6 +1109,7 @@
 				A7F5F0731CE31E420064AAB7 /* CAKeyframeViewController.m in Sources */,
 				A7147EA61CF69A390090FCCB /* NSObject+CCModel.m in Sources */,
 				A785B0921CE3355F00A7686D /* CoordinateViewController.m in Sources */,
+				A7C6FD181D503E8B00FE4807 /* VCTransitionViewController.m in Sources */,
 				A785B0831CE32EF800A7686D /* UIWebViewViewController.m in Sources */,
 				A734D11D1CF42BA9008276C9 /* NetworkViewController.m in Sources */,
 				A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */,
@@ -1096,6 +1133,7 @@
 				A73B4EF21D051838002E1A1A /* CCTextDefine.m in Sources */,
 				A7699BD11D0FA65F00250024 /* LineViewController.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
+				A7C6FD291D507C9400FE4807 /* SimpleNavigationDelegate.m in Sources */,
 				A785B0581CE3295D00A7686D /* CornerRadiusView.m in Sources */,
 				A7147EA91CF6FD450090FCCB /* ModelClass.m in Sources */,
 				A7F5F0741CE31E420064AAB7 /* CAShapeLayerTestViewController.m in Sources */,
@@ -1106,6 +1144,7 @@
 				A773F69E1CEC54920098F1C8 /* ImagePickerViewControllerHelper.m in Sources */,
 				A73B4F0C1D07B19B002E1A1A /* CCFPSLabel.m in Sources */,
 				A785B05E1CE3298A00A7686D /* UIImage+CCKit.m in Sources */,
+				A7C6FD251D507B4E00FE4807 /* CustomAnimator.m in Sources */,
 				A73B4F1B1D07FCDC002E1A1A /* NSString+CCKit.m in Sources */,
 				A73B4EFD1D0792F5002E1A1A /* KVOViewController.m in Sources */,
 				A73B4EF01D051838002E1A1A /* CCLabel.m in Sources */,
@@ -1257,11 +1296,14 @@
 			baseConfigurationReference = EE3C926B60615226292E07E4 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -1270,11 +1312,14 @@
 			baseConfigurationReference = ECBD2C306C1233F71F3C7BBC /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = demo/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kudocc.demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
