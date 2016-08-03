@@ -10,8 +10,7 @@
 #import "CustomNavigationChildViewController.h"
 #import "SimpleNavigationDelegate.h"
 #import "InteractiveNavigationDelegate.h"
-//#import "CustomNavigationController.h"
-//#import "InteractiveNavigationController.h"
+#import "ImageTransitionViewController.h"
 
 @interface VCTransitionViewController ()
 
@@ -35,7 +34,7 @@
 }
 
 - (void)initView {
-    self.arrayTitle = @[@"Custom NavigationController", @"Interactive NavigationController"];
+    self.arrayTitle = @[@"Custom NavigationController", @"Interactive NavigationController", @"Image Transition"];
     
     __weak typeof(self) wself = self;
     self.cellSelectedBlock = ^(NSIndexPath *path) {
@@ -47,12 +46,15 @@
             CustomNavigationChildViewController *vc = [[CustomNavigationChildViewController alloc] init];
             vc.enableTap = YES;
             [wself.navigationController pushViewController:vc animated:YES];
-        } else {
+        } else if (path.row == 1) {
             wself.delegateInteractive = [[InteractiveNavigationDelegate alloc] initWithNavigationController:wself.navigationController];
             wself.navigationController.delegate = wself.delegateInteractive;
             
             CustomNavigationChildViewController *vc = [[CustomNavigationChildViewController alloc] init];
             vc.enableTap = YES;
+            [wself.navigationController pushViewController:vc animated:YES];
+        } else {
+            ImageTransitionViewController *vc = [[ImageTransitionViewController alloc] init];
             [wself.navigationController pushViewController:vc animated:YES];
         }
     };

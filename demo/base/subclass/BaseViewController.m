@@ -30,6 +30,8 @@
     self.view.backgroundColor = [UIColor cc_colorWithRed:239 green:239 blue:244];
     self.view.frame = CGRectMake(0, 0, ScreenWidth, ScreenHeight);
     
+    self.title = NSStringFromClass(self.class);
+    
     NSString *string = @"Tap";
     NSDictionary *attribute = @{NSFontAttributeName:[UIFont systemFontOfSize:14.0], NSForegroundColorAttributeName:[UIColor blueColor]};
     CGRect bounding = [string boundingRectWithSize:CGSizeMake(1024, 30.0) options:0 attributes:attribute context:nil];

@@ -109,6 +109,8 @@
 		A7C6FD251D507B4E00FE4807 /* CustomAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */; };
 		A7C6FD291D507C9400FE4807 /* SimpleNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */; };
 		A7C6FD2C1D507D8600FE4807 /* InteractiveNavigationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */; };
+		A7C6FD301D50975400FE4807 /* ImageTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD2F1D50975400FE4807 /* ImageTransitionViewController.m */; };
+		A7C6FD331D509A9600FE4807 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD321D509A9600FE4807 /* ImagePickerViewController.m */; };
 		A7F5F05E1CE31DE60064AAB7 /* AudioPlaybackViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */; };
 		A7F5F05F1CE31DE60064AAB7 /* AudioRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F0591CE31DE60064AAB7 /* AudioRecordViewController.m */; };
 		A7F5F0611CE31DE60064AAB7 /* AudioViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7F5F05D1CE31DE60064AAB7 /* AudioViewController.m */; };
@@ -344,6 +346,10 @@
 		A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimpleNavigationDelegate.m; sourceTree = "<group>"; };
 		A7C6FD2A1D507D8600FE4807 /* InteractiveNavigationDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InteractiveNavigationDelegate.h; sourceTree = "<group>"; };
 		A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InteractiveNavigationDelegate.m; sourceTree = "<group>"; };
+		A7C6FD2E1D50975400FE4807 /* ImageTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageTransitionViewController.h; sourceTree = "<group>"; };
+		A7C6FD2F1D50975400FE4807 /* ImageTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageTransitionViewController.m; sourceTree = "<group>"; };
+		A7C6FD311D509A9600FE4807 /* ImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewController.h; sourceTree = "<group>"; };
+		A7C6FD321D509A9600FE4807 /* ImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewController.m; sourceTree = "<group>"; };
 		A7F5F0561CE31DE60064AAB7 /* AudioPlaybackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlaybackViewController.h; sourceTree = "<group>"; };
 		A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlaybackViewController.m; sourceTree = "<group>"; };
 		A7F5F0581CE31DE60064AAB7 /* AudioRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecordViewController.h; sourceTree = "<group>"; };
@@ -760,6 +766,8 @@
 		A7C6FD151D503E5700FE4807 /* view_controller_transition */ = {
 			isa = PBXGroup;
 			children = (
+				A7C6FD231D507B4E00FE4807 /* CustomAnimator.h */,
+				A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */,
 				A7C6FD161D503E8B00FE4807 /* VCTransitionViewController.h */,
 				A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */,
 				A7C6FD1F1D506F9800FE4807 /* CustomNavigationChildViewController.h */,
@@ -768,8 +776,10 @@
 				A7C6FD281D507C9400FE4807 /* SimpleNavigationDelegate.m */,
 				A7C6FD2A1D507D8600FE4807 /* InteractiveNavigationDelegate.h */,
 				A7C6FD2B1D507D8600FE4807 /* InteractiveNavigationDelegate.m */,
-				A7C6FD231D507B4E00FE4807 /* CustomAnimator.h */,
-				A7C6FD241D507B4E00FE4807 /* CustomAnimator.m */,
+				A7C6FD2E1D50975400FE4807 /* ImageTransitionViewController.h */,
+				A7C6FD2F1D50975400FE4807 /* ImageTransitionViewController.m */,
+				A7C6FD311D509A9600FE4807 /* ImagePickerViewController.h */,
+				A7C6FD321D509A9600FE4807 /* ImagePickerViewController.m */,
 			);
 			path = view_controller_transition;
 			sourceTree = "<group>";
@@ -1092,6 +1102,7 @@
 				A773F68C1CE9D6B60098F1C8 /* ImageDestinationViewController.m in Sources */,
 				A7F5F0721CE31E420064AAB7 /* CABasicAnimationTestViewController.m in Sources */,
 				A785B0561CE3295D00A7686D /* TestMissalignedViewController.m in Sources */,
+				A7C6FD331D509A9600FE4807 /* ImagePickerViewController.m in Sources */,
 				A785B0551CE3295D00A7686D /* TestDrawScaleViewController.m in Sources */,
 				A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */,
 				A73B4F151D07C647002E1A1A /* CCHTMLParser.m in Sources */,
@@ -1121,6 +1132,7 @@
 				A785B08F1CE3344D00A7686D /* UIView+CCKit.m in Sources */,
 				A785B0611CE32B5A00A7686D /* CornerRadiusView+WebCache.m in Sources */,
 				A7699BD81D129ADA00250024 /* CoreTextExclusivePathViewController.m in Sources */,
+				A7C6FD301D50975400FE4807 /* ImageTransitionViewController.m in Sources */,
 				A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */,
 				A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */,
 				A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */,
