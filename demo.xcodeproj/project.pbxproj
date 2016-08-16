@@ -65,6 +65,7 @@
 		A7699C1F1D1A28BF00250024 /* ImageViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699C1E1D1A28BF00250024 /* ImageViewContainer.m */; };
 		A7699C221D1A34A500250024 /* DrawImagePerformanceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699C211D1A34A500250024 /* DrawImagePerformanceViewController.m */; };
 		A7699C251D1A361700250024 /* DrawViewContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = A7699C241D1A361700250024 /* DrawViewContainer.m */; };
+		A773BD1E1D62AE8D008E53C1 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD1D1D62AE8D008E53C1 /* AudioListViewController.m */; };
 		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
 		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
 		A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */; };
@@ -265,6 +266,8 @@
 		A7699C211D1A34A500250024 /* DrawImagePerformanceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawImagePerformanceViewController.m; sourceTree = "<group>"; };
 		A7699C231D1A361700250024 /* DrawViewContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DrawViewContainer.h; sourceTree = "<group>"; };
 		A7699C241D1A361700250024 /* DrawViewContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DrawViewContainer.m; sourceTree = "<group>"; };
+		A773BD1C1D62AE8D008E53C1 /* AudioListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioListViewController.h; sourceTree = "<group>"; };
+		A773BD1D1D62AE8D008E53C1 /* AudioListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioListViewController.m; sourceTree = "<group>"; };
 		A773F6771CE810E40098F1C8 /* PathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathViewController.h; sourceTree = "<group>"; };
 		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
 		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
@@ -584,6 +587,7 @@
 				A7147EBE1CFD24900090FCCB /* coreText */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
 				A7C6FD151D503E5700FE4807 /* view_controller_transition */,
+				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A7A0E7B31D54244100A8EAF8 /* autoLayout */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
@@ -592,7 +596,6 @@
 				A7147EAA1CF7EFE00090FCCB /* model */,
 				A7583C751CE31C88007558CB /* urlSession */,
 				A785B0751CE32EF800A7686D /* webView */,
-				A7F5F0551CE31DE60064AAB7 /* audio */,
 				A785B03F1CE3295D00A7686D /* performance */,
 				A7583C401CE31BFB007558CB /* AppDelegate.h */,
 				A7583C411CE31BFB007558CB /* AppDelegate.m */,
@@ -807,6 +810,8 @@
 			children = (
 				A7F5F05C1CE31DE60064AAB7 /* AudioViewController.h */,
 				A7F5F05D1CE31DE60064AAB7 /* AudioViewController.m */,
+				A773BD1C1D62AE8D008E53C1 /* AudioListViewController.h */,
+				A773BD1D1D62AE8D008E53C1 /* AudioListViewController.m */,
 				A7F5F0561CE31DE60064AAB7 /* AudioPlaybackViewController.h */,
 				A7F5F0571CE31DE60064AAB7 /* AudioPlaybackViewController.m */,
 				A7F5F0581CE31DE60064AAB7 /* AudioRecordViewController.h */,
@@ -1127,6 +1132,7 @@
 				A73B4F151D07C647002E1A1A /* CCHTMLParser.m in Sources */,
 				A773F6921CEC007D0098F1C8 /* IncrementalImageSourceViewController.m in Sources */,
 				A73B4EF11D051838002E1A1A /* CCTextContainer.m in Sources */,
+				A773BD1E1D62AE8D008E53C1 /* AudioListViewController.m in Sources */,
 				A73B4EF81D0551C0002E1A1A /* NSDictionary+CCKit.m in Sources */,
 				A785B0821CE32EF800A7686D /* UIWebViewCacheViewController.m in Sources */,
 				A7147EC41CFD24F30090FCCB /* CoreTextChatViewController.m in Sources */,

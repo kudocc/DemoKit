@@ -9,125 +9,134 @@
 #import "AudioPlaybackViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+CCKit.h"
+#import "UIView+CCKit.h"
 
-@interface AudioPlaybackViewController () <UITableViewDataSource, UITableViewDelegate, AVAudioPlayerDelegate> {
-    NSInteger pageSize;
+@interface AudioPlaybackViewController () <AVAudioPlayerDelegate> {
+    NSString *_oldAudioSessionCategory;
 }
 
-@property (nonatomic, strong) UITableView *tableView;
-@property (nonatomic, strong) NSArray *arrayFile;
-@property (nonatomic, strong) AVAudioPlayer *player;
-@property (nonatomic, assign) NSUInteger indexPlay;
+@property (nonatomic) UIButton *buttonPlay;
+@property (nonatomic) AVAudioPlayer *player;
 
 @end
 
 @implementation AudioPlaybackViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    CGSize size = CGSizeMake(self.view.bounds.size.width, [UIScreen mainScreen].bounds.size.height-44-20);
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0.0, 0.0, size.width, size.height) style:UITableViewStylePlain];
-    [self.view addSubview:_tableView];
-    _tableView.dataSource = self;
-    _tableView.delegate = self;
-    _tableView.tableFooterView = [UIView new];
+    if (_player.isPlaying) {
+        [_player stop];
+    }
     
-    NSString *path = [NSString cc_documentPath];
-    _arrayFile = [self listFileAtPath:path];
+    if (_oldAudioSessionCategory) {
+        NSError *error = nil;
+        [[AVAudioSession sharedInstance] setCategory:_oldAudioSessionCategory
+                                               error:&error];
+        if (error) {
+            NSLog(@"set category: %@", [error localizedDescription]);
+            return;
+        }
+    }
     
-    _indexPlay = NSNotFound;
-}
-
-- (NSArray *)listFileAtPath:(NSString *)path {
-    return [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL];
-}
-
-- (AVAudioPlayer *)playFile:(NSString *)file {
-    NSURL *url = [NSURL URLWithString:file];
+    // When passed in the flags parameter of the setActive:withOptions:error: instance method, indicates that when your audio session deactivates, other audio sessions that had been interrupted by your session can return to their active state
     NSError *error = nil;
-    AVAudioPlayer *player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
-    player.delegate = self;
+    [[AVAudioSession sharedInstance] setActive:NO
+                                   withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation
+                                         error:&error];
     if (error) {
-        NSLog(@"error[%@] when play %@", error, file);
+        NSLog(@"deactive audio session: %@", [error localizedDescription]);
     }
-    BOOL res = [player play];
-    NSLog(@"play file %@, result %@, duration %f", file, @(res), player.duration);
-    return player;
 }
 
-#pragma mark - UITableViewDelegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44.0;
-}
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+- (void)initView {
     
-    if ([_player isPlaying]) {
-        if (indexPath.row == _indexPlay) {
-            [_player stop];
-        } else {
-            [_player stop];
-            NSString *fileName = _arrayFile[indexPath.row];
-            NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
-            _player = [self playFile:filePath];
-            _indexPlay = indexPath.row;
-            self.title = [NSString stringWithFormat:@"play:%@", fileName];
-        }
+    // set up audio session
+    _oldAudioSessionCategory = [AVAudioSession sharedInstance].category;
+    NSLog(@"old audio session category:%@", _oldAudioSessionCategory);
+    
+    NSError *error = nil;
+    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayback error:&error];
+    if (error) {
+        NSLog(@"audioSession: %@", [error localizedDescription]);
+        return;
+    }
+    error = nil;
+    [[AVAudioSession sharedInstance] setActive:YES error:&error];
+    if (error) {
+        NSLog(@"audioSession: %@", [error localizedDescription]);
+        return;
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(handleInterruption:)
+                                                 name:AVAudioSessionInterruptionNotification
+                                               object:[AVAudioSession sharedInstance]];
+    
+    CGRect frame = CGRectMake(0.0, 100.0, self.view.bounds.size.width, 44.0);
+    
+    _buttonPlay = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
+    [_buttonPlay setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [_buttonPlay addTarget:self action:@selector(playButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    _buttonPlay.layer.borderColor = [UIColor blackColor].CGColor;
+    _buttonPlay.layer.borderWidth = 1.0;
+    _buttonPlay.frame = CGRectInset(frame, 10, 0);
+    [self.view addSubview:_buttonPlay];
+    
+    NSURL *url = [NSURL fileURLWithPath:_audioPath];
+    error = nil;
+    _player = [[AVAudioPlayer alloc] initWithContentsOfURL:url error:&error];
+    _player.delegate = self;
+    if (error) {
+        NSLog(@"error[%@] when play %@", error, _audioPath);
+    }
+}
+
+- (void)playButtonPressed:(UIButton *)button {
+    if (_player.playing) {
+        [_player pause];
+        self.title = @"Paused";
+        [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
     } else {
-        if (indexPath.row == _indexPlay) {
-            [_player play];
+        if ([_player play]) {
+            self.title = @"Playing";
+            [_buttonPlay setTitle:@"Pause" forState:UIControlStateNormal];
         } else {
-            NSString *fileName = _arrayFile[indexPath.row];
-            NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
-            _player = [self playFile:filePath];
-            _indexPlay = indexPath.row;
-            self.title = [NSString stringWithFormat:@"play:%@", fileName];
+            self.title = @"Play error";
+            [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
+            NSLog(@"Play error");
         }
     }
 }
 
-#pragma mark - UITableViewDataSource
+#pragma mark -
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [_arrayFile count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *const CellIdentifier = @"CellIdentifier";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+- (void)handleInterruption:(NSNotification *)notification {
+    AVAudioSessionInterruptionType type = [notification.userInfo[AVAudioSessionInterruptionTypeKey] unsignedIntegerValue];
+    if (type == AVAudioSessionInterruptionTypeBegan) {
+        self.title = @"begin interruption";
+        NSLog(@"begin interruption");
+    } else {
+        self.title = @"end interruption";
+        NSLog(@"end interruption");
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@", _arrayFile[indexPath.row]];
-    return cell;
 }
 
 #pragma mark - AVAudioPlayerDelegate
 
 - (void)audioPlayerBeginInterruption:(AVAudioPlayer *)player {
-    if (_player == player) {
-        NSString *file = _arrayFile[_indexPlay];
-        self.title = [NSString stringWithFormat:@"interruption:%@", file];
-    }
+    self.title = @"begin interruption";
 }
 
 - (void)audioPlayerEndInterruption:(AVAudioPlayer *)player withOptions:(NSUInteger)flags {
-    if (_player == player) {
-        NSString *file = _arrayFile[_indexPlay];
-        self.title = [NSString stringWithFormat:@"play:%@", file];
-        [player play];
-    }
+    self.title = @"end interruption";
+    [_player play];
 }
 
 - (void)audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag {
-    if (_player == player) {
-        NSString *file = _arrayFile[_indexPlay];
-        self.title = [NSString stringWithFormat:@"stop play:%@", file];
-    }
+    self.title = @"play finished";
+    [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
 }
 
 @end

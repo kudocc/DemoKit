@@ -6,8 +6,8 @@
 //  Copyright (c) 2015年 KudoCC. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "BaseViewController.h"
 
-@interface AudioRecordViewController : UIViewController
+@interface AudioRecordViewController : BaseViewController
 
 @end

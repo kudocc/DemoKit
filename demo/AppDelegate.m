@@ -35,6 +35,7 @@
     vc.arrayTitle = @[@"Core Text",
                       @"Animation",
                       @"Custom Transition",
+                      @"Audio",
                       @"AutoLayout",
                       @"Quartz 2D",
                       @"Image I/O",
@@ -44,11 +45,11 @@
                       @"Performance",
                       @"URLSession",
                       @"WebView & WebCache",
-                      @"Audio",
                       @"Other"];
     vc.arrayClass = @[[CoreTextViewController class],
                       [AnimationViewController class],
                       [VCTransitionViewController class],
+                      [AudioViewController class],
                       [AutoLayoutViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
@@ -58,7 +59,6 @@
                       [PerformanceViewController class],
                       [UrlSessionViewController class],
                       [WebViewController class],
-                      [AudioViewController class],
                       [OtherViewController class]];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     

@@ -8,19 +8,56 @@
 
 #import "AudioViewController.h"
 #import "AudioRecordViewController.h"
-#import "AudioPlaybackViewController.h"
+#import "AudioListViewController.h"
+#import <AVFoundation/AVFoundation.h>
 
 @interface AudioViewController ()
 @end
 
 @implementation AudioViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+- (void)initView {
+    [super initView];
     
-    self.arrayTitle = @[@"Record", @"Playback"];
-    self.arrayClass = @[[AudioRecordViewController class], [AudioPlaybackViewController class]];
+    self.arrayTitle = @[@"Record", @"Playback-Audio list"];
+    self.arrayClass = @[[AudioRecordViewController class], [AudioListViewController class]];
+    
+    [self checkAudioCodeC];
+}
+
+- (Boolean)checkAudioCodeC {
+    Boolean isAvailable = false;
+    OSStatus error;
+    
+    // get an array of AudioClassDescriptions for all installed encoders for the given format
+    // the specifier is the format that we are interested in - this is 'aac ' in our case
+    UInt32 encoderSpecifier = kAudioFormatMPEG4AAC;
+    UInt32 size;
+    
+    error = AudioFormatGetPropertyInfo(kAudioFormatProperty_Encoders, sizeof(encoderSpecifier),
+                                       &encoderSpecifier, &size);
+    if (error) {
+        printf("AudioFormatGetPropertyInfo kAudioFormatProperty_Encoders error %lu %4.4s\n", (unsigned long)error, (char*)&error);
+        return false;
+    }
+    
+    UInt32 numEncoders = size / sizeof(AudioClassDescription);
+    AudioClassDescription encoderDescriptions[numEncoders];
+    
+    error = AudioFormatGetProperty(kAudioFormatProperty_Encoders, sizeof(encoderSpecifier),
+                                   &encoderSpecifier, &size, encoderDescriptions);
+    if (error) {
+        printf("AudioFormatGetProperty kAudioFormatProperty_Encoders error %lu %4.4s\n",
+                        (unsigned long)error, (char*)&error);
+        return false;
+    }
+    
+    for (UInt32 i=0; i < numEncoders; ++i) {
+        if (encoderDescriptions[i].mSubType == kAudioFormatMPEG4AAC &&
+            encoderDescriptions[i].mManufacturer == kAppleHardwareAudioCodecManufacturer) isAvailable = true;
+    }
+    
+    return isAvailable;
 }
 
 @end
