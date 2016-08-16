@@ -103,6 +103,8 @@
 		A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0941CE41A2500A7686D /* UIColor+CCKit.m */; };
 		A785B0981CE42F3200A7686D /* ShadowGradientsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */; };
 		A785B09B1CE42FB900A7686D /* UILinearGradientView.m in Sources */ = {isa = PBXBuildFile; fileRef = A785B09A1CE42FB900A7686D /* UILinearGradientView.m */; };
+		A7A0E7B61D54245800A8EAF8 /* AutoLayoutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7A0E7B51D54245800A8EAF8 /* AutoLayoutViewController.m */; };
+		A7A0E7B91D5424A500A8EAF8 /* AutoLayoutSimpleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7A0E7B81D5424A500A8EAF8 /* AutoLayoutSimpleViewController.m */; };
 		A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = A70E90C31CF2A902008D5924 /* CCHttpTaskGroup.m */; };
 		A7C6FD181D503E8B00FE4807 /* VCTransitionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */; };
 		A7C6FD211D506F9800FE4807 /* CustomNavigationChildViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A7C6FD201D506F9800FE4807 /* CustomNavigationChildViewController.m */; };
@@ -336,6 +338,10 @@
 		A785B0971CE42F3200A7686D /* ShadowGradientsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShadowGradientsViewController.m; sourceTree = "<group>"; };
 		A785B0991CE42FB900A7686D /* UILinearGradientView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UILinearGradientView.h; sourceTree = "<group>"; };
 		A785B09A1CE42FB900A7686D /* UILinearGradientView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UILinearGradientView.m; sourceTree = "<group>"; };
+		A7A0E7B41D54245800A8EAF8 /* AutoLayoutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoLayoutViewController.h; sourceTree = "<group>"; };
+		A7A0E7B51D54245800A8EAF8 /* AutoLayoutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoLayoutViewController.m; sourceTree = "<group>"; };
+		A7A0E7B71D5424A500A8EAF8 /* AutoLayoutSimpleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoLayoutSimpleViewController.h; sourceTree = "<group>"; };
+		A7A0E7B81D5424A500A8EAF8 /* AutoLayoutSimpleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AutoLayoutSimpleViewController.m; sourceTree = "<group>"; };
 		A7C6FD161D503E8B00FE4807 /* VCTransitionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VCTransitionViewController.h; sourceTree = "<group>"; };
 		A7C6FD171D503E8B00FE4807 /* VCTransitionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VCTransitionViewController.m; sourceTree = "<group>"; };
 		A7C6FD1F1D506F9800FE4807 /* CustomNavigationChildViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomNavigationChildViewController.h; sourceTree = "<group>"; };
@@ -578,6 +584,7 @@
 				A7147EBE1CFD24900090FCCB /* coreText */,
 				A7F5F0621CE31E420064AAB7 /* animation */,
 				A7C6FD151D503E5700FE4807 /* view_controller_transition */,
+				A7A0E7B31D54244100A8EAF8 /* autoLayout */,
 				A785B0261CE3258C00A7686D /* quartz2D */,
 				A773F67E1CE975C00098F1C8 /* imageIO */,
 				A773F6941CEC50CE0098F1C8 /* coreImage */,
@@ -761,6 +768,17 @@
 				A785B0771CE32EF800A7686D /* UIWebViewCacheViewController.m */,
 			);
 			path = webView;
+			sourceTree = "<group>";
+		};
+		A7A0E7B31D54244100A8EAF8 /* autoLayout */ = {
+			isa = PBXGroup;
+			children = (
+				A7A0E7B41D54245800A8EAF8 /* AutoLayoutViewController.h */,
+				A7A0E7B51D54245800A8EAF8 /* AutoLayoutViewController.m */,
+				A7A0E7B71D5424A500A8EAF8 /* AutoLayoutSimpleViewController.h */,
+				A7A0E7B81D5424A500A8EAF8 /* AutoLayoutSimpleViewController.m */,
+			);
+			path = autoLayout;
 			sourceTree = "<group>";
 		};
 		A7C6FD151D503E5700FE4807 /* view_controller_transition */ = {
@@ -1067,6 +1085,7 @@
 				A757237D1CED54560065AA2E /* FaceDetectorViewController.m in Sources */,
 				A785B0951CE41A2500A7686D /* UIColor+CCKit.m in Sources */,
 				A785B0741CE32D9F00A7686D /* UrlSessionViewController.m in Sources */,
+				A7A0E7B61D54245800A8EAF8 /* AutoLayoutViewController.m in Sources */,
 				A785B05B1CE3295D00A7686D /* PerformanceViewController.m in Sources */,
 				A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */,
 				A7C6FD2C1D507D8600FE4807 /* InteractiveNavigationDelegate.m in Sources */,
@@ -1135,6 +1154,7 @@
 				A7C6FD301D50975400FE4807 /* ImageTransitionViewController.m in Sources */,
 				A70EC73E1CF585DC008C4254 /* ImageBlendViewController.m in Sources */,
 				A7BCE5A01CF303A800A7C356 /* CCHttpTaskGroup.m in Sources */,
+				A7A0E7B91D5424A500A8EAF8 /* AutoLayoutSimpleViewController.m in Sources */,
 				A7147EC11CFD24B70090FCCB /* CoreTextViewController.m in Sources */,
 				A7F5F0751CE31E420064AAB7 /* ImplicityAnimationViewController.m in Sources */,
 				A7147ECF1CFE788E0090FCCB /* CCAsyncLayer.m in Sources */,

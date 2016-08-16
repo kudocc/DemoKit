@@ -11,6 +11,7 @@
 #import "CoreTextViewController.h"
 #import "AnimationViewController.h"
 #import "VCTransitionViewController.h"
+#import "AutoLayoutViewController.h"
 #import "Quartz2DViewController.h"
 #import "ImageIOViewController.h"
 #import "CoreImageViewController.h"
@@ -34,6 +35,7 @@
     vc.arrayTitle = @[@"Core Text",
                       @"Animation",
                       @"Custom Transition",
+                      @"AutoLayout",
                       @"Quartz 2D",
                       @"Image I/O",
                       @"Core Image",
@@ -47,6 +49,7 @@
     vc.arrayClass = @[[CoreTextViewController class],
                       [AnimationViewController class],
                       [VCTransitionViewController class],
+                      [AutoLayoutViewController class],
                       [Quartz2DViewController class],
                       [ImageIOViewController class],
                       [CoreImageViewController class],
