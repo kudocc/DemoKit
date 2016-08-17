@@ -9,10 +9,6 @@
 #import <Foundation/Foundation.h>
 #import <AudioToolbox/AudioToolbox.h>
 
-/**
- AAC-HE recorder
- */
-
 @protocol AudioQueueRecorderDelegate;
 @interface AudioQueueRecorder : NSObject
 
@@ -32,8 +28,8 @@
 
 @protocol AudioQueueRecorderDelegate <NSObject>
 
-- (AudioStreamBasicDescription)audioStreamBasicDescription;
+- (AudioStreamBasicDescription)audioStreamBasicDescriptionOfRecorder:(AudioQueueRecorder *)recorder;
 
-- (void)recordBuffer:(AudioQueueBufferRef)buffer streamPacketDescriptionList:(const AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets;
+- (void)recorder:(AudioQueueRecorder *)recorder recordBuffer:(AudioQueueBufferRef)buffer streamPacketDescList:(const AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets;
 
 @end

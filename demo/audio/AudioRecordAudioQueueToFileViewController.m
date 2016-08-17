@@ -117,8 +117,6 @@
     _basicDescription.mBitsPerChannel = 0;
     _basicDescription.mReserved = 0;
     
-    _recorder = [[AudioQueueRecorder alloc] initWithDelegate:self];
-    
     // create audio queue file
     NSDate *current = [NSDate date];
     NSString *fileName = [NSString stringWithFormat:@"%ld", (long)[current timeIntervalSince1970]];
@@ -129,6 +127,8 @@
     if (status != noErr) {
         _audioFileID = NULL;
     }
+    
+    _recorder = [[AudioQueueRecorder alloc] initWithDelegate:self];
 }
 
 - (void)startRecord:(id)obj {
@@ -165,11 +165,11 @@
 
 #pragma mark - AudioQueueRecorderDelegate
 
-- (AudioStreamBasicDescription)audioStreamBasicDescription {
+- (AudioStreamBasicDescription)audioStreamBasicDescriptionOfRecorder:(AudioQueueRecorder *)recorder {
     return _basicDescription;
 }
 
-- (void)recordBuffer:(AudioQueueBufferRef)buffer streamPacketDescriptionList:(const AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets {
+- (void)recorder:(AudioQueueRecorder *)recorder recordBuffer:(AudioQueueBufferRef)buffer streamPacketDescList:(const AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets {
     if (inNumPackets == 0 && _basicDescription.mBytesPerPacket != 0)
         inNumPackets = buffer->mAudioDataByteSize / _basicDescription.mBytesPerPacket;
     

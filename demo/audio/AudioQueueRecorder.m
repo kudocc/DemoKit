@@ -29,7 +29,7 @@ static void HandleInputBuffer (void *aqData,
     AudioQueueRecorder *sself = (__bridge AudioQueueRecorder *)aqData;
     
     // call delegate
-    [sself.delegate recordBuffer:inBuffer streamPacketDescriptionList:inPacketDesc numberOfPacketDescription:inNumPackets];
+    [sself.delegate recorder:sself recordBuffer:inBuffer streamPacketDescList:inPacketDesc numberOfPacketDescription:inNumPackets];
     
     // enqueue buffer
     AudioQueueEnqueueBuffer(sself->_audioQueue, inBuffer, 0, NULL);
@@ -64,7 +64,7 @@ static void HandleInputBuffer (void *aqData,
         }
         
         // set up `AudioStreamBasicDescription`
-        _basicDescription = [_delegate audioStreamBasicDescription];
+        _basicDescription = [_delegate audioStreamBasicDescriptionOfRecorder:self];
     }
     return self;
 }
@@ -77,8 +77,6 @@ static void HandleInputBuffer (void *aqData,
 }
 
 - (BOOL)startRecord {
-    // set up `AudioStreamBasicDescription`
-    _basicDescription = [_delegate audioStreamBasicDescription];
     
     OSStatus status;
     // create a record audio queue

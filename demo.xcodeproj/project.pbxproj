@@ -68,6 +68,8 @@
 		A773BD1E1D62AE8D008E53C1 /* AudioListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD1D1D62AE8D008E53C1 /* AudioListViewController.m */; };
 		A773BD271D63FB4F008E53C1 /* AudioQueueRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD261D63FB4F008E53C1 /* AudioQueueRecorder.m */; };
 		A773BD2A1D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD291D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.m */; };
+		A773BD2D1D643C68008E53C1 /* AudioQueuePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD2C1D643C68008E53C1 /* AudioQueuePlayer.m */; };
+		A773BD301D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773BD2F1D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.m */; };
 		A773F6791CE810E40098F1C8 /* PathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6781CE810E40098F1C8 /* PathViewController.m */; };
 		A773F67C1CE86BC80098F1C8 /* PatternViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F67B1CE86BC80098F1C8 /* PatternViewController.m */; };
 		A773F6811CE975DA0098F1C8 /* ImageIOViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A773F6801CE975DA0098F1C8 /* ImageIOViewController.m */; };
@@ -274,6 +276,10 @@
 		A773BD261D63FB4F008E53C1 /* AudioQueueRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioQueueRecorder.m; sourceTree = "<group>"; };
 		A773BD281D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioRecordAudioQueueToFileViewController.h; sourceTree = "<group>"; };
 		A773BD291D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioRecordAudioQueueToFileViewController.m; sourceTree = "<group>"; };
+		A773BD2B1D643C68008E53C1 /* AudioQueuePlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioQueuePlayer.h; sourceTree = "<group>"; };
+		A773BD2C1D643C68008E53C1 /* AudioQueuePlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioQueuePlayer.m; sourceTree = "<group>"; };
+		A773BD2E1D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayAudioQueueFromFileViewController.h; sourceTree = "<group>"; };
+		A773BD2F1D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayAudioQueueFromFileViewController.m; sourceTree = "<group>"; };
 		A773F6771CE810E40098F1C8 /* PathViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PathViewController.h; sourceTree = "<group>"; };
 		A773F6781CE810E40098F1C8 /* PathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PathViewController.m; sourceTree = "<group>"; };
 		A773F67A1CE86BC80098F1C8 /* PatternViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternViewController.h; sourceTree = "<group>"; };
@@ -824,8 +830,12 @@
 				A7F5F0591CE31DE60064AAB7 /* AudioRecordViewController.m */,
 				A773BD281D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.h */,
 				A773BD291D640C6A008E53C1 /* AudioRecordAudioQueueToFileViewController.m */,
+				A773BD2E1D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.h */,
+				A773BD2F1D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.m */,
 				A773BD251D63FB4F008E53C1 /* AudioQueueRecorder.h */,
 				A773BD261D63FB4F008E53C1 /* AudioQueueRecorder.m */,
+				A773BD2B1D643C68008E53C1 /* AudioQueuePlayer.h */,
+				A773BD2C1D643C68008E53C1 /* AudioQueuePlayer.m */,
 			);
 			path = audio;
 			sourceTree = "<group>";
@@ -1128,6 +1138,7 @@
 				A7147EED1D0172B40090FCCB /* CCLabelDemoViewController.m in Sources */,
 				A73B4EF41D051838002E1A1A /* CCTextLine.m in Sources */,
 				A73B4F061D079524002E1A1A /* KVOSubViewController.m in Sources */,
+				A773BD2D1D643C68008E53C1 /* AudioQueuePlayer.m in Sources */,
 				A785B08A1CE3303F00A7686D /* WebViewController.m in Sources */,
 				A7699C221D1A34A500250024 /* DrawImagePerformanceViewController.m in Sources */,
 				A7147EE41CFEE1470090FCCB /* NSAttributedString+CCKit.m in Sources */,
@@ -1185,6 +1196,7 @@
 				A7F5F07D1CE31F7F0064AAB7 /* BaseViewController.m in Sources */,
 				A73B4F091D07973A002E1A1A /* OtherViewController.m in Sources */,
 				A73B4EF21D051838002E1A1A /* CCTextDefine.m in Sources */,
+				A773BD301D644A47008E53C1 /* AudioPlayAudioQueueFromFileViewController.m in Sources */,
 				A7699BD11D0FA65F00250024 /* LineViewController.m in Sources */,
 				A734D1291CF42C31008276C9 /* HttpComplexRequestsViewController.m in Sources */,
 				A7C6FD291D507C9400FE4807 /* SimpleNavigationDelegate.m in Sources */,
