@@ -38,7 +38,8 @@ static void HandleInputBuffer (void *aqData,
 @implementation AudioQueueRecorder
 
 - (UInt32)deriveAudioBufferWithSeconds:(Float64)seconds {
-    static const int maxBufferSize = 0x50000;
+    // 0x10000 = 1*16*16*16*16 ~ 64k
+    static const int maxBufferSize = 0x10000;
     
     int maxPacketSize = _basicDescription.mBytesPerPacket;
     if (maxPacketSize == 0) {
@@ -50,7 +51,8 @@ static void HandleInputBuffer (void *aqData,
     }
     
     Float64 numBytesForTime = _basicDescription.mSampleRate * maxPacketSize * seconds;
-    return numBytesForTime < maxBufferSize ? numBytesForTime : maxBufferSize;
+    numBytesForTime = numBytesForTime < maxBufferSize ? numBytesForTime : maxBufferSize;
+    return numBytesForTime < maxPacketSize ? maxPacketSize : numBytesForTime;
 }
 
 - (instancetype)initWithDelegate:(id<AudioQueueRecorderDelegate>)delegate {
@@ -93,7 +95,7 @@ static void HandleInputBuffer (void *aqData,
         goto Failed_label;
     }
     
-    _bufferByteSize = [self deriveAudioBufferWithSeconds:0.5];
+    _bufferByteSize = [self deriveAudioBufferWithSeconds:0.2];
 
     for (NSInteger i = 0; i < kNumberBuffers; ++i) {
         status = AudioQueueAllocateBuffer(_audioQueue, _bufferByteSize, &_audioQueueBuffer[i]);
@@ -120,7 +122,7 @@ static void HandleInputBuffer (void *aqData,
     
 Failed_label:
     if (_audioQueue) {
-        AudioQueueDispose(_audioQueue, true);
+        AudioQueueDispose(_audioQueue, false);
         _audioQueue = NULL;
     }
     for (NSInteger i = 0; i < kNumberBuffers; ++i) {
