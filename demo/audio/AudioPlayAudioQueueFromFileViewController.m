@@ -33,10 +33,6 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    if (_player.playing) {
-        [_player stopPlay];
-    }
-    
     if (_oldAudioSessionCategory) {
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory:_oldAudioSessionCategory
@@ -106,6 +102,9 @@
     }
     
     if (_audioFileID) {
+        int seconds = [self getAudioFileDuration];
+        NSLog(@"Audio file duration:%d", seconds);
+        
         UInt32 dataFormatSize = sizeof (_basicDescription);
         status = AudioFileGetProperty(_audioFileID, kAudioFilePropertyDataFormat, &dataFormatSize, &_basicDescription);
         if (status == noErr) {
@@ -115,12 +114,47 @@
             [self deriveBufferSize:maxPacketSize seconds:1 outBufferSize:&_bufferByteSize outNumPacketsToRead:&_numPacketRead];
             
             _player = [[AudioQueuePlayer alloc] initWithDelegate:self];
+            
+            // set audio queue magic cookie
+            UInt32 cookieSize = sizeof(UInt32);
+            bool couldNotGetProperty = AudioFileGetPropertyInfo(_audioFileID, kAudioFilePropertyMagicCookieData, &cookieSize, NULL);
+            if (!couldNotGetProperty && cookieSize) {
+                char* magicCookie = (char *)malloc(cookieSize);
+                OSStatus status = AudioFileGetProperty(_audioFileID, kAudioFilePropertyMagicCookieData, &cookieSize, magicCookie);
+#ifdef DEBUG
+                if (status != noErr) {
+                    NSLog(@"Audio File Get Magic Cookie data fail:%d", status);
+                }
+#endif
+                status = AudioQueueSetProperty(_player.audioQueue, kAudioQueueProperty_MagicCookie, magicCookie, cookieSize);
+#ifdef DEBUG
+                if (status != noErr) {
+                    NSLog(@"Audio Queue set Magic Cookie data fail:%d", status);
+                }
+#endif
+                free(magicCookie);
+            }
         }
     }
 }
 
+- (int)getAudioFileDuration {
+    UInt32 dataSize = 0;
+    UInt32 writable = 0;
+    OSStatus status = AudioFileGetPropertyInfo(_audioFileID, kAudioFilePropertyEstimatedDuration, &dataSize, &writable);
+    if (status == noErr) {
+        void *duration = malloc(dataSize);
+        AudioFileGetProperty(_audioFileID, kAudioFilePropertyEstimatedDuration, &dataSize, duration);
+        double seconds = 0;
+        memcpy(&seconds, duration, sizeof(seconds));
+        free(duration);
+        return seconds;
+    }
+    return 0;
+}
+
 - (void)deriveBufferSize:(UInt32)maxPacketSize seconds:(Float64)seconds outBufferSize:(UInt32 *)outBufferSize outNumPacketsToRead:(UInt32 *)outNumPacketsToRead {
-    static const int maxBufferSize = 0x50000;
+    static const int maxBufferSize = 0x10000;
     static const int minBufferSize = 0x4000;
     
     if (_basicDescription.mFramesPerPacket != 0) {
@@ -133,9 +167,8 @@
     if (*outBufferSize > maxBufferSize &&
         *outBufferSize > maxPacketSize)
         *outBufferSize = maxBufferSize;
-    else {
-        if (*outBufferSize < minBufferSize)
-            *outBufferSize = minBufferSize;
+    else if (*outBufferSize < minBufferSize) {
+        *outBufferSize = minBufferSize;
     }
     *outNumPacketsToRead = *outBufferSize / maxPacketSize;
 }
@@ -146,7 +179,7 @@
         self.title = @"Paused";
         [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
     } else {
-        if ([_player startPlay]) {
+        if ([_player play]) {
             self.title = @"Playing";
             [_buttonPlay setTitle:@"Pause" forState:UIControlStateNormal];
         } else {
@@ -176,26 +209,36 @@
     return _basicDescription;
 }
 
-- (void)player:(AudioQueuePlayer *)player bufferByteSize:(UInt32 *)outBufferSize numPacketsToRead:(UInt32 *)outNumPacketsToRead {
+- (void)audioQueuePlayer:(AudioQueuePlayer *)player
+       getBufferByteSize:(UInt32 *)outBufferSize
+      packetToReadNumber:(UInt32 *)outPacketToReadNumber {
     *outBufferSize = _bufferByteSize;
-    *outNumPacketsToRead = _numPacketRead;
+    *outPacketToReadNumber = _numPacketRead;
 }
 
-// return writed number of packets
-- (UInt32)player:(AudioQueuePlayer *)player
-     primeBuffer:(AudioQueueBufferRef)buffer
-streamPacketDescList:(AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets {
+- (void)audioQueuePlayer:(AudioQueuePlayer *)player
+             primeBuffer:(AudioQueueBufferRef)inAudioQueueBuffer
+ streamPacketDescription:(AudioStreamPacketDescription *)inPacketDesc
+       descriptionNumber:(UInt32)inNumPackets
+        readPacketNumber:(UInt32 *)outReadPacketNumber
+          readByteNumber:(UInt32 *)outReadByteNumber {
     
-    UInt32 numBytesReadFromFile = buffer->mAudioDataBytesCapacity;
-    UInt32 numPackets = _numPacketRead;
-    
-    OSStatus status = AudioFileReadPackets(_audioFileID, false, &numBytesReadFromFile, inPacketDesc, _currentPacket, &numPackets, buffer->mAudioData);
+    UInt32 numPackets = inNumPackets;
+    OSStatus status = AudioFileReadPackets(_audioFileID, false, outReadByteNumber, inPacketDesc,
+                                           _currentPacket, &numPackets, inAudioQueueBuffer->mAudioData);
+    *outReadPacketNumber = numPackets;
     if (status != noErr) {
         NSLog(@"read packets error:%d", status);
-        return 0;
+    } else if (numPackets == 0) {
+        NSLog(@"read file end");
     }
     _currentPacket += numPackets;
-    return numBytesReadFromFile;
+}
+
+- (void)audioQueuePlayerDidFinishPlay:(AudioQueuePlayer *)player {
+    [_buttonPlay setTitle:@"Play" forState:UIControlStateNormal];
+    self.title = @"finsh play";
+    _currentPacket = 0;
 }
 
 @end

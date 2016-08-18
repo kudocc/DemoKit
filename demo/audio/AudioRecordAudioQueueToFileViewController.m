@@ -30,10 +30,6 @@
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    if (_recorder.recording) {
-        [_recorder stopRecord];
-    }
-    
     if (_oldAudioSessionCategory) {
         NSError *error = nil;
         [[AVAudioSession sharedInstance] setCategory:_oldAudioSessionCategory
@@ -61,7 +57,6 @@
 - (void)initView {
     
     // set up audio session
-    
     _oldAudioSessionCategory = [AVAudioSession sharedInstance].category;
     NSLog(@"old audio session category:%@", _oldAudioSessionCategory);
     
@@ -129,6 +124,25 @@
     }
     
     _recorder = [[AudioQueueRecorder alloc] initWithDelegate:self];
+    
+    // Set a magic cookie to file
+    OSStatus result = noErr;
+    UInt32 cookieSize;
+    if (AudioQueueGetPropertySize(_recorder.audioQueue, kAudioQueueProperty_MagicCookie, &cookieSize) == noErr) {
+        char *magicCookie = (char *)malloc(cookieSize);
+        if (AudioQueueGetProperty(_recorder.audioQueue,
+                                  kAudioQueueProperty_MagicCookie,
+                                  magicCookie,
+                                  &cookieSize) == noErr) {
+            result = AudioFileSetProperty(_audioFileID, kAudioFilePropertyMagicCookieData, cookieSize, magicCookie);
+#ifdef DEBUG
+            if (result) {
+                NSLog(@"successfully write magic cookie to file");
+            }
+#endif
+        }
+        free(magicCookie);
+    }
 }
 
 - (void)startRecord:(id)obj {

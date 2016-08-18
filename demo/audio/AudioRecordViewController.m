@@ -10,11 +10,20 @@
 #import <AVFoundation/AVFoundation.h>
 #import "NSString+CCKit.h"
 
+typedef NS_ENUM(NSUInteger, RecordStatus) {
+    RecordStatusNone,
+    RecordStatusRecording,
+    RecordStatusPaused,
+    RecordStatusStoped
+};
+
 @interface AudioRecordViewController () <AVAudioRecorderDelegate> {
     NSString *_oldAudioSessionCategory;
 }
 
 @property (nonatomic) UIButton *buttonRecord;
+
+@property (nonatomic) RecordStatus recordStatus;
 @property (nonatomic, strong) AVAudioRecorder *recorder;
 
 @end
@@ -88,7 +97,7 @@
     NSDate *current = [NSDate date];
     NSString *fileName = [NSString stringWithFormat:@"%ld", (long)[current timeIntervalSince1970]];
     NSString *filePath = [[NSString cc_documentPath] stringByAppendingPathComponent:fileName];
-    NSDictionary *setting = @{AVFormatIDKey:@(kAudioFormatAppleIMA4), AVSampleRateKey:@(44100.0), AVNumberOfChannelsKey:@2};
+    NSDictionary *setting = @{AVFormatIDKey:@(kAudioFormatMPEG4AAC), AVSampleRateKey:@(44100.0), AVNumberOfChannelsKey:@2};
     error = nil;
     _recorder = [[AVAudioRecorder alloc] initWithURL:[NSURL fileURLWithPath:filePath] settings:setting error:&error];
     _recorder.delegate = self;
@@ -98,18 +107,42 @@
     }
 }
 
+- (void)setButtonTitle:(NSString *)title {
+    [_buttonRecord setTitle:title forState:UIControlStateNormal];
+}
+
+- (void)setRecordStatus:(RecordStatus)recordStatus {
+    _recordStatus = recordStatus;
+    switch (_recordStatus) {
+        case RecordStatusNone:
+            [self setButtonTitle:@"Start"];
+            break;
+        case RecordStatusRecording:
+            [self setButtonTitle:@"Pause"];
+            break;
+        case RecordStatusPaused:
+            [self setButtonTitle:@"Resume"];
+            break;
+        case RecordStatusStoped:
+            [self setButtonTitle:@"Can't do anything"];
+        default:
+            break;
+    }
+}
+
 - (void)startRecord:(id)obj {
     if (!_recorder.isRecording) {
         BOOL res = [_recorder record];
         if (res) {
-            [_buttonRecord setTitle:@"Stop" forState:UIControlStateNormal];
+            self.recordStatus = RecordStatusRecording;
             self.title = @"Recording";
         } else {
-            self.title = @"Recording Error";
+            self.recordStatus = RecordStatusStoped;
+            self.title = @"Start record error";
         }
     } else {
         [_recorder pause];
-        [_buttonRecord setTitle:@"Start" forState:UIControlStateNormal];
+        self.recordStatus = RecordStatusPaused;
         self.title = @"Record paused";
     }
 }
@@ -131,10 +164,16 @@
 
 - (void)audioRecorderDidFinishRecording:(AVAudioRecorder *)recorder successfully:(BOOL)flag {
     NSLog(@"%@, flag:%@", NSStringFromSelector(_cmd), @(flag));
+    
+    self.recordStatus = RecordStatusStoped;
+    self.title = @"record did finish";
 }
 
 - (void)audioRecorderEncodeErrorDidOccur:(AVAudioRecorder *)recorder error:(NSError * __nullable)error {
     NSLog(@"%@, error:%@", NSStringFromSelector(_cmd), error.localizedDescription);
+    
+    self.recordStatus = RecordStatusStoped;
+    self.title = @"encode error did occur";
 }
 
 @end

@@ -15,14 +15,14 @@
 - (instancetype)initWithDelegate:(id<AudioQueuePlayerDelegate>)delegate;
 
 @property (nonatomic, weak, readonly) id<AudioQueuePlayerDelegate> delegate;
+@property (nonatomic, readonly) AudioQueueRef audioQueue;
 
-@property (nonatomic) BOOL playing;
+@property (nonatomic, getter=isPlaying) BOOL playing;
 
-- (BOOL)startPlay;
-- (void)stopPlay;
+- (BOOL)play;
+- (void)stop;
 
 - (BOOL)pause;
-- (BOOL)resume;
 
 @end
 
@@ -30,9 +30,17 @@
 
 - (AudioStreamBasicDescription)audioStreamBasicDescriptionOfPlayer:(AudioQueuePlayer *)player;
 
-- (void)player:(AudioQueuePlayer *)player bufferByteSize:(UInt32 *)outBufferSize numPacketsToRead:(UInt32 *)outNumPacketsToRead;
+- (void)audioQueuePlayer:(AudioQueuePlayer *)player
+       getBufferByteSize:(UInt32 *)outBufferSize
+      packetToReadNumber:(UInt32 *)outPacketToReadNumber;
 
-// return writed number of packets
-- (UInt32)player:(AudioQueuePlayer *)player primeBuffer:(AudioQueueBufferRef)buffer streamPacketDescList:(AudioStreamPacketDescription *)inPacketDesc numberOfPacketDescription:(UInt32)inNumPackets;
+- (void)audioQueuePlayer:(AudioQueuePlayer *)player
+             primeBuffer:(AudioQueueBufferRef)inAudioQueueBuffer
+ streamPacketDescription:(AudioStreamPacketDescription *)inPacketDesc
+       descriptionNumber:(UInt32)inNumPackets
+        readPacketNumber:(UInt32 *)outReadPacketNumber
+          readByteNumber:(UInt32 *)outReadByteNumber;
+
+- (void)audioQueuePlayerDidFinishPlay:(AudioQueuePlayer *)player;
 
 @end

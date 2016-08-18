@@ -60,52 +60,51 @@ static void HandleInputBuffer (void *aqData,
     if (self) {
         _delegate = delegate;
         
-        _audioQueue = NULL;
-        for (NSInteger i = 0; i < kNumberBuffers; ++i) {
-            _audioQueueBuffer[i] = NULL;
-        }
-        
         // set up `AudioStreamBasicDescription`
         _basicDescription = [_delegate audioStreamBasicDescriptionOfRecorder:self];
+        
+        // create a record audio queue, callback run in CommonMode of Main Thread
+        OSStatus status = AudioQueueNewInput(&_basicDescription, HandleInputBuffer, (__bridge void *)self,
+                                    CFRunLoopGetMain(), kCFRunLoopCommonModes, 0, &_audioQueue);
+        if (status != noErr) {
+            // kAudioFormatUnsupportedDataFormatError is 1718449215
+            _audioQueue = nil;
+            return self;
+        }
+        
+        UInt32 basicDescriptionSize = sizeof(_basicDescription);
+        status = AudioQueueGetProperty(_audioQueue, kAudioQueueProperty_StreamDescription, &_basicDescription, &basicDescriptionSize);
+        NSAssert(status == noErr, @"get stream description error");
     }
     return self;
 }
 
 - (void)dealloc {
     if (_audioQueue) {
-        AudioQueueDispose(_audioQueue, YES);
+        AudioQueueDispose(_audioQueue, false);
         _audioQueue = NULL;
     }
 }
 
 - (BOOL)startRecord {
     
-    OSStatus status;
-    // create a record audio queue
-    status = AudioQueueNewInput(&_basicDescription, HandleInputBuffer, (__bridge void *)self,
-                                CFRunLoopGetMain(), kCFRunLoopCommonModes, 0, &_audioQueue);
-    if (status != noErr) {
-        // kAudioFormatUnsupportedDataFormatError is 1718449215
-        goto Failed_label;
-    }
-    
-    UInt32 basicDescriptionSize = sizeof(_basicDescription);
-    status = AudioQueueGetProperty(_audioQueue, kAudioQueueProperty_StreamDescription, &_basicDescription, &basicDescriptionSize);
-    if (status != noErr) {
-        goto Failed_label;
-    }
-    
+    OSStatus status = noErr;
     _bufferByteSize = [self deriveAudioBufferWithSeconds:0.2];
-
     for (NSInteger i = 0; i < kNumberBuffers; ++i) {
         status = AudioQueueAllocateBuffer(_audioQueue, _bufferByteSize, &_audioQueueBuffer[i]);
         if (status != noErr) {
-            goto Failed_label;
+            break;
         }
         status = AudioQueueEnqueueBuffer(_audioQueue, _audioQueueBuffer[i], 0, NULL);
         if (status != noErr) {
-            goto Failed_label;
+            break;
         }
+    }
+    if (status != noErr) {
+#ifdef DEBUG
+        NSLog(@"Allocate Buffer or Enqueue Buffer error:%d", status);
+#endif
+        goto Failed_label;
     }
     
     // The second parameter

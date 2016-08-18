@@ -79,6 +79,7 @@
     // 这里要注意的是这个函数以及相关的对transform做变换的函数，以CGAffineTransformTranslate(transform, x, y)为例
     // 他是将CGAffineTransformMakeTranslation(x, y)的结果与transform做矩阵相乘
     // 而不是transform与CGAffineTransformMakeTranslation(x, y)的结果相乘，矩阵相乘交换律不成立，所以千万小心
+    /*
     CGPoint srcPoint = CGPointMake(10, 10);
     
     CGFloat scale = [UIScreen mainScreen].scale;
@@ -95,7 +96,7 @@
     CGPoint dstPoint = CGPointApplyAffineTransform(srcPoint, transform);
     NSLog(@"src point:%@", NSStringFromCGPoint(srcPoint));
     NSLog(@"det point:%@", NSStringFromCGPoint(dstPoint));
-    
+    */
     /*
      CGAffineTransform transform = CGAffineTransformMakeScale(1/scale, 1/scale);
      NSLog(@"%@", NSStringFromCGAffineTransform(transform));

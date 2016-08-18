@@ -15,6 +15,7 @@
 - (instancetype)initWithDelegate:(id<AudioQueueRecorderDelegate>)delegate;
 
 @property (nonatomic, weak, readonly) id<AudioQueueRecorderDelegate> delegate;
+@property (nonatomic, readonly) AudioQueueRef audioQueue;
 
 @property (nonatomic) BOOL recording;
 
