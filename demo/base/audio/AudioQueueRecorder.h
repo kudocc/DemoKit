@@ -17,13 +17,12 @@
 @property (nonatomic, weak, readonly) id<AudioQueueRecorderDelegate> delegate;
 @property (nonatomic, readonly) AudioQueueRef audioQueue;
 
-@property (nonatomic) BOOL recording;
+@property (nonatomic, getter=isRecording) BOOL recording;
 
-- (BOOL)startRecord;
-- (void)stopRecord;
+- (BOOL)record;
+- (void)stop;
 
 - (BOOL)pause;
-- (BOOL)resume;
 
 @end
 

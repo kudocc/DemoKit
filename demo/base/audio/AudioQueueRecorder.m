@@ -16,6 +16,8 @@
     AudioQueueRef _audioQueue;
     AudioQueueBufferRef _audioQueueBuffer[kNumberBuffers];
     UInt32 _bufferByteSize;
+    
+    BOOL _finished;
 }
 
 @end
@@ -33,6 +35,8 @@ static void HandleInputBuffer (void *aqData,
     
     // enqueue buffer
     AudioQueueEnqueueBuffer(sself->_audioQueue, inBuffer, 0, NULL);
+    
+    printf("IN HANDLE INPUT BUFFER\n");
 }
 
 @implementation AudioQueueRecorder
@@ -59,6 +63,7 @@ static void HandleInputBuffer (void *aqData,
     self = [super init];
     if (self) {
         _delegate = delegate;
+        _finished = YES;
         
         // set up `AudioStreamBasicDescription`
         _basicDescription = [_delegate audioStreamBasicDescriptionOfRecorder:self];
@@ -81,12 +86,25 @@ static void HandleInputBuffer (void *aqData,
 
 - (void)dealloc {
     if (_audioQueue) {
-        AudioQueueDispose(_audioQueue, false);
+        // if audio queue doesn't finish, stop it
+        if (!_finished) {
+            AudioQueueStop(_audioQueue, true);
+        }
+        AudioQueueDispose(_audioQueue, true);
+        
         _audioQueue = NULL;
     }
 }
 
-- (BOOL)startRecord {
+- (BOOL)record {
+    // aq is recording
+    if (_recording) {
+        return YES;
+    }
+    
+    if (!_finished) {
+        return [self resume];
+    }
     
     OSStatus status = noErr;
     _bufferByteSize = [self deriveAudioBufferWithSeconds:0.2];
@@ -116,6 +134,7 @@ static void HandleInputBuffer (void *aqData,
     }
     
     _recording = YES;
+    _finished = NO;
     
     return YES;
     
@@ -131,16 +150,30 @@ Failed_label:
     return NO;
 }
 
-- (void)stopRecord {
-    if (_audioQueue) {
-        AudioQueueDispose(_audioQueue, false);
-        _audioQueue = NULL;
+- (void)stop {
+    [self stopImmediately:NO];
+}
+
+- (void)stopImmediately:(BOOL)immediate {
+    // aq is already finished
+    if (_finished) {
+        return;
     }
     
+    if (_audioQueue) {
+        Boolean imme = immediate ? true : false;
+        AudioQueueStop(_audioQueue, imme);
+    }
     _recording = NO;
+    _finished = YES;
 }
 
 - (BOOL)pause {
+    // aq is already paused
+    if (!_recording) {
+        return YES;
+    }
+    
     if (_audioQueue) {
         OSStatus status = AudioQueuePause(_audioQueue);
         if (status == noErr) {
@@ -152,6 +185,11 @@ Failed_label:
 }
 
 - (BOOL)resume {
+    // aq is recording
+    if (_recording) {
+        return YES;
+    }
+    
     if (_audioQueue) {
         OSStatus status = AudioQueueStart(_audioQueue, NULL);
         if (status == noErr) {

@@ -147,7 +147,7 @@
 
 - (void)startRecord:(id)obj {
     if (!_recorder.recording) {
-        BOOL res = [_recorder startRecord];
+        BOOL res = [_recorder record];
         if (res) {
             [_buttonRecord setTitle:@"Pause" forState:UIControlStateNormal];
             self.title = @"Recording";
