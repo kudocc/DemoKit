@@ -19,16 +19,34 @@
     UInt32 _numPacketRead;
     AudioStreamPacketDescription *_packetDescription;
     
-    BOOL _finished;
+    /*
+                                                   |--playing--|
+    |--starting--|--playing--|--pause--|--playing--|--stoping--|--stoped--|
+                 |---------started-----------------|
+    */
+    // audio queue need some time to start, so during we call AudioQueueStart and it really starts, _starting is YES
+    BOOL _starting;
+    // audio queue is started
+    BOOL _started;
+    
+    // audio device may not finish immediately after call AudioQueueStop, if you pass false as its second paramter.
+    // during we call AudioQueueStop to it really finishs, _stopping is YES
+    BOOL _stopping;
+    // YES means finished, NO means started
+    BOOL _stopped;
 }
 
 - (void)stopImmediately:(BOOL)immediate;
+
+- (void)audioQueueStartedCallback;
+- (void)audioQueueStoppedCallback;
 
 @end
 
 static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
     AudioQueuePlayer *player = (__bridge AudioQueuePlayer *)aqData;
-    if (player->_finished) {
+    if (!player->_starting &&
+        !player->_started) {
         return;
     }
     
@@ -60,12 +78,30 @@ static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuff
     }
 }
 
+void AudioQueueIsRunningPropertyChange(void *inUserData, AudioQueueRef inAQ, AudioQueuePropertyID inID) {
+    AudioQueuePlayer *player = (__bridge AudioQueuePlayer *)inUserData;
+    
+    UInt32 isRunning = 0;
+    UInt32 size = sizeof(isRunning);
+    AudioQueueGetProperty(inAQ, kAudioQueueProperty_IsRunning, &isRunning, &size);
+    if (isRunning) {
+        [player audioQueueStartedCallback];
+    } else {
+        [player audioQueueStoppedCallback];
+    }
+}
+
 @implementation AudioQueuePlayer
 
 - (instancetype)initWithDelegate:(id<AudioQueuePlayerDelegate>)delegate {
     self = [super init];
     if (self) {
-        _finished = YES;
+        _starting = NO;
+        _started = NO;
+        _playing = NO;
+        _stopping = NO;
+        _stopped = YES;
+        
         _delegate = delegate;
         
         _audioQueue = NULL;
@@ -86,6 +122,8 @@ static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuff
             // Does it cause memory leak?
             return nil;
         }
+        
+        AudioQueueAddPropertyListener(_audioQueue, kAudioQueueProperty_IsRunning, AudioQueueIsRunningPropertyChange, (__bridge void *)self);
         
         // get max buffer size and packet to read
         [_delegate audioQueuePlayer:self getBufferByteSize:&_bufferByteSize packetToReadNumber:&_numPacketRead];
@@ -117,8 +155,9 @@ static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuff
 
 - (void)dealloc {
     if (_audioQueue) {
-        // if audio queue doesn't finish, stop it
-        if (!_finished) {
+        AudioQueueRemovePropertyListener(_audioQueue, kAudioQueueProperty_IsRunning, AudioQueueIsRunningPropertyChange, (__bridge void *)self);
+        
+        if (_started) {
             AudioQueueStop(_audioQueue, true);
         }
         AudioQueueDispose(_audioQueue, true);
@@ -133,18 +172,28 @@ static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuff
 }
 
 - (BOOL)play {
-    
     // already playing
     if (_playing) {
         return YES;
     }
     
+    // during starting
+    if (_starting) {
+        return NO;
+    }
+    
+    // during stopping, we can't start it
+    if (_stopping) {
+        return NO;
+    }
+    
     // now audio queue is paused, resume play
-    if (!_finished) {
+    if (_started) {
         return [self resume];
     }
     
-    _finished = NO;
+    // set starting = YES, make HandleOutputBuffer work
+    _starting = YES;
     for (NSInteger i = 0; i < kNumberBuffers; ++i) {
         // prime audio
         HandleOutputBuffer((__bridge void *)self, _audioQueue, _audioQueueBuffer[i]);
@@ -164,23 +213,21 @@ static void HandleOutputBuffer (void *aqData, AudioQueueRef inAQ, AudioQueueBuff
     // The second parameter
     // The time at which the audio queue should start.
     // To specify a start time relative to the timeline of the associated audio device, use the mSampleTime field of the AudioTimeStamp structure. Use NULL to indicate that the audio queue should start as soon as possible.
+    NSLog(@"begin start");
     status = AudioQueueStart(_audioQueue, NULL);
+    NSLog(@"end start");
     if (status != noErr) {
 #ifdef DEBUG
-        NSLog(@"AudioQueueStart %d", status);
+        NSLog(@"AudioQueueStart failed:%d", status);
 #endif
         // -50 其中一个原因查看AVAudioSession的category是否正确设置
         goto Failed_label;
     }
     
-    _playing = YES;
-    _finished = NO;
-    
     return YES;
     
 Failed_label:
-    _finished = YES;
-    _playing = NO;
+    _starting = NO;
     
     if (_audioQueue) {
         AudioQueueDispose(_audioQueue, false);
@@ -203,30 +250,31 @@ Failed_label:
 }
 
 - (void)stopImmediately:(BOOL)immediate {
-    // aq is already finished
-    if (_finished) {
-        return;
-    }
-    
-    if (_audioQueue) {
+    if (_started) {
         Boolean imme = immediate ? true : false;
+        /*
+         we don't get the result of AudioQueueStop because I think it would fail if audio queue is already stopped or audio queue is invalid, no matter what it is, the queue would be stopped
+         */
+        _started = NO;
+        
+        // audio queue begin to stop
+        _stopping = YES;
+        
         AudioQueueStop(_audioQueue, imme);
     }
-    _playing = NO;
-    _finished = YES;
-    
-    [_delegate audioQueuePlayerDidFinishPlay:self];
 }
 
 - (BOOL)pause {
-    // currently aq is not playing
-    if (!_playing) {
-        return YES;
-    }
-    
-    if (_audioQueue) {
+    if (_playing) {
+        // if audio queue is in stopping status, we omit the pause operation and return NO
+        if (_stopping) {
+#ifdef DEBUG
+            NSLog(@"audio queue is in stopping status");
+#endif
+            return NO;
+        }
+        
         OSStatus status = AudioQueuePause(_audioQueue);
-        NSLog(@"call pause");
         if (status == noErr) {
             _playing = NO;
         }
@@ -236,19 +284,34 @@ Failed_label:
 }
 
 - (BOOL)resume {
-    // currently aq is playing
-    if (_playing) {
-        return YES;
-    }
-    
-    if (_audioQueue) {
+    if (_started && !_playing) {
         OSStatus status = AudioQueueStart(_audioQueue, NULL);
         if (status == noErr) {
             _playing = YES;
         }
-        return status != noErr;
+        return status == noErr;
     }
     return NO;
+}
+
+#pragma mark -
+
+- (void)audioQueueStartedCallback {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    _starting = NO;
+    _started = YES;
+    _playing = YES;
+}
+
+- (void)audioQueueStoppedCallback {
+    NSLog(@"%@", NSStringFromSelector(_cmd));
+    
+    _playing = NO;
+    _stopping = NO;
+    _stopped = YES;
+    
+    [_delegate audioQueuePlayerDidFinishPlay:self];
 }
 
 @end
