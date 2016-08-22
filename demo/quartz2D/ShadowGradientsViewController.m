@@ -7,7 +7,7 @@
 //
 
 #import "ShadowGradientsViewController.h"
-#import "UILinearGradientView.h"
+#import <CCLinearGradientView.h>
 
 @implementation ShadowGradientsViewController
 
@@ -105,7 +105,7 @@
     y = imageViewShadow.bottom + 10;
     
     // create a axial gradient view
-    UILinearGradientView *gradientView = [[UILinearGradientView alloc] initWithFrame:CGRectMake(0, y, scrollView.width, scrollView.height) colors:@[[UIColor redColor], [UIColor greenColor], [UIColor blueColor]] axis:UILinerGradientViewAxisX];
+    CCLinearGradientView *gradientView = [[CCLinearGradientView alloc] initWithFrame:CGRectMake(0, y, scrollView.width, scrollView.height) colors:@[[UIColor redColor], [UIColor greenColor], [UIColor blueColor]] axis:CCLinerGradientViewAxisX];
     [scrollView addSubview:gradientView];
     y = gradientView.bottom + 10;
     
